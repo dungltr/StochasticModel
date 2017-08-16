@@ -1,0 +1,6 @@
+#
+#Thu May 04 16:28:43 CEST 2017
+Constraints.Output.number=1
+Constraints.OpSpecification.Algorithm.name=SQL_query
+Constraints.Input.number=1
+Constraints.Engine=PostgreSQL
