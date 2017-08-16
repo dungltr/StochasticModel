@@ -1,0 +1,9 @@
+#
+#Fri Mar 17 17:42:15 CET 2017
+Constraints.DataInfo.Attributes.Atr2.type=Varchar
+Optimization.uniqueKeys=1 million
+Constraints.DataInfo.Attributes.Atr1.type=Varchar
+Optimization.size=1GB
+Constraints.Engine.DB.Relational.MySQL.schema=...
+Constraints.DataInfo.Attributes.number=2
+Constraints.Engine.DB.Relational.MySQL.location=127.0.0.1

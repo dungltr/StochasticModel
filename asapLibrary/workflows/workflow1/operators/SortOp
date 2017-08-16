@@ -1,0 +1,7 @@
+#
+#Tue Mar 21 09:56:09 CET 2017
+Constraints.Output.number=1
+Constraints.OpSpecification.Algorithm.Sort..*=.*
+Constraints.Input0.DataInfo.Attributes.number=2
+Constraints.Input.number=1
+Constraints.Output0.DataInfo.Attributes.number=2

@@ -1,0 +1,5 @@
+0,d3,SortOp,0
+1,SortOp,d4,0
+0,hbaseDataset,JoinOp,0
+0,mySQLDataset,JoinOp,1
+1,JoinOp,d3,0

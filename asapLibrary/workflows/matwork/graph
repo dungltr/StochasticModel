@@ -1,0 +1,16 @@
+0,hbaseDataset,HBase_HashJoin,0
+0,t1,HBase_HashJoin,1
+1,HBase_HashJoin,t2,0
+0,t2,Sort,0
+1,Sort,t7,0
+0,mySQLDataset,move,0
+1,move,t1,0
+0,hbaseDataset,Java_SortMergeJoin,0
+0,mySQLDataset,Java_SortMergeJoin,1
+1,Java_SortMergeJoin,t5,0
+0,t2,Sort2,0
+1,Sort2,t9,0
+0,t5,t8,0
+0,hbaseDataset,t0,0
+0,mySQLDataset,t4,0
+0,t2,t8,0
