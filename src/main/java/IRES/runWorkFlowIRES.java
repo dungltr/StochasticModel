@@ -5,7 +5,6 @@
  */
 package IRES;
 ////////////////////////////////////////////////////////////////////////////////
-///Test more
 import static Algorithms.Algorithms.estimateCostValue;
 import Algorithms.testWriteMatrix2CSV;
 import LibraryIres.Move_Data;
