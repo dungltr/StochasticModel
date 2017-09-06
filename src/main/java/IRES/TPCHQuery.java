@@ -31,12 +31,12 @@ public class TPCHQuery {
     private static int numberOfSize_Postgres_Postgres = 6;
     private static int numberOfSize_Hive_Hive = 3;
     
-    public static void TPCH_Hive_Postgres(double TimeOfDay, String Table, String query) throws Exception {
+    public static void TPCH_Hive_Postgres(double TimeOfDay, String Table, String query, String KindOfRunning) throws Exception {
         String Size_tpch = "1000m";
         String database = "tpch";
         String SQL_folder = new App().readhome("SQL");
         runWorkFlowIRES IRES = new runWorkFlowIRES();
-        String[] randomQuery = createRandomQuery();
+        String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);
         String From = "Hive";
         String To   = "Postgres";
         
@@ -99,14 +99,14 @@ public class TPCHQuery {
 //            Files.createFile(filePathRealValue);
             Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay);
         }
-        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay,size);
+        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay,size,KindOfRunning);
     }
-    public static void TPCH_Hive_Hive(double TimeOfDay, String Table) throws Exception {
+    public static void TPCH_Hive_Hive(double TimeOfDay, String Table, String KindOfRunning) throws Exception {
         String Size_tpch = "100m";
         String database = "tpch";
         String SQL_folder = new App().readhome("SQL");
         runWorkFlowIRES IRES = new runWorkFlowIRES();
-        String[] randomQuery = createRandomQuery();
+        String[] randomQuery = createRandomQuery(KindOfRunning,Size_tpch);
         String From = "Hive";
         String To   = "Hive";
         double[] size = calculateSize(randomQuery, From, To, Size_tpch);
@@ -164,14 +164,14 @@ public class TPCHQuery {
 //            Files.createFile(filePathRealValue);
             Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay);
         }
-        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size);
+        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
     }
-    public static void TPCH_Postgres_Postgres(double TimeOfDay, String Table) throws Exception {
+    public static void TPCH_Postgres_Postgres(double TimeOfDay, String Table, String KindOfRunning) throws Exception {
         String Size_tpch = "100m";
         String database = "tpch";
         String SQL_folder = new App().readhome("SQL");
         runWorkFlowIRES IRES = new runWorkFlowIRES();
-        String[] randomQuery = createRandomQuery();
+        String[] randomQuery = createRandomQuery(KindOfRunning,Size_tpch);
         String From = "Postgres";
         String To   = "Postgres";
         double[] size = calculateSize(randomQuery, From, To, Size_tpch);
@@ -229,19 +229,20 @@ public class TPCHQuery {
 //            Files.createFile(filePathRealValue);
             Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay);
         }
-        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size);
+        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
     }
-    public static void TPCH(double TimeOfDay, String DB, String Size, String from, String to) throws Exception {
+    public static void TPCH(double TimeOfDay, String DB, String Size, String from, String to, String KindOfRunning) throws Exception {
         String Size_tpch = Size;
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
         runWorkFlowIRES IRES = new runWorkFlowIRES();
-        String[] randomQuery = createRandomQuery();
+        String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);
         String From = from;
         String To   = to;
         
         double[] size = calculateSize(randomQuery, From, To, Size_tpch);
-        double[] Yarn = testQueryPlan.createRandomYarn();
+        if (KindOfRunning.equals("testing")&&(From.equals("hive"))&&(To.equals("hive"))) size[1] = Double.parseDouble(randomQuery[0]); 
+	double[] Yarn = testQueryPlan.createRandomYarn();
         ////////////////////////////////////////////
         size[size.length-1]=TimeOfDay;
         ///////////////////////////////////////////
@@ -257,9 +258,10 @@ public class TPCHQuery {
         String DataOut = randomQuery[1].toUpperCase();
         String DatabaseOut = database + Size_tpch;       
        
-        //String SQL_fileName = SQL_folder + "tpch_" + query; 
-        String SQL_fileName = SQL_folder + randomQuery[2];
-       
+        String SQL_fileName = ""; 
+        if (KindOfRunning.equals("training"))
+	SQL_fileName = SQL_folder + randomQuery[2];
+        else SQL_fileName = SQL_folder + randomQuery[2]; 
         String SQL = "DROP TABLE IF EXISTS "+ randomQuery[2]+"_"+From+"_"+To+"; "
                 + "CREATE TABLE "+ randomQuery[2]+"_"+From+"_"+To+" "
                 + "AS " 
@@ -300,7 +302,7 @@ public class TPCHQuery {
 //            Files.createFile(filePathRealValue);
             Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay);
         }
-        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay,size);
+        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
     }    
     public static String Schema(String Table) {
         String Schema = "";

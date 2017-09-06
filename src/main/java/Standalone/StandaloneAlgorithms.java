@@ -91,7 +91,7 @@ public class StandaloneAlgorithms {
     }    
     public void setup(Move_Data Data, YarnValue yarnValue, double[] size, String Size_tpch, double TimeOfDay) throws Exception {        
         int numberParameter = size.length + 1;
-        String[] randomQuery = testQueryPlan.createRandomQuery();
+        String[] randomQuery = testQueryPlan.createRandomQuery("",Size_tpch);
         double[] size_random = calculateSize(randomQuery, Data.get_From(), Data.get_To(),Size_tpch);
         double[] yarn_random = testQueryPlan.createRandomYarn(); 
         
@@ -114,7 +114,7 @@ public class StandaloneAlgorithms {
         for (i = 0; i< size.length+2; i++)
                 {   System.out.println("\nTest Time:"+i+"--------------------------------------------------------");
                     //TimeOfDay = 24*Math.random();
-                    randomQuery = testQueryPlan.createRandomQuery();
+                    randomQuery = testQueryPlan.createRandomQuery("",Size_tpch);
                     size_random = calculateSize(randomQuery, Data.get_From(), Data.get_To(),Size_tpch);
                     size_random[size_random.length-1] = TimeOfDay;
                     createData(Data, SQL, yarnValue);                    

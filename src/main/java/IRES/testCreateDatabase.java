@@ -29,7 +29,7 @@ public class testCreateDatabase {
         
         String Size_tpch = "100m";
         runWorkFlowIRES IRES = new runWorkFlowIRES();
-        String[] randomQuery = createRandomQuery();
+        String[] randomQuery = createRandomQuery("",Size_tpch);
         String From = "Hive";
         String To   = "Hive";
         double[] size = calculateSize(randomQuery, From, To, Size_tpch);
@@ -80,13 +80,13 @@ public class testCreateDatabase {
 //            Files.createFile(filePathRealValue);
             Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay);
         }
-        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay,size);
+        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay,size,"");
     }
 //    @Test 
     public static void testCreatePostgresDataBase(double TimeOfDay) throws Exception {
         String Size_tpch = "100m";
         runWorkFlowIRES IRES = new runWorkFlowIRES();
-        String[] randomQuery = createRandomQuery();
+        String[] randomQuery = createRandomQuery("",Size_tpch);
         String From = "Postgres";
         String To   = "Postgres";
         double[] size = calculateSize(randomQuery, From, To, Size_tpch);
@@ -134,7 +134,7 @@ public class testCreateDatabase {
 //            Files.createFile(filePathRealValue);
             Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay);
         }
-        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay,size);
+        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay,size,"");
     }
     
 }

@@ -32,7 +32,7 @@ public class TPCHStandalone {
         String Size_tpch = "100m";
         String database = "tpch";
         String SQL_folder = new App().readhome("SQL");
-        String[] randomQuery = createRandomQuery();
+        String[] randomQuery = createRandomQuery("",Size_tpch);
         String From = "Hive";
         String To   = "Postgres";
         double[] size = calculateSize(randomQuery, From, To, Size_tpch);
@@ -93,7 +93,7 @@ public class TPCHStandalone {
     public static void TPCH_Standalone_Hive_Hive(double TimeOfDay) throws Exception {
         String Size_tpch = "100m";
         String SQL_folder = new App().readhome("SQL");
-        String[] randomQuery = createRandomQuery();
+        String[] randomQuery = createRandomQuery("",Size_tpch);
         String From = "Hive";
         String To   = "Hive";
         double[] size = calculateSize(randomQuery, From, To, Size_tpch);
@@ -155,7 +155,7 @@ public class TPCHStandalone {
         String Size_tpch = "100m";
         String database = "tpch";
         String SQL_folder = new App().readhome("SQL");
-        String[] randomQuery = createRandomQuery();
+        String[] randomQuery = createRandomQuery("",Size_tpch);
         String From = "Postgres";
         String To   = "Postgres";
         double[] size = calculateSize(randomQuery, From, To, Size_tpch);
@@ -217,7 +217,7 @@ public class TPCHStandalone {
         String Size_tpch = Size;
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
-        String[] randomQuery = createRandomQuery();
+        String[] randomQuery = createRandomQuery("",Size_tpch);
         String From = from;
         String To   = to;
         double[] size = calculateSize(randomQuery, From, To, Size_tpch);

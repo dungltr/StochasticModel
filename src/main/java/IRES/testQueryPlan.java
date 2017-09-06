@@ -1,4 +1,4 @@
-/*
+/**
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -16,7 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Random;
-
+import java.util.Arrays;
 /**
  *
  * @author letrung
@@ -27,7 +27,7 @@ public class testQueryPlan {
     public static void testQueryPlanIRES_Hive_Postgres(double TimeOfDay) throws Exception {
         String Size_tpch = "100m";
         runWorkFlowIRES IRES = new runWorkFlowIRES();
-        String[] randomQuery = createRandomQuery();
+        String[] randomQuery = createRandomQuery("",Size_tpch);
         String From = "Hive";
         String To   = "Postgres";
         double[] size = calculateSize(randomQuery, From, To, Size_tpch);
@@ -85,14 +85,14 @@ public class testQueryPlan {
 //            Files.createFile(filePathRealValue);
             Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay);
         }
-        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay,size);         
+        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay,size,"");         
 //        }
     }
 //    @Test 
     public static void testQueryPlanIRES_Postgres(double TimeOfDay) throws Exception {
         String Size_tpch = "100m";
         runWorkFlowIRES IRES = new runWorkFlowIRES();
-        String[] randomQuery = createRandomQuery();
+        String[] randomQuery = createRandomQuery("",Size_tpch);
         String From = "Postgres";
         String To   = "Postgres";
         double[] size = calculateSize(randomQuery, From, To, Size_tpch);
@@ -149,7 +149,7 @@ public class testQueryPlan {
 //            Files.createFile(filePathRealValue);
             Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay);
         }
-        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay,size);         
+        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay,size,"");         
 //        }
     }
     public static double[] createRandomYarn() {
@@ -186,68 +186,249 @@ public class testQueryPlan {
         return tmp;        
     }
     
-    public static String[] createRandomQuery() {
+    public static String[] createRandomQuery(String KindOfRunning, String Size_tpch) {
         Random rand = new Random();
-        
         String [] dataset_move  = {"orders","lineitem", "orders","lineitem",    "orders","lineitem",    "customer","orders", "part","lineitem",     "lineitem","part",    "part","lineitem",     "customer","orders"};
         String [] query         = {"query0","query0",   "query4","query4",    "query12","query12",      "query13","query13",   "query14","query14",  "query17","query17",  "query19","query19",  "query22","query22"};
         String [] dataset_up    = {"lineitem","orders", "lineitem","orders",  "lineitem","orders",       "orders","customer",   "lineitem","part",   "part","lineitem",     "lineitem","part",    "orders","customer"};
         double [] size = new double [dataset_move.length];
         int i = rand.nextInt(dataset_move.length);//rand.nextInt(4) + 6;//
-        String[] tmp = new String[4];       
-        tmp[0] = Double.toString(size[i]);
+        int j,k;
+	double size_multi = 0;
+	String[] tmp = new String[4];       
+        if (KindOfRunning.equals("testing")){
+	i = rand.nextInt(22);
+	String [] SliceArray = Checkquery(Integer.toString(i));
+        //String [] SliceArray = sliceArray(Checkquery(Integer.toString(i)),tmp[1]);
+	for (k = 0; k < SliceArray.length; k++)
+		size_multi = size_multi + testQueryPlan.sizeDataset(SliceArray[k],Size_tpch);
+	tmp[0] = Double.toString(size_multi);
+	System.out.println("Size of tables except:" + tmp[0]);
+        tmp[1] = dataset_move(Integer.toString(i));
+        tmp[2] = Integer.toString(i);
+        tmp[3] = SliceArray[rand.nextInt(SliceArray.length)];
+	}
+	else{
+	tmp[0] = Double.toString(size[i]);
         tmp[1] = dataset_move[i];
         tmp[2] = query[i];  
         tmp[3] = dataset_up[i];
+	}
         return tmp;        
     }
-    
+    public static String[] sliceArray(String[] originArray, String object){
+	String [] newArray = new String [originArray.length];
+	for (int i = 0; i < newArray.length; i++){newArray[i] = "";}
+        int j = 0;
+	if (originArray.length > 1){
+		for (int i = 0; i < originArray.length; i++){
+			if (!object.equals(originArray[i])){
+				newArray[j] = originArray[i];
+				j++;
+			}  
+	     	}
+	System.out.println(Arrays.toString(originArray));
+	System.out.println(Arrays.toString(newArray));
+	return newArray;
+	}
+	else return originArray;
+    }
+
+    public static String[] Checkquery (String query){
+	String [] query1 = {"lineitem"};
+        String [] query2 = {"part","supplier","partsupp","nation","region"};
+        String [] query3 = {"customer","orders","lineitem"};
+        String [] query4 = {"orders"};
+        String [] query5 = {"customer","orders","lineitem","supplier","nation","region"};
+        String [] query6 = {"lineitem"};
+        String [] query7 = {"supplier","lineitem","orders","customer","nation"};
+        String [] query8 = {"part","supplier","lineitem","orders","customer","nation","region"};
+        String [] query9 = {"part","supplier","lineitem","partsupp","orders","nation"};
+        String [] query10 = {"lineitem","orders","customer","nation"};
+        String [] query11 = {"partsupp","supplier","nation"};
+        String [] query12 = {"lineitem","orders"};
+        String [] query13 = {"orders","customer"};
+        String [] query14 = {"lineitem","part"};
+        String [] query15 = {"lineitem","supplier"};
+        String [] query16 = {"part","partsupp"};
+        String [] query17 = {"lineitem","part"};
+        String [] query18 = {"lineitem","orders","customer"};
+        String [] query19 = {"lineitem","part"};
+        String [] query20 = {"lineitem","part","partsupp","supplier","nation"};
+        String [] query21 = {"lineitem","orders","supplier","nation"};
+        String [] query22 = {"orders","customer"};
+	switch (query){
+                case "1": {return query1;}
+                        //break;
+                case "2": {return query2;}
+                        //break;
+                case "3": {return query3;}
+                        //break;
+                case "4": {return query4;}
+                        //break;
+                case "5": {return query5;}
+                        //break;
+                case "6": {return query6;}
+                        //break;
+                case "7": {return query7;}
+                        //break;
+                case "8": {return query8;}
+                        //break;
+                case "9": {return query9;}
+                        //break;
+                case "10": {return query10;}
+                        //break;
+                case "11": {return query11;}
+                        //break;
+                case "12": {return query12;}
+                        //break;
+                case "13": {return query13;}
+                        //break;
+                case "14": {return query14;}
+                        //break;
+                case "15": {return query15;}
+                        //break;
+                case "16": {return query16;}
+                        //break;
+                case "17": {return query17;}
+                        //break;
+                case "18": {return query18;}
+                        //break;
+                case "19": {return query19;}
+                        //break;
+                case "20": {return query20;}
+                        //break;
+                case "21": {return query21;}
+                        //break;
+                case "22": {return query22;}
+			//break;
+		default: return query22; 
+			//break;
+	}
+	//return query1;
+    }
+    public static String dataset_move(String query){
+	Random rand = new Random();
+	String [] query1 = {"lineitem"};
+	String [] query2 = {"part","supplier","partsupp","nation","region"};
+	String [] query3 = {"customer","orders","lineitem"};
+	String [] query4 = {"orders"};
+	String [] query5 = {"customer","orders","lineitem","supplier","nation","region"};
+        String [] query6 = {"lineitem"};
+        String [] query7 = {"supplier","lineitem","orders","customer","nation"};
+        String [] query8 = {"part","supplier","lineitem","orders","customer","nation","region"};
+	String [] query9 = {"part","supplier","lineitem","partsupp","orders","nation"};
+	String [] query10 = {"lineitem","orders","customer","nation"};
+	String [] query11 = {"partsupp","supplier","nation"};
+	String [] query12 = {"lineitem","orders"};
+	String [] query13 = {"orders","customer"};
+	String [] query14 = {"lineitem","part"};
+	String [] query15 = {"lineitem","supplier"};
+	String [] query16 = {"part","partsupp"};
+	String [] query17 = {"lineitem","part"};
+	String [] query18 = {"lineitem","orders","customer"};
+	String [] query19 = {"lineitem","part"};
+	String [] query20 = {"lineitem","part","partsupp","supplier","nation"};
+	String [] query21 = {"lineitem","orders","supplier","nation"};
+	String [] query22 = {"orders","customer"};
+	String query_select;
+	switch (query){
+		case "1": {query_select = query1[rand.nextInt(query1.length)];}
+			break;
+		case "2": {query_select = query2[rand.nextInt(query2.length)];}
+                        break;
+		case "3": {query_select = query3[rand.nextInt(query3.length)];}
+                        break;
+                case "4": {query_select = query4[rand.nextInt(query4.length)];}
+                        break;
+		case "5": {query_select = query5[rand.nextInt(query5.length)];}
+                        break;
+                case "6": {query_select = query6[rand.nextInt(query6.length)];}
+                        break;
+                case "7": {query_select = query7[rand.nextInt(query7.length)];}
+                        break;
+                case "8": {query_select = query8[rand.nextInt(query8.length)];}
+                        break;
+		case "9": {query_select = query9[rand.nextInt(query9.length)];}
+                        break;
+                case "10": {query_select = query10[rand.nextInt(query10.length)];}
+                        break;
+                case "11": {query_select = query11[rand.nextInt(query11.length)];}
+                        break;
+                case "12": {query_select = query12[rand.nextInt(query12.length)];}
+                        break;
+                case "13": {query_select = query13[rand.nextInt(query13.length)];}
+                        break;
+                case "14": {query_select = query14[rand.nextInt(query14.length)];}
+                        break;
+                case "15": {query_select = query15[rand.nextInt(query15.length)];}
+                        break;
+                case "16": {query_select = query16[rand.nextInt(query16.length)];}
+                        break;
+		case "17": {query_select = query17[rand.nextInt(query17.length)];}
+                        break;
+                case "18": {query_select = query18[rand.nextInt(query18.length)];}
+                        break;
+                case "19": {query_select = query19[rand.nextInt(query19.length)];}
+                        break;
+                case "20": {query_select = query20[rand.nextInt(query20.length)];}
+                        break;
+                case "21": {query_select = query21[rand.nextInt(query21.length)];}
+                        break;
+                case "22": {query_select = query22[rand.nextInt(query22.length)];}
+                        break;
+		default : {query_select = query1[0];}
+                        break;
+	}
+	return query_select;
+    }
+
     public static double sizeDataset(String dataset, String Size_tpch){
         double size = 0;
         if (Size_tpch.contains("1000m")){
             switch (dataset) {
             case "nation":
                 {
-                size = 240.1;
+                size = 0.0022;
                 }
                 break;
             case "region":
                 {
-                size = 240.1;
+                size = 0.000389;
                 }
                 break;
             case "part":
                 {
-                size = 26;
+                size = 23;
                 }
                 break;
             case "supplier":
                 {
-                size = 2.8;
+                size = 1.3;
                 }
                 break;
             case "partsupp":
                 {
-                size = 240.1;
+                size = 113.5;
                 }
                 break;
             case "customer":
                 {
-                size = 23;
+                size = 23.2;
                 }
                 break; 
             case "orders":
                 {
-                size = 172;
+                size = 164;
                 }
                 break;
             case "lineitem":
                 {
-                size = 843;
+                size = 724.7;
                 }
                 break; 
             default:
-                size = 240.1;
+                size = 0;
                 break;    
             }
         }
@@ -255,27 +436,27 @@ public class testQueryPlan {
                         switch (dataset) {
                 case "nation":
                     {
-                    size = 240.1;
+                    size = 0.0022;
                     }
                     break;
                 case "region":
                     {
-                    size = 240.1;
+                    size = 0.000389;
                     }
                     break;
                 case "part":
                     {
-                    size = 2.6;
+                    size = 2.3;
                     }
                     break;
                 case "supplier":
                     {
-                    size = 2.8;
+                    size = 0.1364;
                     }
                     break;
                 case "partsupp":
                     {
-                    size = 240.1;
+                    size = 11;
                     }
                     break;
                 case "customer":
@@ -285,16 +466,16 @@ public class testQueryPlan {
                     break; 
                 case "orders":
                     {
-                    size = 17;
+                    size = 16.1;
                     }
                     break;
                 case "lineitem":
                     {
-                    size = 83;
+                    size = 70.8;
                     }
                     break; 
                 default:
-                    size = 240.1;
+                    size = 0;
                     break;    
                     }
 
@@ -342,7 +523,7 @@ public class testQueryPlan {
                     }
                     break; 
                 default:
-                    size = 240.1;
+                    size = 0;
                     break;    
                     }
 

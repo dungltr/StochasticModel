@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package IRES;
-
+////////////////////////////////////////////////////////////////////////////////
 import static Algorithms.Algorithms.estimateCostValue;
 import Algorithms.testWriteMatrix2CSV;
 import LibraryIres.Move_Data;
@@ -327,7 +327,7 @@ public class runWorkFlowIRES {
                 break;
             default:                
                 break;
-        }       
+        }
     }
     public void createDataMove2 (Move_Data Data, String SQL, YarnValue yarn) throws Exception {
         String NameOp = Nameop(Data);
@@ -349,8 +349,11 @@ public class runWorkFlowIRES {
                     }
                 else if (Data.get_To().toLowerCase().contains("hive"))
                     {   
-                        create_Data_SQL_Hive(Data,SQL); 
-                        create_Data_SQL_Hive_remote(Data,SQL);
+                        //create_Data_SQL_Hive(Data,SQL); 
+                        //create_Data_SQL_Hive_remote(Data,SQL);
+			create_Data_Hive_Hive_remote(Data, SQL);
+			create_Remote_Hive_CSV(Data,SQL);
+			create_SQL_Hive(Data, SQL);
                     }                    
                 }
                 break;
@@ -401,6 +404,17 @@ public class runWorkFlowIRES {
             sh = script.top_sh(Data) + script.HIVE2CSV_remote() + script.CSV2Posgres() + script.Postgres_SQL(SQL) + script.bottom_sh();
         createfile(OperatorFolder + "/" + NameOp, NameOp + ".sh", sh);
     }
+public void create_Data_Hive_Hive_remote(Move_Data Data, String SQL) {//In, String DatabaseIn, String SchemaIn, String From, String To, String DataOut$
+        String NameOp = Nameop(Data);
+        Script script = new Script();       
+        String sh = "";
+        if (Data.get_Operator().contains("TPCH"))
+            sh = script.top_sh(Data) + script.HIVE2CSV_remote() + script.CSV2HDFS() + script.HDFS2Hive() + script.TPCH_Hive_SQL(Data,SQL) + script.bottom_sh();
+        else 
+            sh = script.top_sh(Data) + script.HIVE2CSV_remote() + script.CSV2HDFS() + script.HDFS2Hive() + script.Hive_SQL(Data,SQL) + script.bottom_sh();
+        createfile(OperatorFolder + "/" + NameOp, NameOp + ".sh", sh);
+    }
+
         public void create_Data_Postgres_Postgres_remote(Move_Data Data, String SQL) {//In, String DatabaseIn, String SchemaIn, String From, String To, String DataOut, String DatabaseOut) {
         String NameOp = Nameop(Data);
         Script script = new Script();       
@@ -496,7 +510,7 @@ public class runWorkFlowIRES {
     public void create_Data_SQL_Hive_remote(Move_Data Data, String SQL){
         String NameOp = Nameop(Data);
         Script script = new Script();
-        String sh = script.top_sh(Data) + script.Hive_SQL_remote(Data, SQL) + script.bottom_sh();
+        String sh = script.top_sh(Data) + script.HIVE2CSV_remote() + script.bottom_sh();//Hive_SQL_remote(Data, SQL) + script.bottom_sh();
         createfile(OperatorFolder + "/" + NameOp, NameOp + ".sh", sh);
         createfile(OperatorFolder + "/" + NameOp, NameOp + ".sql", SQL);       
     }
@@ -539,6 +553,12 @@ public class runWorkFlowIRES {
         createfile(OperatorFolder + "/" + NameOp, NameOp + ".sql", SQL);
         
     }
+    public void create_SQL_Hive(Move_Data Data, String SQL){
+        String NameOp = Nameop(Data);
+        createfile(OperatorFolder + "/" + NameOp, NameOp + ".sql", SQL);
+        
+    }
+
     public static String Nameop(Move_Data Data){
         String NameOp = Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To();
         return NameOp;

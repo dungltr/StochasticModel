@@ -170,7 +170,7 @@ public class Script {
 "	mkdir -p $BASE_IN/$TABLE\n" +
 "	chmod -R a+wrx $BASE_IN/tmp\n" +
 "else\n" +
-"	rm /mnt/Data/tmp/$TABLE/*\n" +
+"	rm $BASE_IN/$TABLE/*\n" +
 "fi\n" +
 "ssh -i $key $username@$master 'bash -s' < $OperatorDirectory/$NameOpRemote \n"+
 "scp -i $key $username@$master:$BASE_OUT/$TABLE/$TABLE.csv $BASE_IN/$TABLE/$TABLE.csv \n"+
@@ -196,7 +196,7 @@ public class Script {
         String CSV2HDFS = "echo -e \"Uploading $TABLE.csv to HDFS\"\n" +
 "$HADOOP_HOME/bin/hdfs dfs -rm -r $HDFS/$TABLE\n" +
 "$HADOOP_HOME/bin/hdfs dfs -mkdir $HDFS/$TABLE\n" +
-"$HADOOP_HOME/bin/hdfs dfs -copyFromLocal /mnt/Data/tmp/$TABLE/$TABLE.csv $HDFS/$TABLE\n";               
+"$HADOOP_HOME/bin/hdfs dfs -copyFromLocal $BASE_IN/$TABLE/$TABLE.csv $HDFS/$TABLE\n";               
         return CSV2HDFS;
     }
     public String HDFS2Parquet(Move_Data Data) {
@@ -219,7 +219,7 @@ public class Script {
 "psql -U "+username+" -d $DATABASE_OUT -c \"DROP TABLE IF EXISTS $TABLE_OUT;\"\n" +
 "psql -U "+username+" -d $DATABASE_OUT -c \"CREATE TABLE IF NOT EXISTS $TABLE_OUT $SCHEMA;\"\n" +
 "psql -U "+username+" -d $DATABASE_OUT -c \"\\COPY $TABLE_OUT FROM '$BASE_IN/$TABLE/$TABLE.csv' WITH DELIMITER AS '|';\"\n" +
-//"SQL_CSV2Posgres=\"DROP TABLE IF EXISTS $TABLE_OUT; CREATE TABLE IF NOT EXISTS $TABLE_OUT $SCHEMA; COPY $TABLE_OUT FROM '/mnt/Data/tmp/$TABLE/$TABLE.csv' WITH DELIMITER AS '|';\"\n" +
+//"SQL_CSV2Posgres=\"DROP TABLE IF EXISTS $TABLE_OUT; CREATE TABLE IF NOT EXISTS $TABLE_OUT $SCHEMA; COPY $TABLE_OUT FROM '$BASE_IN/$TABLE/$TABLE.csv' WITH DELIMITER AS '|';\"\n" +
 //"#rm /mnt/Data/tmp/$TABLE_OUT.csv\n" +
 //"#rm /mnt/Data/tmp/$TABLE.csv\n" +                
                 
@@ -248,7 +248,7 @@ public class Script {
 "$HADOOP_HOME/bin/hdfs dfs -rm -r $HDFS/$TABLE\n" +                
 "#rm /mnt/Data/tmp/$TABLE_OUT.csv\n" +
 "#rm /mnt/Data/tmp/$TABLE.csv\n" +                
-"rm -r /mnt/Data/tmp/$TABLE\n" + "\n";
+"rm -r $BASE_IN/$TABLE\n" + "\n";
         return HDFS2Hive;
     }
     public String Parquet2CSV(Move_Data Data) {
@@ -298,6 +298,14 @@ public class Script {
     public String Hive_SQL(Move_Data Data, String Hive_SQL){
         String username = System.getProperty("user.name");        
         String SQL = "$HIVE_HOME/bin/hive -e \"USE "+Data.get_DatabaseIn()+";"+Hive_SQL+"\"\n";
+        if ("".equals(Hive_SQL))
+        return "";
+        else return SQL;
+    }
+    public String TPCH_Hive_SQL(Move_Data Data, String Hive_SQL){
+        String username = System.getProperty("user.name");        
+        String NameOp = Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To();
+	String SQL = "$HIVE_HOME/bin/hive -e \"USE "+Data.get_DatabaseIn()+";"+Hive_SQL+"\"\n";
         if ("".equals(Hive_SQL))
         return "";
         else return SQL;

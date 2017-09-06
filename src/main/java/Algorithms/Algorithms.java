@@ -545,7 +545,7 @@ public class Algorithms {
         updateParameter(fileParameter,B);    
         return estimateCurrentCostValue(X, B);
     }
-    public static void mainIRES(Move_Data Data, String SQL, YarnValue yarnValue, double TimeOfDay, double[] size ) throws Exception{
+    public static void mainIRES(Move_Data Data, String SQL, YarnValue yarnValue, double TimeOfDay, double[] size, String KindOfRunning ) throws Exception{
         String IRES_HOME = new App().readhome("IRES_HOME");       
         String IRES_library = IRES_HOME+"/asap-platform/asap-server";    
         String OperatorFolder = IRES_library+"/target/asapLibrary/operators/";
@@ -565,7 +565,7 @@ public class Algorithms {
         String NameOfRealValue = delay_ys+"realValue";
         
         parameter = directory + "/"+delay_ys+"Parameter.csv";
-        Error = directory + "/error_"+delay_ys+ Data.get_Operator()+ ".csv";
+        Error = directory + "/error_"+delay_ys+ "_" + KindOfRunning + Data.get_Operator()+ ".csv";
         
         estimate = directory + "/"+delay_ys+"Estimate.csv";
         String NameOfEstimateValue = delay_ys+"Estimate";
@@ -651,7 +651,7 @@ public class Algorithms {
     public static void setup(Move_Data Data, YarnValue yarnValue, double[] size, String Size_tpch, double TimeOfDay) throws Exception {        
         runWorkFlowIRES IRES = new runWorkFlowIRES(); 
         int numberParameter = size.length + 1;
-        String[] randomQuery = testQueryPlan.createRandomQuery();
+        String[] randomQuery = testQueryPlan.createRandomQuery("",Size_tpch);
         
         double[] size_random = TPCHQuery.calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch);
         double[] yarn_random = testQueryPlan.createRandomYarn();
@@ -675,7 +675,7 @@ public class Algorithms {
         for (i = 0; i < size.length+2; i++)
                 {   System.out.println("\nTest Time:"+i+"--------------------------------------------------------");
                     TimeOfDay = 24*Math.random();
-                    randomQuery = testQueryPlan.createRandomQuery();
+                    randomQuery = testQueryPlan.createRandomQuery("",Size_tpch);
                     size_random = TPCHQuery.calculateSize(randomQuery,Data.get_From(), Data.get_To(),Size_tpch);
                     IRES.createDatasetMove_Hive_Postgres(Data, SQL);//createDatasetMove(Data, SQL);
                     IRES.createDataMove2(Data, SQL, yarnValue);                    

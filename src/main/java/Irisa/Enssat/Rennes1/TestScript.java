@@ -64,7 +64,8 @@ public class TestScript {
     public static void testall() throws Exception{
         double TimeOfDay = 24.00*Math.random();
         Scanner in = new Scanner(System.in);
-	        
+	Console console = System.console();
+	String KindOfRunning = KindRunning(console.readLine("Kind of running (a-training; b-Testing): ")); 
         System.out.printf("How many operators you want to process(default = 1):  ");
         int k = 1;
         try
@@ -116,14 +117,14 @@ public class TestScript {
                 //TPCHQuery.TPCH_Hive_Postgres(TimeOfDay,"", "");
 		if (call[j][6].equals("no")) TimeOfDay_tmp = TimeOfDay/24;
 		else TimeOfDay_tmp = TimeOfDay;
-                TPCH(TimeOfDay_tmp,call[j]);
+                TPCH(TimeOfDay_tmp,call[j], KindOfRunning);
             }
                 
         }       
     }
-    public static void TPCH(double TimeOfDay, String[] call) throws Exception{
+    public static void TPCH(double TimeOfDay, String[] call, String KindOfRunning) throws Exception{
         if (call[0]=="IRES")
-            TPCHQuery.TPCH(TimeOfDay, call[1], call[2], call[3], call[4]);
+            TPCHQuery.TPCH(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
         else TPCHStandalone.TPCH_Standalone(TimeOfDay, call[1], call[2], call[3], call[4]);
         
     }
@@ -132,6 +133,12 @@ public class TestScript {
         else if (Kind.toLowerCase().contains("b")) return "Standalone";
             else
                 return "IRES";
+    }
+    public static String KindRunning(String KindOfRunning){
+        if (KindOfRunning.toLowerCase().contains("a")) return "training";
+        else if (KindOfRunning.toLowerCase().contains("b")) return "testing";
+            else
+                return "training";
     }
     public static String DbCheck(String DB){
         if (DB.toLowerCase().contains("tpch")) return "tpch";
