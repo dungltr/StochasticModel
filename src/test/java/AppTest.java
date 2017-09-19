@@ -92,6 +92,9 @@ public class AppTest{
     static String ASAP_HOME = IRES_HOME;
     static String IRES_library = ASAP_HOME+"/asap-platform/asap-server";
     static String node_pc = new App().readhome("NODE_PC");
+    static String test = new App().readhome("TEST");
+    static String training = new App().readhome("TRAINING");
+    static String testing = new App().readhome("TESTING");
     @BeforeClass
     /**
     * Start up the asap-server before executing the unit tests.
@@ -129,9 +132,9 @@ public class AppTest{
     @Test
     public void testConvert_IRES() throws Exception {
         createProperties();
-        String file_test = "/home/ubuntu/test.csv";
-        String training_file = "/home/ubuntu/no_delayrealValue.csv";
-        String testing_file = "/home/ubuntu/newValue.csv";
+        String file_test = test;
+        String training_file = training;
+        String testing_file = testing;
         LinearRegressionManual.testLinearRegression(file_test);
         LinearRegressionManual.main_test(training_file,testing_file);
 
