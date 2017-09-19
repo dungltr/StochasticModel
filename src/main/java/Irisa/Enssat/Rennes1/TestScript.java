@@ -125,7 +125,7 @@ public class TestScript {
     public static void TPCH(double TimeOfDay, String[] call, String KindOfRunning) throws Exception{
         if (call[0]=="IRES")
             TPCHQuery.TPCH(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
-        else TPCHStandalone.TPCH_Standalone(TimeOfDay, call[1], call[2], call[3], call[4]);
+        else TPCHStandalone.TPCH_Standalone(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
         
     }
     public static String KindCheck(String Kind){

@@ -78,7 +78,7 @@ public class testCreateDatabase {
         if (!Files.exists(filePathRealValue))
         {   IRES.createOperatorMove(Data, SQL, 0);            
 //            Files.createFile(filePathRealValue);
-            Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay);
+            Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,"");
         }
         Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay,size,"");
     }
@@ -132,7 +132,7 @@ public class testCreateDatabase {
         if (!Files.exists(filePathRealValue))
         {   IRES.createOperatorMove(Data, SQL, 0);            
 //            Files.createFile(filePathRealValue);
-            Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay);
+            Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,"");
         }
         Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay,size,"");
     }

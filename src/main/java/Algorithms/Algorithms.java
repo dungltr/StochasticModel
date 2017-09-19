@@ -11,6 +11,7 @@ import static Algorithms.testScilab.invert;
 import static Algorithms.testScilab.multiply;
 import static Algorithms.testScilab.printArray;
 import static Algorithms.testScilab.transpose;
+import static Algorithms.LinearRegression.*;
 import static IRES.TPCHQuery.calculateSize;
 import static IRES.runWorkFlowIRES.Nameop;
 import static IRES.testQueryPlan.createRandomQuery;
@@ -33,7 +34,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import static org.apache.commons.math.util.MathUtils.round;
-
 /**
  *
  * @author letrungdung
@@ -146,10 +146,16 @@ public class Algorithms {
             one[i] = 1;
         return one;    
     }
-    public static int estimateSizeOfMatrix(int Max_Line, int numberOfVariable, String directory, double R_2_limit, String delay) throws IOException {
-        String fileRealValue = directory + delay + "realValue.csv";
-        String fileParameter = directory + delay + "Parameter.csv";
-        String fileEstimate = directory + delay + "Estimate.csv";
+    public static String fileName (String directory, String delay, String name, String KindOfRunning){
+	return directory +"/"+ delay +"_"+ KindOfRunning +"_"+ name + ".csv";
+    }
+    public static String NameOfFileName(String delay, String name, String KindOfRunning){
+	return delay+"_"+KindOfRunning+"_"+name;
+    }
+    public static int estimateSizeOfMatrix(int Max_Line, int numberOfVariable, String directory, double R_2_limit, String delay, String KindOfRunning) throws IOException {
+        String fileRealValue = fileName(directory,delay,"realValue",KindOfRunning);
+        String fileParameter = fileName(directory,delay,"parameter",KindOfRunning);
+        String fileEstimate = fileName(directory,delay,"estimate",KindOfRunning);
         int Max_Estimate = CsvFileReader.count(fileEstimate)-1;
         int MaxOfLine;
         if (Max_Estimate < Max_Line)
@@ -560,21 +566,22 @@ public class Algorithms {
         directory = testWriteMatrix2CSV.getDirectory(Data);
         String delay_ys = "";
 	if (TimeOfDay<1) delay_ys = "no_delay";
-	
-        realValue = directory + "/"+delay_ys+"realValue.csv";
-        String NameOfRealValue = delay_ys+"realValue";
-        
-        parameter = directory + "/"+delay_ys+"Parameter.csv";
-        Error = directory + "/error_"+delay_ys+ "_" + KindOfRunning + Data.get_Operator()+ ".csv";
-        
-        estimate = directory + "/"+delay_ys+"Estimate.csv";
-        String NameOfEstimateValue = delay_ys+"Estimate";
-        
 
-       
-        int Max = CsvFileReader.count(realValue)-1;
+	realValue = fileName(directory,delay_ys,"realValue",KindOfRunning);
+        String NameOfRealValue = NameOfFileName(delay_ys,"realValue",KindOfRunning);
         
-//        int numerOfVariable = numberParameter-1;
+        parameter = fileName(directory,delay_ys,"parameter",KindOfRunning);
+
+        Error = fileName(directory,delay_ys,"error",KindOfRunning);
+        
+        estimate = fileName(directory,delay_ys,"estimate",KindOfRunning);
+        String NameOfEstimateValue = NameOfFileName(delay_ys,"estimate",KindOfRunning);
+        
+	int Max = 0;
+	Path filePathRealValue = Paths.get(realValue);
+        if (Files.exists(filePathRealValue))
+        Max = CsvFileReader.count(realValue)-1;
+        
         double R_2_limit = 0.8;////////////////////////////////////////////////////////////////////
         int sizeOfValue;
         
@@ -593,24 +600,26 @@ public class Algorithms {
         String DataOut = Data.get_DataOut();
         double Numberuser = 100;
 
-  
-        
-        sizeOfValue = estimateSizeOfMatrix(Max, numerOfVariable, directory, R_2_limit, delay_ys);
+        sizeOfValue = estimateSizeOfMatrix(Max, numerOfVariable, directory, R_2_limit, delay_ys, KindOfRunning);
 
         System.out.println("\nReal Running:--------------------------------------------------------"+
-                "\n"+Data.get_DataIn()+"\n"+yarnValue.toString());
-        
-              
+                "\n"+Data.get_DataIn()+"\n"+yarnValue.toString());              
         double[] StochasticValue = setupStochasticValue(size);
-        costEstimateValue = estimateCostValue(sizeOfValue, realValue, parameter, StochasticValue, R_2_limit);
+//	String test_file = "/home/ubuntu/test.csv";
+//	LinearRegression.testLinearRegression(test_file);
+//	double costEstimateValue2 = batchgradientdescent.estimateGradient(sizeOfValue, realValue, parameter, StochasticValue, R_2_limit);
+//        System.out.println("\n Estimate Value of Batch Gradient Descent is: " + costEstimateValue2);
+	costEstimateValue = estimateCostValue(sizeOfValue, realValue, parameter, StochasticValue, R_2_limit);
         IRES.createDatasetMove_Hive_Postgres(Data, SQL);//createDatasetMove(Data, SQL);
         IRES.createOperatorMove(Data, SQL, costEstimateValue);
         IRES.createDataMove2(Data, SQL, yarnValue);
-         
+        
+	Path filePathEstimateValue = Paths.get(estimate); 
+        if (!Files.exists(filePathEstimateValue))
+            Files.createFile(filePathEstimateValue); 
         testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size, costEstimateValue)), NameOfEstimateValue); 
 
         double Time_Cost = IRES.runWorkflow(Data, NameOfWorkflow, policy);
-        //double delay = SimulateStochastic.waiting(Numberuser,TimeOfDay);
         long delay = SimulateStochastic.TimeWaiting(Numberuser,TimeOfDay)/1000;
         Time_Cost = Time_Cost + delay;        
         testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), NameOfRealValue);
@@ -619,8 +628,10 @@ public class Algorithms {
         System.out.println("\n Real Value without Delay is: " + Double.toString(Time_Cost-delay));
         System.out.println("\n Delay Value is: " + delay); 
         
-        reportResult.reportError(Error, setupStochasticValue(setupValue(size, Time_Cost)), costEstimateValue);
-        reportResult.report(sizeOfValue, realValue, estimate, Error);
+        reportResult.reportError(Error, setupStochasticValue(setupValue(size, Time_Cost)), costEstimateValue, sizeOfValue);
+//        reportResult.report(sizeOfValue, realValue, estimate, Error);
+        
+//        double costEstimateValue2 = batchgradientdescent.estimateGradient(sizeOfValue, realValue, parameter, StochasticValue, R_2_limit);
         //Thread.sleep(1000);
 //        OptimizeWorkFlow Optimize = new OptimizeWorkFlow();
 //        Optimize.OptimizeWorkFlow(Data, policy);
@@ -648,7 +659,7 @@ public class Algorithms {
         return Parameter;
     }
             
-    public static void setup(Move_Data Data, YarnValue yarnValue, double[] size, String Size_tpch, double TimeOfDay) throws Exception {        
+    public static void setup(Move_Data Data, YarnValue yarnValue, double[] size, String Size_tpch, double TimeOfDay, String KindOfRunning) throws Exception {        
         runWorkFlowIRES IRES = new runWorkFlowIRES(); 
         int numberParameter = size.length + 1;
         String[] randomQuery = testQueryPlan.createRandomQuery("",Size_tpch);
@@ -667,9 +678,10 @@ public class Algorithms {
         String directory = testWriteMatrix2CSV.getDirectory(Data);
         String delay_ys = "";
 	if (TimeOfDay<1) delay_ys = "no_delay";
-        String NameOfRealValue = delay_ys+"realValue";
-        String NameOfParameter = delay_ys+"Parameter";
-        String NameOfEstimateValue = delay_ys+"Estimate";
+        String NameOfRealValue = NameOfFileName(delay_ys,"realValue",KindOfRunning);
+	String NameOfParameter = NameOfFileName(delay_ys,"parameter",KindOfRunning);
+        String NameOfEstimateValue = NameOfFileName(delay_ys,"estimate",KindOfRunning);
+
         double[] Parameter = initParamter(numberParameter);
 
         for (i = 0; i < size.length+2; i++)

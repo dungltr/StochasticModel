@@ -28,7 +28,7 @@ public class TPCHStandalone {
 //    private static int numberOfSize = 3;
 //    private static int numberOfSize_Hive_Postgres = 6;
 //    private static int numberOfSize_Hive_Hive = 2;
-    public static void TPCH_Standalone_Hive_Postgres(double TimeOfDay) throws Exception {
+    public static void TPCH_Standalone_Hive_Postgres(double TimeOfDay, String KindOfRunning) throws Exception {
         String Size_tpch = "100m";
         String database = "tpch";
         String SQL_folder = new App().readhome("SQL");
@@ -86,11 +86,11 @@ public class TPCHStandalone {
         StandaloneAlgorithms Algor = new StandaloneAlgorithms();
         if (!Files.exists(filePathRealValue))
         {            
-            Algor.setup(Data,yarnValue,size,Size_tpch,TimeOfDay);
+            Algor.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,KindOfRunning);
         }
-        Algor.mainStandalone(Data, SQL, yarnValue, TimeOfDay,size);       
+        Algor.mainStandalone(Data, SQL, yarnValue, TimeOfDay,size, KindOfRunning);       
     } 
-    public static void TPCH_Standalone_Hive_Hive(double TimeOfDay) throws Exception {
+    public static void TPCH_Standalone_Hive_Hive(double TimeOfDay, String KindOfRunning) throws Exception {
         String Size_tpch = "100m";
         String SQL_folder = new App().readhome("SQL");
         String[] randomQuery = createRandomQuery("",Size_tpch);
@@ -147,11 +147,11 @@ public class TPCHStandalone {
         StandaloneAlgorithms Algor = new StandaloneAlgorithms();
         if (!Files.exists(filePathRealValue))
         {            
-            Algor.setup(Data,yarnValue,size,Size_tpch,TimeOfDay);
+            Algor.setup(Data,yarnValue,size,Size_tpch,TimeOfDay, KindOfRunning);
         }
-        Algor.mainStandalone(Data, SQL, yarnValue, TimeOfDay,size);        
+        Algor.mainStandalone(Data, SQL, yarnValue, TimeOfDay,size,KindOfRunning);        
     }  
-    public static void TPCH_Standalone_Postgres_Postgres(double TimeOfDay) throws Exception {
+    public static void TPCH_Standalone_Postgres_Postgres(double TimeOfDay, String KindOfRunning) throws Exception {
         String Size_tpch = "100m";
         String database = "tpch";
         String SQL_folder = new App().readhome("SQL");
@@ -209,11 +209,11 @@ public class TPCHStandalone {
         StandaloneAlgorithms Algor = new StandaloneAlgorithms();
         if (!Files.exists(filePathRealValue))
         {            
-            Algor.setup(Data,yarnValue,size,Size_tpch,TimeOfDay);
+            Algor.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,KindOfRunning);
         }
-        Algor.mainStandalone(Data, SQL, yarnValue, TimeOfDay,size);        
+        Algor.mainStandalone(Data, SQL, yarnValue, TimeOfDay,size,KindOfRunning);        
     }
-    public static void TPCH_Standalone(double TimeOfDay, String DB, String Size, String from, String to) throws Exception {
+    public static void TPCH_Standalone(double TimeOfDay, String DB, String Size, String from, String to, String KindOfRunning) throws Exception {
         String Size_tpch = Size;
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
@@ -272,8 +272,8 @@ public class TPCHStandalone {
         StandaloneAlgorithms Algor = new StandaloneAlgorithms();
         if (!Files.exists(filePathRealValue))
         {            
-            Algor.setup(Data,yarnValue,size,Size_tpch,TimeOfDay);
+            Algor.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,KindOfRunning);
         }
-        Algor.mainStandalone(Data, SQL, yarnValue, TimeOfDay,size);       
+        Algor.mainStandalone(Data, SQL, yarnValue, TimeOfDay,size,KindOfRunning);       
     }
 }

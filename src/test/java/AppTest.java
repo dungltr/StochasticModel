@@ -3,6 +3,8 @@ import Algorithms.Algorithms;
 import static Algorithms.Algorithms.estimateCostValue;
 import static Algorithms.Algorithms.estimateSizeOfMatrix;
 import Algorithms.CreateDatabase;
+import Algorithms.LinearRegression;
+import Algorithms.LinearRegressionManual;
 import Algorithms.Writematrix2CSV;
 import Algorithms.testScilab;
 import Algorithms.testWriteMatrix2CSV;
@@ -127,9 +129,14 @@ public class AppTest{
     @Test
     public void testConvert_IRES() throws Exception {
         createProperties();
+        String file_test = "/home/ubuntu/test.csv";
+        String training_file = "/home/ubuntu/no_delayrealValue.csv";
+        String testing_file = "/home/ubuntu/newValue.csv";
+        LinearRegressionManual.testLinearRegression(file_test);
+        LinearRegressionManual.main_test(training_file,testing_file);
 
     }
-    @Test
+//    @Test
     public void testall() throws Exception{
         double TimeOfDay = 24.00*Math.random();
         int times = 0;
@@ -146,13 +153,13 @@ public class AppTest{
 //            testQueryPlan.testQueryPlanIRES_Postgres(TimeOfDay);        
 //        setup();
 //        TPCHQuery.TPCH_Hive_Postgres(TimeOfDay, "", "");
-        TPCHQuery.TPCH_Hive_Postgres(TimeOfDay, "", "");
+//        TPCHQuery.TPCH_Hive_Postgres(TimeOfDay, "", "");
 //        tearDown();
 //        setup();
 //        TPCHQuery.TPCH_Hive_Hive(TimeOfDay, "lineitem");
 //        tearDown();
 //        setup();
-            TPCHQuery.TPCH_Postgres_Postgres(TimeOfDay, "lineitem");
+//            TPCHQuery.TPCH_Postgres_Postgres(TimeOfDay, "lineitem");
 //        tearDown();
 //        TPCHStandalone.TPCH_Standalone_Hive_Hive(TimeOfDay); 
 //        TPCHStandalone.TPCH_Standalone_Hive_Postgres(TimeOfDay); 

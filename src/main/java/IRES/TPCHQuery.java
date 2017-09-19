@@ -97,7 +97,7 @@ public class TPCHQuery {
         if (!Files.exists(filePathRealValue))
         {   IRES.createOperatorMove(Data, SQL, 0);            
 //            Files.createFile(filePathRealValue);
-            Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay);
+            Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,KindOfRunning);
         }
         Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay,size,KindOfRunning);
     }
@@ -162,7 +162,7 @@ public class TPCHQuery {
         if (!Files.exists(filePathRealValue))
         {   IRES.createOperatorMove(Data, SQL, 0);            
 //            Files.createFile(filePathRealValue);
-            Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay);
+            Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,KindOfRunning);
         }
         Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
     }
@@ -227,7 +227,7 @@ public class TPCHQuery {
         if (!Files.exists(filePathRealValue))
         {   IRES.createOperatorMove(Data, SQL, 0);            
 //            Files.createFile(filePathRealValue);
-            Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay);
+            Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,KindOfRunning);
         }
         Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
     }
@@ -261,8 +261,11 @@ public class TPCHQuery {
         String SQL_fileName = ""; 
         if (KindOfRunning.equals("training"))
 	SQL_fileName = SQL_folder + randomQuery[2];
-        else SQL_fileName = SQL_folder + randomQuery[2]; 
-        String SQL = "DROP TABLE IF EXISTS "+ randomQuery[2]+"_"+From+"_"+To+"; "
+        else {
+		if (To.toLowerCase().equals("postgres")) SQL_fileName = SQL_folder + randomQuery[2];
+		else SQL_fileName = SQL_folder+randomQuery[2]; 
+        }
+	String SQL = "DROP TABLE IF EXISTS "+ randomQuery[2]+"_"+From+"_"+To+"; "
                 + "CREATE TABLE "+ randomQuery[2]+"_"+From+"_"+To+" "
                 + "AS " 
                 + readSQL(SQL_fileName);
@@ -291,16 +294,16 @@ public class TPCHQuery {
         String realValue, parameter, estimate, directory;
         directory = testWriteMatrix2CSV.getDirectory(Data);
         String delay_ys = "";
-	if (TimeOfDay<1) delay_ys = "no_delay";
-        realValue = directory + "/"+delay_ys+"realValue.csv";
-        parameter = directory + "/"+delay_ys+"Parameter.csv";
-        estimate = directory + "/"+delay_ys+"Estimate.csv";
+	if (TimeOfDay<1) delay_ys = "no_delay_";
+        realValue = directory + "/"+delay_ys+KindOfRunning+"_realValue.csv";
+//        parameter = directory + "/"+delay_ys+"Parameter.csv";
+//        estimate = directory + "/"+delay_ys+"Estimate.csv";
         Path filePathRealValue = Paths.get(realValue); 
 
         if (!Files.exists(filePathRealValue))
         {   IRES.createOperatorMove(Data, SQL, 0);            
 //            Files.createFile(filePathRealValue);
-            Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay);
+            Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,KindOfRunning);
         }
         Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
     }    

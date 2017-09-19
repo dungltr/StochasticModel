@@ -83,7 +83,7 @@ public class testQueryPlan {
         if (!Files.exists(filePathRealValue))
         {   IRES.createOperatorMove(Data, SQL, 0);            
 //            Files.createFile(filePathRealValue);
-            Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay);
+            Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,"");
         }
         Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay,size,"");         
 //        }
@@ -147,7 +147,7 @@ public class testQueryPlan {
         if (!Files.exists(filePathRealValue))
         {   IRES.createOperatorMove(Data, SQL, 0);            
 //            Files.createFile(filePathRealValue);
-            Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay);
+            Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,"");
         }
         Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay,size,"");         
 //        }
@@ -194,19 +194,23 @@ public class testQueryPlan {
         double [] size = new double [dataset_move.length];
         int i = rand.nextInt(dataset_move.length);//rand.nextInt(4) + 6;//
         int j,k;
+	int [] SQLJoin2Table = {12,13,14,15,16,17,19,22};
 	double size_multi = 0;
 	String[] tmp = new String[4];       
         if (KindOfRunning.equals("testing")){
-	i = rand.nextInt(22);
-	String [] SliceArray = Checkquery(Integer.toString(i));
-        //String [] SliceArray = sliceArray(Checkquery(Integer.toString(i)),tmp[1]);
+	i = SQLJoin2Table[rand.nextInt(SQLJoin2Table.length)];
+	tmp[1] = dataset_move(Integer.toString(i));
+	//String [] SliceArray = Checkquery(Integer.toString(i));
+        String [] SliceArray = sliceArray(Checkquery(Integer.toString(i)),tmp[1]);
 	for (k = 0; k < SliceArray.length; k++)
 		size_multi = size_multi + testQueryPlan.sizeDataset(SliceArray[k],Size_tpch);
 	tmp[0] = Double.toString(size_multi);
 	System.out.println("Size of tables except:" + tmp[0]);
-        tmp[1] = dataset_move(Integer.toString(i));
-        tmp[2] = Integer.toString(i);
-        tmp[3] = SliceArray[rand.nextInt(SliceArray.length)];
+        //tmp[1] = dataset_move(Integer.toString(i));
+        tmp[2] = "tpch_query"+Integer.toString(i);
+        tmp[3] = SliceArray[0];
+	System.out.println("Table 1" + tmp[1]);
+	System.out.println("Table 2" + tmp[3]);
 	}
 	else{
 	tmp[0] = Double.toString(size[i]);

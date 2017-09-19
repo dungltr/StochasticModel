@@ -82,8 +82,15 @@
             <version>1.2</version>
             <scope>compile</scope>
         </dependency>
+<!--Weka-->
+        <dependency>
+    <groupId>nz.ac.waikato.cms.weka</groupId>
+    <artifactId>weka-stable</artifactId>
+    <version>3.6.6</version>
+        </dependency>
+
     </dependencies>
-        
+
     <name>TestPostgre_V9</name>
            
 <build>

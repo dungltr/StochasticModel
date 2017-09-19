@@ -279,7 +279,7 @@ public class Script {
     }
     public String Postgres_SQL(String postgres_SQL){
         String username = System.getProperty("user.name");
-        String SQL = "psql -U "+username+" -d $DATABASE -c \""+postgres_SQL+"\"\n";
+        String SQL = "psql -U "+username+" -d $DATABASE_OUT -c \""+postgres_SQL+"\"\n";
         if ("".equals(postgres_SQL))
         return "";
         else return SQL;
@@ -287,7 +287,8 @@ public class Script {
     public String TPCH_Postgres_SQL(Move_Data Data, String TPCH_SQL){
         String username = System.getProperty("user.name");
         String NameOp = Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To();
-        String SQL = "$POSTGRES_HOME/psql -U "+username+" -d $DATABASE -c \""+TPCH_SQL+"\"\n";// + 
+        //String SQL = "$POSTGRES_HOME/psql -U "+username+" -d $DATABASE_OUT -c \""+TPCH_SQL+"\"\n";// + 
+	String SQL = "psql -U "+username+" -d $DATABASE_OUT -c \""+TPCH_SQL+"\"\n";// + 
 //                "rm -r /mnt/Data/tmp/$TABLE\n"+ "\n";
 //        String SQL = "psql -U "+username+" -d $DATABASE -f "+directory_operator+NameOp+"/"+NameOp+".sql"+"\n";
         System.out.println("\n"+directory_operator+NameOp+"/"+TPCH_SQL);

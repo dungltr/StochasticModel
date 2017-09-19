@@ -58,13 +58,14 @@ public class reportResult {
        System.out.println("\nAverage value of Error Time is: "+averageError + " in " + numberOfError + " Sample");
        
     }
-    public static void reportError(String errorFile, double[] tmp, double costEstimateValue) throws IOException{
+    public static void reportError(String errorFile, double[] tmp, double costEstimateValue, int sizeOfValue) throws IOException{
         String ErrorFile = errorFile;
         Path filePath = Paths.get(ErrorFile);
         double[][] error = new double[1][tmp.length+2];
         for (int i = 0; i < tmp.length; i++) error[0][i] = tmp[i];
         error[0][tmp.length] = costEstimateValue;
-        error[0][tmp.length + 1] = tmp[tmp.length-1] - costEstimateValue;
+	error[0][tmp.length+1] = (double)(sizeOfValue);
+//        error[0][tmp.length + 1] = tmp[tmp.length-1] - costEstimateValue;
 //        if (!Files.exists(filePathError)) {
 //            Files.createFile(filePathError);
 //            }
@@ -76,7 +77,7 @@ public class reportResult {
                 String FILE_HEADER = "";
                 for (int i= 0; i < tmp.length-1; i++)
                 FILE_HEADER = FILE_HEADER + "Variable["+i+"]" + COMMA_DELIMITER;
-                FILE_HEADER = FILE_HEADER + "CostValue"+ COMMA_DELIMITER + "EstimateValue"+ COMMA_DELIMITER +"ErrorValue";
+                FILE_HEADER = FILE_HEADER + "CostValue"+ COMMA_DELIMITER + "EstimateValue"+ COMMA_DELIMITER +"SizeOfValue";
                 Writematrix2CSV.Writematrix2CSV(error, ErrorFile, FILE_HEADER);
                 }
             else {

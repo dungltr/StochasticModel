@@ -88,8 +88,14 @@ public class StandaloneAlgorithms {
             break;
         }       
         return actualTime;
+    }
+    public static String fileName (String directory, String delay, String name, String KindOfRunning){
+        return directory +"/"+ delay +"_"+ KindOfRunning +"_"+ name + ".csv";
+    }
+    public static String NameOfFileName(String delay, String name, String KindOfRunning){
+        return delay+"_"+KindOfRunning+"_"+name;
     }    
-    public void setup(Move_Data Data, YarnValue yarnValue, double[] size, String Size_tpch, double TimeOfDay) throws Exception {        
+    public void setup(Move_Data Data, YarnValue yarnValue, double[] size, String Size_tpch, double TimeOfDay, String KindOfRunning) throws Exception {        
         int numberParameter = size.length + 1;
         String[] randomQuery = testQueryPlan.createRandomQuery("",Size_tpch);
         double[] size_random = calculateSize(randomQuery, Data.get_From(), Data.get_To(),Size_tpch);
@@ -106,9 +112,9 @@ public class StandaloneAlgorithms {
         String directory = testWriteMatrix2CSV.getDirectory(Data);        
         String delay_ys = "";
         if (TimeOfDay<1) delay_ys = "no_delay";
-	String NameOfRealValue = delay_ys+"realValue";
-        String NameOfParameter = delay_ys+"Parameter";
-        String NameOfEstimateValue = delay_ys+"Estimate";
+	String NameOfRealValue = NameOfFileName(delay_ys,"realValue",KindOfRunning);
+        String NameOfParameter = NameOfFileName(delay_ys,"parameter",KindOfRunning);
+        String NameOfEstimateValue = NameOfFileName(delay_ys,"estimate",KindOfRunning);
         double[] Parameter = initParamter(numberParameter);
 
         for (i = 0; i< size.length+2; i++)
@@ -180,6 +186,7 @@ public class StandaloneAlgorithms {
                 break;
         }       
     } 
+
     public void create_Data_Hive_Postgres(Move_Data Data, String SQL) {//In, String DatabaseIn, String SchemaIn, String From, String To, String DataOut, String DatabaseOut) {
         String NameOp = Nameop(Data);
         StandaloneScript script = new StandaloneScript();       
@@ -329,7 +336,7 @@ public class StandaloneAlgorithms {
         return "Abstract_"+NameOp;        
     }
     
-    public void mainStandalone(Move_Data Data, String SQL, YarnValue yarnValue, double TimeOfDay, double[] size ) throws Exception{
+    public void mainStandalone(Move_Data Data, String SQL, YarnValue yarnValue, double TimeOfDay, double[] size, String KindOfRunning ) throws Exception{
 
 //        runWorkFlowIRES IRES = new runWorkFlowIRES();
         int numberParameter = size.length + 1;
@@ -340,14 +347,14 @@ public class StandaloneAlgorithms {
 	String delay_ys = "";
         if (TimeOfDay<1) delay_ys = "no_delay";
         
-        realValue = directory + "/"+delay_ys+"realValue.csv";
-        String NameOfRealValue = delay_ys+"realValue";
+        realValue = fileName(directory,delay_ys,"realValue",KindOfRunning);
+        String NameOfRealValue = NameOfFileName(delay_ys,"realValue",KindOfRunning);
         
-        parameter = directory + "/"+delay_ys+"Parameter.csv";
-        error = directory + "/error_"+delay_ys+ Data.get_Operator()+ ".csv";
+        parameter = fileName(directory,delay_ys,"parameter",KindOfRunning);
+        error = fileName(directory,delay_ys,"error",KindOfRunning);
         
-        estimate = directory + "/"+delay_ys+"Estimate.csv";
-        String NameOfEstimateValue = delay_ys+"Estimate";
+        estimate = fileName(directory,delay_ys,"estimate",KindOfRunning);
+        String NameOfEstimateValue = NameOfFileName(delay_ys,"estimate",KindOfRunning);
 
         int Max = CsvFileReader.count(realValue)-1;
         double R_2_limit = 0.8;
@@ -370,7 +377,7 @@ public class StandaloneAlgorithms {
 	//if (!Files.exists(realValue))            Files.createFile(realValue);
         //Path filePathRealValue = Paths.get(realValue);   
         
-        sizeOfValue = estimateSizeOfMatrix(Max, numerOfVariable, directory, R_2_limit, delay_ys);
+        sizeOfValue = estimateSizeOfMatrix(Max, numerOfVariable, directory, R_2_limit, delay_ys, KindOfRunning);
         System.out.println("\nReal Running:--------------------------------------------------------"+
                 "\n"+Data.get_DataIn()+"\n"+yarnValue.toString());
         double[] StochasticValue = setupStochasticValue(size);
@@ -387,7 +394,7 @@ public class StandaloneAlgorithms {
         System.out.println("\n Estimate Value is: " + costEstimateValue);
         System.out.println("\n Real Value is: " + Double.toString(Time_Cost-delay));
         System.out.println("\n Delay Value is: " + delay);       
-        reportResult.reportError(error, setupStochasticValue(setupValue(size, Time_Cost)), costEstimateValue);
+        reportResult.reportError(error, setupStochasticValue(setupValue(size, Time_Cost)), costEstimateValue,sizeOfValue);
         reportResult.report(sizeOfValue, realValue, estimate, error);
 
     } 
