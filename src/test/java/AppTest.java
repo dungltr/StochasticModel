@@ -135,8 +135,11 @@ public class AppTest{
         String file_test = test;
         String training_file = training;
         String testing_file = testing;
-        LinearRegressionManual.testLinearRegression(file_test);
-        LinearRegressionManual.main_test(training_file,testing_file);
+//        LinearRegressionManual.testLinearRegression(file_test);
+//        LinearRegressionManual.small_test(training_file,testing_file);
+//        LinearRegressionManual.main_test(training_file,testing_file);
+        LinearRegressionManual.test_minDataset(training_file,testing_file,0.8);
+//        Irisa.Enssat.Rennes1.TestScript.testall();
 
     }
 //    @Test

@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package Irisa.Enssat.Rennes1;
+import Algorithms.LinearRegressionManual;
 import IRES.TPCHQuery;
 import Standalone.TPCHStandalone;
 import com.sparkexample.App;
@@ -65,7 +66,7 @@ public class TestScript {
         double TimeOfDay = 24.00*Math.random();
         Scanner in = new Scanner(System.in);
 	Console console = System.console();
-	String KindOfRunning = KindRunning(console.readLine("Kind of running (a-training; b-Testing): ")); 
+	String KindOfRunning = KindRunning(console.readLine("Kind of running (a-Training; b-Testing; c-Predict): ")); 
         System.out.printf("How many operators you want to process(default = 1):  ");
         int k = 1;
         try
@@ -123,9 +124,16 @@ public class TestScript {
         }       
     }
     public static void TPCH(double TimeOfDay, String[] call, String KindOfRunning) throws Exception{
-        if (call[0]=="IRES")
-            TPCHQuery.TPCH(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
-        else TPCHStandalone.TPCH_Standalone(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
+        if ((KindOfRunning=="training")||(KindOfRunning=="testing")){
+            if (call[0]=="IRES")
+                TPCHQuery.TPCH(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
+            else TPCHStandalone.TPCH_Standalone(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
+        }
+        else 
+            if (KindOfRunning=="predict"){
+                LinearRegressionManual.TPCH(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
+            }
+        
         
     }
     public static String KindCheck(String Kind){
@@ -137,8 +145,8 @@ public class TestScript {
     public static String KindRunning(String KindOfRunning){
         if (KindOfRunning.toLowerCase().contains("a")) return "training";
         else if (KindOfRunning.toLowerCase().contains("b")) return "testing";
-            else
-                return "training";
+            else if (KindOfRunning.toLowerCase().contains("c")) return "predict";
+                else return "training";
     }
     public static String DbCheck(String DB){
         if (DB.toLowerCase().contains("tpch")) return "tpch";
