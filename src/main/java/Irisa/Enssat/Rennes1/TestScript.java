@@ -129,11 +129,11 @@ public class TestScript {
                 TPCHQuery.TPCH(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
             else TPCHStandalone.TPCH_Standalone(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
         }
-        else 
+        else {
             if (KindOfRunning=="predict"){
                 LinearRegressionManual.TPCH(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
             }
-        
+        }
         
     }
     public static String KindCheck(String Kind){
