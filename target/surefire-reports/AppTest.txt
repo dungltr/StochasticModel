@@ -1,4 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: AppTest
 -------------------------------------------------------------------------------
+<<<<<<< HEAD
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.155 sec
+=======
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.112 sec
+>>>>>>> ebdb8450290dde1d386e61da1ee4beca78da4506
