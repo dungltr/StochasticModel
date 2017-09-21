@@ -389,6 +389,55 @@ public class testQueryPlan {
 
     public static double sizeDataset(String dataset, String Size_tpch){
         double size = 0;
+	if (Size_tpch.contains("10000m")){
+            switch (dataset) {
+            case "nation":
+                {
+                size = 0.0022;
+                }
+                break;
+            case "region":
+                {
+                size = 0.000389;
+                }
+                break;
+            case "part":
+                {
+                size = 232.1;
+                }
+                break;
+            case "supplier":
+                {
+                size = 13.5;
+                }
+                break;
+            case "partsupp":
+                {
+                size = 113.5;
+                }
+                break;
+            case "customer":
+                {
+                size = 233.5;
+                }
+                break; 
+            case "orders":
+                {
+                size = 1600;
+                }
+                break;
+            case "lineitem":
+                {
+                size = 7200;
+                }
+                break; 
+            default:
+                size = 0;
+                break;    
+            }
+	}
+	else
+	{
         if (Size_tpch.contains("1000m")){
             switch (dataset) {
             case "nation":
@@ -488,12 +537,12 @@ public class testQueryPlan {
                         switch (dataset) {
                 case "nation":
                     {
-                    size = 24;
+                    size = 0.0022;
                     }
                     break;
                 case "region":
                     {
-                    size = 24;
+                    size = 0.000389;
                     }
                     break;
                 case "part":
@@ -534,20 +583,69 @@ public class testQueryPlan {
                 } 
         }
         }
+	}
         return size;
     } 
     public static double pageDataset(String dataset, String Size_tpch){
         double page = 0;
-        if (Size_tpch.contains("1000m")){
+	if (Size_tpch.contains("10000m")){
         switch (dataset) {
             case "nation":
                 {
-                page = 240.1;
+                page = 240.1;//no need
                 }
                 break;
             case "region":
                 {
-                page = 240.1;
+                page = 240.1;// no need
+                }
+                break;
+            case "part":
+                {
+                page = 40962;
+                }
+                break;
+            case "supplier":
+                {
+                page = 2.8;// not yet
+                }
+                break;
+            case "partsupp":
+                {
+                page = 8193;// not yet
+                }
+                break;
+            case "customer":
+                {
+                page = 35827;
+                }
+                break; 
+            case "orders":
+                {
+                page = 260912;
+                }
+                break;
+	    case "lineitem":
+                {
+                page = 1124542;
+                }
+                break; 
+            default:
+                page = 0;
+                break;    
+            }
+        }
+	else {
+        if (Size_tpch.contains("1000m")){
+        switch (dataset) {
+            case "nation":
+                {
+                page = 240.1;//no need
+                }
+                break;
+            case "region":
+                {
+                page = 240.1;//no need
                 }
                 break;
             case "part":
@@ -557,12 +655,12 @@ public class testQueryPlan {
                 break;
             case "supplier":
                 {
-                page = 2.8;
+                page = 222;
                 }
                 break;
             case "partsupp":
                 {
-                page = 8193;
+                page = 17451;
                 }
                 break;
             case "customer":
@@ -581,7 +679,7 @@ public class testQueryPlan {
                 }
                 break; 
             default:
-                page = 240.1;
+                page = 0;
                 break;    
             }
         }
@@ -589,12 +687,12 @@ public class testQueryPlan {
                 switch (dataset) {
                 case "nation":
                     {
-                    page = 240.1;
+                    page = 240.1;//no need
                     }
                     break;
                 case "region":
                     {
-                    page = 240.1;
+                    page = 240.1;//no need
                     }
                     break;
                 case "part":
@@ -604,12 +702,12 @@ public class testQueryPlan {
                     break;
                 case "supplier":
                     {
-                    page = 2.8;
+                    page = 23;
                     }
                     break;
                 case "partsupp":
                     {
-                    page = 240.1;
+                    page = 1744;
                     }
                     break;
                 case "customer":
@@ -628,7 +726,7 @@ public class testQueryPlan {
                     }
                     break; 
                 default:
-                    page = 240.1;
+                    page = 0;
                     break;    
                     }
                 } 
@@ -636,12 +734,12 @@ public class testQueryPlan {
                 switch (dataset) {
                 case "nation":
                     {
-                    page = 2.4;
+                    page = 2.4;// no need
                     }
                     break;
                 case "region":
                     {
-                    page = 2.4;
+                    page = 2.4;// no need
                     }
                     break;
                 case "part":
@@ -675,27 +773,76 @@ public class testQueryPlan {
                     }
                     break; 
                 default:
-                    page = 2.4;
+                    page = 0;
                     break;    
                     }
                 } 
         }
         }
-            
+        }
         return page;
     }
     public static double tupleDataset(String dataset, String Size_tpch){
         double tuple = 0;
-         if (Size_tpch.contains("1000m")){
-        switch (dataset) {
+	if (Size_tpch.contains("10000m")){
+	switch (dataset) {
             case "nation":
                 {
-                tuple = 240.1;
+                tuple = 25;
                 }
                 break;
             case "region":
                 {
-                tuple = 240.1;
+                tuple = 5;
+                }
+                break;
+            case "part":
+                {
+                tuple = 2000000;
+                }
+                break;
+            case "supplier":
+                {
+                tuple = 100000;
+                }
+                break;
+            case "partsupp":
+                {
+                tuple = 8000000;
+                }
+                break;
+            case "customer":
+                {
+                tuple = 1500000;
+                }
+                break; 
+            case "orders":
+                {
+                tuple = 15000000;
+                }
+                break;
+            case "lineitem":
+                {
+                tuple =59986052;
+                }
+                break; 
+            default:
+                tuple = 0;
+                break; 
+	   }
+	}
+	else
+	{
+         if (Size_tpch.contains("1000m")){
+        switch (dataset) {
+            case "nation":
+                {
+                tuple = 25;
+                }
+                break;
+            case "region":
+                {
+                tuple = 5;
                 }
                 break;
             case "part":
@@ -705,12 +852,12 @@ public class testQueryPlan {
                 break;
             case "supplier":
                 {
-                tuple = 2.8;
+                tuple = 10000;
                 }
                 break;
             case "partsupp":
                 {
-                tuple = 400000;
+                tuple = 800000;
                 }
                 break;
             case "customer":
@@ -737,12 +884,12 @@ public class testQueryPlan {
                 switch (dataset) {
                 case "nation":
                     {
-                    tuple = 240.1;
+                    tuple = 25;
                     }
                     break;
                 case "region":
                     {
-                    tuple = 240.1;
+                    tuple = 5;
                     }
                     break;
                 case "part":
@@ -752,12 +899,12 @@ public class testQueryPlan {
                     break;
                 case "supplier":
                     {
-                    tuple = 2.8;
+                    tuple = 1000;
                     }
                     break;
                 case "partsupp":
                     {
-                    tuple = 240.1;
+                    tuple = 80000;
                     }
                     break;
                 case "customer":
@@ -776,7 +923,7 @@ public class testQueryPlan {
                     }
                     break; 
                 default:
-                    tuple = 240.1;
+                    tuple = 0;
                     break;    
                     }
                 } 
@@ -784,12 +931,12 @@ public class testQueryPlan {
                 switch (dataset) {
                 case "nation":
                     {
-                    tuple = 2.4;
+                    tuple = 25;
                     }
                     break;
                 case "region":
                     {
-                    tuple = 2.4;
+                    tuple = 5;
                     }
                     break;
                 case "part":
@@ -799,7 +946,7 @@ public class testQueryPlan {
                     break;
                 case "supplier":
                     {
-                    tuple = 0.28;
+                    tuple = 0.28;// not yet
                     }
                     break;
                 case "partsupp":
@@ -823,13 +970,12 @@ public class testQueryPlan {
                     }
                     break; 
                 default:
-                    tuple = 24;
+                    tuple = 0;
                     break;    
                     }
                 }
-            
         }
-            
+	}//else of 10000m
         return tuple;
     }
 

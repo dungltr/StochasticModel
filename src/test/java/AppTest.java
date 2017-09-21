@@ -139,7 +139,7 @@ public class AppTest{
 //        LinearRegressionManual.small_test(training_file,testing_file);
 //        LinearRegressionManual.main_test(training_file,testing_file);
 //        LinearRegressionManual.test_minDataset(training_file,testing_file,0.8);
-        LinearRegressionManual.TPCH(0.0, "", "100m", "Hive", "Hive", "predict");
+//        LinearRegressionManual.TPCH(0.0, "", "100m", "Hive", "Hive", "predict");
 //        Irisa.Enssat.Rennes1.TestScript.testall();
 
     }

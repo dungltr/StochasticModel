@@ -153,11 +153,14 @@ public class TestScript {
         else return "tpch";
     }
     public static String SizeCheck(String Size){
+	if (Size.toLowerCase().contains("10000m")) return "10000m";
+	else {
         if (Size.toLowerCase().contains("1000m")) return "1000m";
         else {
             if (Size.toLowerCase().contains("10m")) return "10m";
             return "100m";
-        }        
+        }     
+	}   
     }
     public static String FromCheck(String From){
         if ((From.toLowerCase().contains("hive"))||(From.toLowerCase().equals("h"))) return "Hive";
