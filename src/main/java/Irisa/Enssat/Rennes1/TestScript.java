@@ -131,7 +131,7 @@ public class TestScript {
         }
         else {
             if (KindOfRunning=="predict"){
-                LinearRegressionManual.TPCH_new(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
+                LinearRegressionManual.TPCH(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
             }
         }
         
