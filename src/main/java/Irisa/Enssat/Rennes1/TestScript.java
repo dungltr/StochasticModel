@@ -155,11 +155,14 @@ public class TestScript {
     public static String SizeCheck(String Size){
 	if (Size.toLowerCase().contains("10000m")) return "10000m";
 	else {
-        if (Size.toLowerCase().contains("1000m")) return "1000m";
-        else {
-            if (Size.toLowerCase().contains("10m")) return "10m";
-            return "100m";
-        }     
+        	if (Size.toLowerCase().contains("1000m")) return "1000m";
+        	else {
+            		if (Size.toLowerCase().contains("10m")) return "10m";
+            		else {
+                        	if (Size.toLowerCase().contains("2000m")) return "2000m";
+			}
+			return "100m";
+        	}     
 	}   
     }
     public static String FromCheck(String From){
