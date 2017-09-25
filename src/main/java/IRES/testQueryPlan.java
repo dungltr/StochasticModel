@@ -386,12 +386,10 @@ public class testQueryPlan {
 	}
 	return query_select;
     }
-
-    public static double sizeDataset(String dataset, String Size_tpch){
-        double size = 0;
-	if (Size_tpch.contains("10000m")){
-            switch (dataset) {
-            case "nation":
+    public static double sizeDataset10000m(String dataset, String Size_tpch){
+    	double size = 0;
+ 	switch (dataset) {
+            case "nation":   
                 {
                 size = 0.0022;
                 }
@@ -420,7 +418,7 @@ public class testQueryPlan {
                 {
                 size = 233.5;
                 }
-                break; 
+	        break; 
             case "orders":
                 {
                 size = 1600;
@@ -432,14 +430,14 @@ public class testQueryPlan {
                 }
                 break; 
             default:
-                size = 0;
+                size = 7200;
                 break;    
             }
-	}
-	else
-	{
-        if (Size_tpch.contains("1000m")){
-            switch (dataset) {
+	return size;
+    }
+    public static double sizeDataset1000m(String dataset, String Size_tpch){
+        double size = 0;
+ 	switch (dataset) {
             case "nation":
                 {
                 size = 0.0022;
@@ -481,12 +479,14 @@ public class testQueryPlan {
                 }
                 break; 
             default:
-                size = 0;
-                break;    
-            }
-        }
-            else  {if (Size_tpch.contains("100m")) {
-                        switch (dataset) {
+                size = 724.7;
+		break;
+	}
+        return size;
+    }
+    public static double sizeDataset100m(String dataset, String Size_tpch){
+        double size = 0;
+	switch (dataset) {
                 case "nation":
                     {
                     size = 0.0022;
@@ -505,7 +505,7 @@ public class testQueryPlan {
                 case "supplier":
                     {
                     size = 0.1364;
-                    }
+		    }
                     break;
                 case "partsupp":
                     {
@@ -528,13 +528,14 @@ public class testQueryPlan {
                     }
                     break; 
                 default:
-                    size = 0;
-                    break;    
-                    }
-
-                } 
-            else  {if (Size_tpch.contains("10m")) {
-                        switch (dataset) {
+                    size = 70.8;
+		    break;
+	}
+        return size;
+    }
+    public static double sizeDataset10m(String dataset, String Size_tpch){
+        double size = 0;
+        switch (dataset) {
                 case "nation":
                     {
                     size = 0.0022;
@@ -576,20 +577,35 @@ public class testQueryPlan {
                     }
                     break; 
                 default:
-                    size = 0;
+                    size = 8.3;
                     break;    
                     }
+        return size;
+    }
 
-                } 
-        }
-        }
+    public static double sizeDataset(String dataset, String Size_tpch){
+        double size = 0;
+	if (Size_tpch.contains("10000m")){
+		size = sizeDataset10000m(dataset, Size_tpch);
 	}
+	else{	if (Size_tpch.contains("1000m")){
+			size = sizeDataset1000m(dataset, Size_tpch);
+            	}
+            	else{	if (Size_tpch.contains("100m")) {
+				size = sizeDataset100m(dataset, Size_tpch);
+			}
+	   		else{	if (Size_tpch.contains("10m")) {
+					size = sizeDataset10m(dataset, Size_tpch);
+				}
+				else size  = sizeDataset1000m(dataset, Size_tpch);
+			}
+		}
+        }
         return size;
     } 
-    public static double pageDataset(String dataset, String Size_tpch){
-        double page = 0;
-	if (Size_tpch.contains("10000m")){
-        switch (dataset) {
+    public static double pageDataset10000m(String dataset, String Size_tpch){
+    	double page = 0;
+	switch (dataset) {
             case "nation":
                 {
                 page = 240.1;//no need
@@ -611,32 +627,33 @@ public class testQueryPlan {
                 }
                 break;
             case "partsupp":
-                {
+	        {
                 page = 8193;// not yet
                 }
                 break;
             case "customer":
                 {
                 page = 35827;
-                }
+                }   
                 break; 
             case "orders":
                 {
                 page = 260912;
                 }
                 break;
-	    case "lineitem":
+            case "lineitem":
                 {
                 page = 1124542;
                 }
                 break; 
             default:
-                page = 0;
+                page = 1124542;
                 break;    
             }
-        }
-	else {
-        if (Size_tpch.contains("1000m")){
+	return page;
+    }
+    public static double pageDataset1000m(String dataset, String Size_tpch){
+        double page = 0;
         switch (dataset) {
             case "nation":
                 {
@@ -657,7 +674,7 @@ public class testQueryPlan {
                 {
                 page = 222;
                 }
-                break;
+		break;
             case "partsupp":
                 {
                 page = 17451;
@@ -679,12 +696,14 @@ public class testQueryPlan {
                 }
                 break; 
             default:
-                page = 0;
-                break;    
-            }
-        }
-            else  {if (Size_tpch.contains("100m")) {
-                switch (dataset) {
+                page = 112503;
+		break;
+	}                
+        return page;
+    }
+    public static double pageDataset100m(String dataset, String Size_tpch){
+        double page = 0;
+        switch (dataset) {
                 case "nation":
                     {
                     page = 240.1;//no need
@@ -718,20 +737,22 @@ public class testQueryPlan {
                 case "orders":
                     {
                     page = 2610;
-                    }
-                    break;
+                    }            
+		    break;
                 case "lineitem":
                     {
                     page = 11259;
                     }
                     break; 
                 default:
-                    page = 0;
+                    page = 11259;
                     break;    
-                    }
-                } 
-            else  {if (Size_tpch.contains("10m")) {
-                switch (dataset) {
+        } 
+        return page;
+    }
+    public static double pageDataset10m(String dataset, String Size_tpch){
+        double page = 0;
+        switch (dataset) {
                 case "nation":
                     {
                     page = 2.4;// no need
@@ -773,18 +794,35 @@ public class testQueryPlan {
                     }
                     break; 
                 default:
-                    page = 0;
+                    page = 1126;
                     break;    
-                    }
-                } 
+        }                
+        return page;
+    }
+
+    public static double pageDataset(String dataset, String Size_tpch){
+        double page = 0;
+	if (Size_tpch.contains("10000m")){
+		page = pageDataset10000m(dataset, Size_tpch);
         }
-        }
+	else {
+	        if (Size_tpch.contains("1000m")){
+			page = pageDataset1000m(dataset, Size_tpch);
+            	}
+            	else {	if (Size_tpch.contains("100m")) {
+				page = pageDataset100m(dataset, Size_tpch);
+			}
+            		else{	if (Size_tpch.contains("10m")) {
+					page = pageDataset10m(dataset, Size_tpch);
+				}
+				else page  = pageDataset1000m(dataset, Size_tpch);
+			}
+		}
         }
         return page;
     }
-    public static double tupleDataset(String dataset, String Size_tpch){
-        double tuple = 0;
-	if (Size_tpch.contains("10000m")){
+    public static double tupleDataset10000m(String dataset, String size_tpch){
+	double tuple = 0;
 	switch (dataset) {
             case "nation":
                 {
@@ -815,7 +853,7 @@ public class testQueryPlan {
                 {
                 tuple = 1500000;
                 }
-                break; 
+                break;    
             case "orders":
                 {
                 tuple = 15000000;
@@ -827,14 +865,14 @@ public class testQueryPlan {
                 }
                 break; 
             default:
-                tuple = 0;
-                break; 
+                tuple = 59986052;
+		break;
 	   }
-	}
-	else
-	{
-         if (Size_tpch.contains("1000m")){
-        switch (dataset) {
+	return tuple;
+    }
+    public static double tupleDataset1000m(String dataset, String Size_tpch){
+	double tuple = 0;
+	switch (dataset) {
             case "nation":
                 {
                 tuple = 25;
@@ -868,7 +906,7 @@ public class testQueryPlan {
             case "orders":
                 {
                 tuple = 1500000;
-                }
+ 		}
                 break;
             case "lineitem":
                 {
@@ -876,12 +914,15 @@ public class testQueryPlan {
                 }
                 break; 
             default:
-                tuple = 240.1;
+                tuple = 6001215;
                 break;    
         } 
-         }
-            else  {if (Size_tpch.contains("100m")) {
-                switch (dataset) {
+	return tuple;
+
+    }
+    public static double tupleDataset100m(String dataset, String size_tpch){
+	double tuple = 0;
+	switch (dataset) {
                 case "nation":
                     {
                     tuple = 25;
@@ -907,11 +948,11 @@ public class testQueryPlan {
                     tuple = 80000;
                     }
                     break;
-                case "customer":
+		case "customer":
                     {
                     tuple = 15000;
                     }
-                    break; 
+                    break;    
                 case "orders":
                     {
                     tuple = 150000;
@@ -923,12 +964,14 @@ public class testQueryPlan {
                     }
                     break; 
                 default:
-                    tuple = 0;
-                    break;    
+                    tuple = 600572;
+                    break;      
                     }
-                } 
-            else if (Size_tpch.contains("10m")) {
-                switch (dataset) {
+		return tuple;
+    }
+    public static double tupleDataset10m(String dataset, String size_tpch){
+	double tuple = 0;
+	switch (dataset) {
                 case "nation":
                     {
                     tuple = 25;
@@ -965,16 +1008,36 @@ public class testQueryPlan {
                     }
                     break;
                 case "lineitem":
-                    {
+		    {
                     tuple = 60057;
                     }
                     break; 
                 default:
-                    tuple = 0;
+                    tuple = 60057;
                     break;    
                     }
-                }
-        }
+	return tuple;
+    }
+    public static double tupleDataset(String dataset, String Size_tpch){
+        double tuple = 0;
+	if (Size_tpch.contains("10000m")){
+		tuple  = tupleDataset10000m(dataset, Size_tpch);
+	}
+	else{
+         	if (Size_tpch.contains("1000m")){
+        		tuple  = tupleDataset1000m(dataset, Size_tpch);
+	        } 
+                else{
+			if (Size_tpch.contains("100m")) {
+                		tuple  = tupleDataset100m(dataset, Size_tpch);
+                        }
+                        else{
+				 if (Size_tpch.contains("10m")) {
+                			tuple  = tupleDataset100m(dataset, Size_tpch); 
+				}
+				else tuple  = tupleDataset1000m(dataset, Size_tpch);
+        		}//else of 100m
+		}// else of 1000m
 	}//else of 10000m
         return tuple;
     }
