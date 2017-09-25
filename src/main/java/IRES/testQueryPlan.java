@@ -435,6 +435,55 @@ public class testQueryPlan {
             }
 	return size;
     }
+    public static double sizeDataset2000m(String dataset, String Size_tpch){
+        double size = 0;
+        switch (dataset) {
+            case "nation":
+                {
+                size = 0.0022;
+                }
+                break;
+            case "region":
+                {
+                size = 0.000389;
+                }
+                break;
+            case "part":
+                {
+                size = 46.1;
+                }
+                break;
+            case "supplier":
+                {
+                size = 2.7;
+                }
+                break;
+            case "partsupp":
+                {
+                size = 228.1;
+                }
+                break;
+            case "customer":
+                {
+                size = 46.5;
+                }
+                break;
+	    case "orders":
+                {
+                size = 329.7;
+                }
+                break;
+            case "lineitem":
+                {
+                size = 1400;
+                }
+                break;
+            default:
+                size = 1400;
+                break;
+        }
+        return size;
+    }
     public static double sizeDataset1000m(String dataset, String Size_tpch){
         double size = 0;
  	switch (dataset) {
@@ -597,7 +646,11 @@ public class testQueryPlan {
 	   		else{	if (Size_tpch.contains("10m")) {
 					size = sizeDataset10m(dataset, Size_tpch);
 				}
-				else size  = sizeDataset1000m(dataset, Size_tpch);
+				else{	if (Size_tpch.contains("2000m")) {
+                                        size = sizeDataset2000m(dataset, Size_tpch);
+                                	}
+                                	else size  = sizeDataset1000m(dataset, Size_tpch);
+				}
 			}
 		}
         }
@@ -650,6 +703,55 @@ public class testQueryPlan {
                 page = 1124542;
                 break;    
             }
+	return page;
+    }
+public static double pageDataset2000m(String dataset, String Size_tpch){
+        double page = 0;
+        switch (dataset) {
+            case "nation":
+                {
+                page = 240.1;//no need
+                }
+                break;
+            case "region":
+                {
+                page = 240.1;//no need
+                }
+                break;
+            case "part":
+                {
+                page = 8193;
+                }
+                break;
+            case "supplier":
+                {
+                page = 444;//un
+                }
+                break;
+            case "partsupp":
+                {
+                page = 34900;//17451;//
+                }
+                break;
+            case "customer":
+                {
+                page = 7169;
+                }
+                break;
+            case "orders":
+                {
+                page = 52187;
+                }
+                break;
+            case "lineitem":
+                {
+                page = 224920;
+                }
+                break;
+            default:
+                page = 224920;
+                break;
+        }
 	return page;
     }
     public static double pageDataset1000m(String dataset, String Size_tpch){
@@ -805,17 +907,20 @@ public class testQueryPlan {
 	if (Size_tpch.contains("10000m")){
 		page = pageDataset10000m(dataset, Size_tpch);
         }
-	else {
-	        if (Size_tpch.contains("1000m")){
+	else{	if (Size_tpch.contains("1000m")){
 			page = pageDataset1000m(dataset, Size_tpch);
             	}
-            	else {	if (Size_tpch.contains("100m")) {
+            	else{	if (Size_tpch.contains("100m")) {
 				page = pageDataset100m(dataset, Size_tpch);
 			}
             		else{	if (Size_tpch.contains("10m")) {
 					page = pageDataset10m(dataset, Size_tpch);
 				}
-				else page  = pageDataset1000m(dataset, Size_tpch);
+				else{   if (Size_tpch.contains("2000m")) {
+                                        page = pageDataset2000m(dataset, Size_tpch);
+                                	}
+                                	else page  = pageDataset1000m(dataset, Size_tpch);
+                        	}
 			}
 		}
         }
@@ -868,6 +973,54 @@ public class testQueryPlan {
                 tuple = 59986052;
 		break;
 	   }
+	return tuple;
+    }
+    public static double tupleDataset2000m(String dataset, String Size_tpch){
+        double tuple = 0;
+        switch (dataset) {
+            case "nation":
+                {
+                tuple = 25;
+                }
+                break;
+            case "region":
+                {
+                tuple = 5;
+                }
+                break;
+            case "part":
+                {
+                tuple = 400000;
+                }
+                break;
+            case "supplier":
+                {
+                tuple = 20000;//unknown
+                }
+                break;
+            case "partsupp":
+                {
+                tuple = 1600000;//unknow
+                }
+                break;
+            case "customer":
+                {
+                tuple = 300000;
+                }
+                break;
+            case "orders":
+                {
+                tuple = 3000000;
+                }
+                break;
+            case "lineitem":
+                {
+                tuple = 11998600;
+                }
+                break;
+            default:
+		tuple = 11998600;
+	}
 	return tuple;
     }
     public static double tupleDataset1000m(String dataset, String Size_tpch){
@@ -1023,19 +1176,20 @@ public class testQueryPlan {
 	if (Size_tpch.contains("10000m")){
 		tuple  = tupleDataset10000m(dataset, Size_tpch);
 	}
-	else{
-         	if (Size_tpch.contains("1000m")){
+	else{	if (Size_tpch.contains("1000m")){
         		tuple  = tupleDataset1000m(dataset, Size_tpch);
 	        } 
-                else{
-			if (Size_tpch.contains("100m")) {
+                else{	if (Size_tpch.contains("100m")) {
                 		tuple  = tupleDataset100m(dataset, Size_tpch);
                         }
-                        else{
-				 if (Size_tpch.contains("10m")) {
-                			tuple  = tupleDataset100m(dataset, Size_tpch); 
+                        else{	if (Size_tpch.contains("10m")) {
+                			tuple  = tupleDataset10m(dataset, Size_tpch); 
 				}
-				else tuple  = tupleDataset1000m(dataset, Size_tpch);
+				else{	if (Size_tpch.contains("2000m")) {
+                                        	tuple  = tupleDataset2000m(dataset, Size_tpch);
+                                	}
+                                	else tuple  = tupleDataset1000m(dataset, Size_tpch);
+				}
         		}//else of 100m
 		}// else of 1000m
 	}//else of 10000m
