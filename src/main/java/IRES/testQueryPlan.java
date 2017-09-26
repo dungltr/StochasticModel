@@ -676,12 +676,12 @@ public class testQueryPlan {
                 break;
             case "supplier":
                 {
-                page = 2.8;// not yet
+                page = 2215;// not yet
                 }
                 break;
             case "partsupp":
 	        {
-                page = 8193;// not yet
+                page = 174510;// not yet
                 }
                 break;
             case "customer":
@@ -725,12 +725,12 @@ public static double pageDataset2000m(String dataset, String Size_tpch){
                 break;
             case "supplier":
                 {
-                page = 444;//un
+                page = 443;
                 }
                 break;
             case "partsupp":
                 {
-                page = 34900;//17451;//
+                page = 34886;
                 }
                 break;
             case "customer":
@@ -995,12 +995,12 @@ public static double pageDataset2000m(String dataset, String Size_tpch){
                 break;
             case "supplier":
                 {
-                tuple = 20000;//unknown
+                tuple = 20000;
                 }
                 break;
             case "partsupp":
                 {
-                tuple = 1600000;//unknow
+                tuple = 1600000;
                 }
                 break;
             case "customer":

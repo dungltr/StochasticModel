@@ -1,6 +1,7 @@
 -------------------------------------------------------------------------------
 Test set: AppTest
 -------------------------------------------------------------------------------
+<<<<<<< HEAD
 Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 2.415 sec <<< FAILURE!
 testConvert_IRES(AppTest)  Time elapsed: 0.313 sec  <<< ERROR!
 java.sql.SQLSyntaxErrorException: Syntax error: Encountered "T1" at line 1, column 1.
@@ -53,3 +54,6 @@ Caused by: org.apache.derby.client.am.SqlException: Syntax error: Encountered "T
 	at org.apache.derby.client.am.PreparedStatement.prepare(Unknown Source)
 	at org.apache.derby.client.am.Connection.prepareStatementX(Unknown Source)
 	... 34 more
+=======
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.123 sec
+>>>>>>> 0f55e16496b6865b24b03a75f3c2324054f36dfd

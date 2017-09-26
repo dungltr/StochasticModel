@@ -34,7 +34,6 @@ public class testWriteMatrix2CSV {
                 tmp = tmp + "b[" + i + "]" + COMMA_DELIMITER;
                 if (n - 1 == i) tmp = tmp + "b[" + i + "]";
                 String FILE_HEADER = tmp;
-                
 		Writematrix2CSV.Writematrix2CSV(a, fileName, FILE_HEADER);
                 ReadMatrixCSV.readMatrixCsvFile(fileName);
                 System.out.println("Add Array to CSV file:");
@@ -44,14 +43,8 @@ public class testWriteMatrix2CSV {
                 Writematrix2CSV.addMatrix2Csv(fileName, b);
                 ReadMatrixCSV.readMatrixCsvFile(fileName);
                 System.out.println("Read last line in CSV file:");
-//                System.out.println(ReadMatrixCSV.tail2(fileName,1));
-    
     }
     public static void store(Move_Data Data, String SQL, double Data_size, double Ram, double Core, double TimeCost, String realValue) throws IOException {
-//        String IRES_HOME = new App().readhome("IRES_HOME");
-//        String IRES_library = IRES_HOME+"/asap-platform/asap-server";
-//        String directory_operator = IRES_library+"/target/asapLibrary/operators/";
-//        String NameOp = "Move_"+Data.get_From()+"_"+Data.get_To();
         String fileName = realValue;
         double[][] a = new double[1][4];
         a[0][0] = Data_size;
@@ -81,9 +74,6 @@ public class testWriteMatrix2CSV {
     }
     public static void storeValue(Move_Data Data, String SQL, double[] Value, String NameValue) throws IOException {
         String directory = testWriteMatrix2CSV.getDirectory(Data);
-//        realValue = directory + "/realValue.csv";
-//        parameter = directory + "/Parameter.csv";
-//        estimate = directory + "/Estimate.csv";
         String fileName = directory + "/" + NameValue + ".csv";
         double[][] a = new double[1][Value.length];
         for (int i = 0; i < Value.length; i++)
@@ -91,18 +81,16 @@ public class testWriteMatrix2CSV {
         Path filePath = Paths.get(fileName);
             if (!Files.exists(filePath)) {
                 Files.createFile(filePath);                
-                String FILE_HEADER = "";
-                FILE_HEADER = FILE_HEADER + "Line" + COMMA_DELIMITER + 
-                        "RamGB" + COMMA_DELIMITER + 
-                        "Core" + COMMA_DELIMITER + 
-                        "TimeInDay" + COMMA_DELIMITER +
-                        NameValue;
+		String FILE_HEADER = "";
+                for (int i= 0; i < Value.length-1; i++)
+                FILE_HEADER = FILE_HEADER + "Variable["+i+"]" + COMMA_DELIMITER;
+                int last = Value.length-1;
+                FILE_HEADER = FILE_HEADER + NameValue;
                 Writematrix2CSV.Writematrix2CSV(a, fileName, FILE_HEADER);
                 }
             else {
                 String add = "";
             int i = 0;
-            
             for (i = 0; a[0].length - 1 > i; i++)
             add = add + a[0][i] + COMMA_DELIMITER;
             if (a[0].length - 1 == i)
@@ -112,9 +100,6 @@ public class testWriteMatrix2CSV {
     }
     public static void storeParameter(Move_Data Data, double[] Parameter, String fileParameter) throws IOException {
         String directory = testWriteMatrix2CSV.getDirectory(Data);
-//        realValue = directory + "/realValue.csv";
-//        parameter = directory + "/Parameter.csv";
-//        estimate = directory + "/Estimate.csv";
         String fileName = directory + "/" + fileParameter + ".csv";
         double[][] a = new double[1][Parameter.length];
         for (int i = 0; i < Parameter.length; i++)
@@ -124,15 +109,14 @@ public class testWriteMatrix2CSV {
                 Files.createFile(filePath);                
                 String FILE_HEADER = "";
                 for (int i= 0; i < Parameter.length-1; i++)
-                FILE_HEADER = FILE_HEADER + "B["+i+"]" + COMMA_DELIMITER;
+                FILE_HEADER = FILE_HEADER + "Beta["+i+"]" + COMMA_DELIMITER;
                 int last = Parameter.length-1;
-                FILE_HEADER = FILE_HEADER + "B["+ last +"]";
+                FILE_HEADER = FILE_HEADER + "Beta["+ last +"]";
                 Writematrix2CSV.Writematrix2CSV(a, fileName, FILE_HEADER);
                 }
             else {
                 String add = "";
             int i = 0;
-            
             for (i = 0; a[0].length - 1 > i; i++)
             add = add + a[0][i] + COMMA_DELIMITER;
             if (a[0].length - 1 == i)
@@ -140,10 +124,9 @@ public class testWriteMatrix2CSV {
             Files.write(filePath, add.getBytes(), StandardOpenOption.APPEND);
             }
     }
-    public static void storeEstimateData(Move_Data Data, String SQL, double Data_size, double Ram, double Core, double TimeCost, String estimateNameValue) throws IOException {
+/*    public static void storeEstimateData(Move_Data Data, String SQL, double Data_size, double Ram, double Core, double TimeCost, String estimateNameValue) throws IOException {
         String directory = testWriteMatrix2CSV.getDirectory(Data);
         String fileName = directory + "/" + estimateNameValue + ".csv";
-
         double[][] a = new double[1][4];
         a[0][0] = Data_size;
         a[0][1] = Ram;
@@ -170,7 +153,7 @@ public class testWriteMatrix2CSV {
             Files.write(filePath, add.getBytes(), StandardOpenOption.APPEND);
             }
     }
-    public static String getDirectory(Move_Data Data){
+*/    public static String getDirectory(Move_Data Data){
         String IRES_HOME = new App().readhome("IRES_HOME");
         String IRES_library = IRES_HOME+"/asap-platform/asap-server";
         String NameOp = Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To();
