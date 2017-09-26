@@ -16,7 +16,7 @@ public class AskData {
     String From;
     String To;
     String More;
-    
+/**/    
     public AskData (String Kind, String Db, String Size, String From, String To, String More) {
         this.Kind = Kind;
         this.Db = Db;
