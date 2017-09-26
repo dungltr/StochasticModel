@@ -1,15 +1,15 @@
 -------------------------------------------------------------------------------
 Test set: AppTest
 -------------------------------------------------------------------------------
-<<<<<<< HEAD
-Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 2.415 sec <<< FAILURE!
-testConvert_IRES(AppTest)  Time elapsed: 0.313 sec  <<< ERROR!
-java.sql.SQLSyntaxErrorException: Syntax error: Encountered "T1" at line 1, column 1.
-	at org.apache.derby.client.am.SQLExceptionFactory40.getSQLException(Unknown Source)
-	at org.apache.derby.client.am.SqlException.getSQLException(Unknown Source)
-	at org.apache.derby.client.am.Connection.prepareStatement(Unknown Source)
-	at Client.test_main(Client.java:88)
-	at AppTest.testConvert_IRES(AppTest.java:139)
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 2.437 sec <<< FAILURE!
+testConvert_IRES(AppTest)  Time elapsed: 0.06 sec  <<< ERROR!
+java.lang.RuntimeException: Uncompilable source code - no suitable constructor found for TupleTree(java.lang.String)
+    constructor trctree.TupleTree.TupleTree(java.io.Reader) is not applicable
+      (argument mismatch; java.lang.String cannot be converted to java.io.Reader)
+    constructor trctree.TupleTree.TupleTree(trctree.TupleTreeTokenManager) is not applicable
+      (argument mismatch; java.lang.String cannot be converted to trctree.TupleTreeTokenManager)
+	at trctree.TupleTree.main(TupleTree.java:11)
+	at AppTest.testConvert_IRES(AppTest.java:142)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -41,19 +41,3 @@ java.sql.SQLSyntaxErrorException: Syntax error: Encountered "T1" at line 1, colu
 	at org.apache.maven.surefire.booter.SurefireStarter.invokeProvider(SurefireStarter.java:175)
 	at org.apache.maven.surefire.booter.SurefireStarter.runSuitesInProcessWhenForked(SurefireStarter.java:107)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:68)
-Caused by: org.apache.derby.client.am.SqlException: Syntax error: Encountered "T1" at line 1, column 1.
-	at org.apache.derby.client.am.Statement.completeSqlca(Unknown Source)
-	at org.apache.derby.client.net.NetStatementReply.parsePrepareError(Unknown Source)
-	at org.apache.derby.client.net.NetStatementReply.parsePRPSQLSTTreply(Unknown Source)
-	at org.apache.derby.client.net.NetStatementReply.readPrepareDescribeOutput(Unknown Source)
-	at org.apache.derby.client.net.StatementReply.readPrepareDescribeOutput(Unknown Source)
-	at org.apache.derby.client.net.NetStatement.readPrepareDescribeOutput_(Unknown Source)
-	at org.apache.derby.client.am.Statement.readPrepareDescribeOutput(Unknown Source)
-	at org.apache.derby.client.am.PreparedStatement.readPrepareDescribeInputOutput(Unknown Source)
-	at org.apache.derby.client.am.PreparedStatement.flowPrepareDescribeInputOutput(Unknown Source)
-	at org.apache.derby.client.am.PreparedStatement.prepare(Unknown Source)
-	at org.apache.derby.client.am.Connection.prepareStatementX(Unknown Source)
-	... 34 more
-=======
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.123 sec
->>>>>>> 0f55e16496b6865b24b03a75f3c2324054f36dfd

@@ -19,6 +19,7 @@ import LibraryIres.createWorkflow;
 import LibraryIres.runWorkflow;
 import Standalone.TPCHStandalone;
 import Irisa.Enssat.Rennes1.TestScript;
+import Irisa.Enssat.Rennes1.*;
 import WriteReadData.CsvWriteReadTest;
 import org.junit.Test;
 import com.sparkexample.*;
@@ -77,7 +78,9 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.security.auth.login.Configuration;
+import trctree.TupleTree;
+
+//import trctree.TupleTree;
 
 /**
  * Unit test for simple App.
@@ -135,8 +138,8 @@ public class AppTest{
         String file_test = test;
         String training_file = training;
         String testing_file = testing;
-        Client client = new Client();
-        client.test_main();
+//        parseQuery.main("query0");
+//        TupleTree.main();
 //        LinearRegressionManual.testLinearRegression(file_test);
 //        LinearRegressionManual.small_test(training_file,testing_file);
 //        LinearRegressionManual.main_test(training_file,testing_file);
