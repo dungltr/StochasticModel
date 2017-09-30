@@ -135,6 +135,7 @@ public class AppTest{
         String file_test = test;
         String training_file = training;
         String testing_file = testing;
+        Irisa.Enssat.Rennes1.JavaSparkSQLExample.main("abc","123","000");
 //        LinearRegressionManual.testLinearRegression(file_test);
 //        LinearRegressionManual.small_test(training_file,testing_file);
 //        LinearRegressionManual.main_test(training_file,testing_file);
