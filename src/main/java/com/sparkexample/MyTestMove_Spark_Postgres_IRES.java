@@ -229,7 +229,8 @@ public class MyTestMove_Spark_Postgres_IRES {
         String username = System.getProperty("user.name");
         String HOME=System.getenv().get("HOME");
         String node = new App().getComputerName();
-        String password = new TestPostgreSQLDatabase().readpass();
+        String FILENAME = HOME + "/Documents/password.txt";
+        String password = new TestPostgreSQLDatabase().readpass(FILENAME);
     String lua = "-- Specific configuration of operator\n" +
 "ENGINE = \"Postgres\"\n" +
 "OPERATOR = \"Move_Spark_\" .. ENGINE .. \"_IRES\"\n" +

@@ -233,7 +233,9 @@ public class MyTestMove_Postgres_Hive_IRES {
     public void createDocuments(String OperatorFolder,String Name, String Database, String Table, String Schema) throws UnknownHostException{
         String Database_Hive = "mydb";
         String Database_Postgres = "mydb";
-        String password = new TestPostgreSQLDatabase().readpass();               
+        String HOME=System.getenv().get("HOME");
+        String FILENAME = HOME + "/Documents/password.txt";
+        String password = new TestPostgreSQLDatabase().readpass(FILENAME);               
         String node = new App().getComputerName();
         
         

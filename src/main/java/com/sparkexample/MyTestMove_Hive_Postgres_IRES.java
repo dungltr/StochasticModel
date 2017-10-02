@@ -289,7 +289,9 @@ public class MyTestMove_Hive_Postgres_IRES {
         String Schema = "(CUSTKEY int, NAME varchar(25), ADDRESS varchar(40), NATIONKEY int, PHONE varchar(25), ACCTBAL float, MKTSEGMENT varchar(15), COMMENT varchar(120), LAST varchar(10))";
         String Table = "customer";
         String username = System.getProperty("user.name");
-        String password = new TestPostgreSQLDatabase().readpass();
+        String HOME=System.getenv().get("HOME");
+        String FILENAME = HOME + "/Documents/password.txt";
+        String password = new TestPostgreSQLDatabase().readpass(FILENAME);
         String node = new App().getComputerName();        
         String lua = "-- Specific configuration of operator\n" +
 "ENGINE = \"Postgres\"\n" +

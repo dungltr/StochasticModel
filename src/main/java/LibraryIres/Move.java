@@ -322,7 +322,9 @@ public class Move {
         String Table_In = Data.get_DataIn();
         String Table_Out = Data.get_DataOut();
         String username = System.getProperty("user.name");
-        String password = new TestPostgreSQLDatabase().readpass();
+        String HOME=System.getenv().get("HOME");
+        String FILENAME = HOME + "/Documents/password.txt";
+        String password = new TestPostgreSQLDatabase().readpass(FILENAME);
                 
         
     String sh = "#!/bin/bash\n" +
@@ -383,7 +385,9 @@ public class Move {
         String Table_In = Data.get_DataIn();
         String Table_Out = Data.get_DataOut();
         String username = System.getProperty("user.name");
-        String password = new TestPostgreSQLDatabase().readpass();
+        String HOME=System.getenv().get("HOME");
+        String FILENAME = HOME + "/Documents/password.txt";
+        String password = new TestPostgreSQLDatabase().readpass(FILENAME);
                 
         
     String sh = "#!/bin/bash\n" +
@@ -610,7 +614,9 @@ public class Move {
         String Table_In = Data.get_DataIn();
         String Table_Out = Data.get_DataOut();
         String username = System.getProperty("user.name");
-        String password = new TestPostgreSQLDatabase().readpass();
+        String HOME=System.getenv().get("HOME");
+        String FILENAME = HOME + "/Documents/password.txt";
+        String password = new TestPostgreSQLDatabase().readpass(FILENAME);
                 
         
     String sh = "#!/bin/bash\n" +
@@ -679,7 +685,9 @@ public class Move {
         String Table_In = Data.get_DataIn();
         String Table_Out = Data.get_DataOut();
         String username = System.getProperty("user.name");
-        String password = new TestPostgreSQLDatabase().readpass();
+        String HOME=System.getenv().get("HOME");
+        String FILENAME = HOME + "/Documents/password.txt";
+        String password = new TestPostgreSQLDatabase().readpass(FILENAME);
                 
         
    String sh = "#!/bin/bash\n" +
@@ -907,7 +915,9 @@ public class Move {
         String Table_In = Data.get_DataIn();
         String Table_Out = Data.get_DataOut();
         String username = System.getProperty("user.name");
-        String password = new TestPostgreSQLDatabase().readpass();
+        String HOME=System.getenv().get("HOME");
+        String FILENAME = HOME + "/Documents/password.txt";
+        String password = new TestPostgreSQLDatabase().readpass(FILENAME);
                 
         
     String sh = "#!/bin/bash\n" +
@@ -1025,7 +1035,9 @@ public class Move {
         String Table_In = Data.get_DataIn();
         String Table_Out = Data.get_DataOut();
         String username = System.getProperty("user.name");
-        String password = new TestPostgreSQLDatabase().readpass();
+        String HOME=System.getenv().get("HOME");
+        String FILENAME = HOME + "/Documents/password.txt";
+        String password = new TestPostgreSQLDatabase().readpass(FILENAME);
                 
         
     String sh = "#!/bin/bash\n" +

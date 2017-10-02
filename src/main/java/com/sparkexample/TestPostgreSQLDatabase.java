@@ -25,11 +25,11 @@ import java.util.Scanner;
  * @author letrung
  */
 public class TestPostgreSQLDatabase {
-   String username = System.getProperty("user.name");
-   String HOME=System.getenv().get("HOME");
-   String FILENAME = HOME + "/Documents/password.txt";
-   String password = readpass();
-   String customer = "CREATE TABLE CUSTOMER "
+    static String username = System.getProperty("user.name");  
+    static String HOME=System.getenv().get("HOME");
+    static String FILENAME = HOME + "/Documents/password.txt";
+    static String password = readpass(FILENAME);
+    static String customer = "CREATE TABLE CUSTOMER "
            + "(custkey INT PRIMARY KEY NOT NULL,"
            + " name TEXT,"
            + " address TEXT,"
@@ -38,12 +38,12 @@ public class TestPostgreSQLDatabase {
            + " acctbal INT,"
            + " mktsegment TEXT,"
            + " comment TEXT)";
-   String region = "CREATE TABLE REGION_A "
+    static String region = "CREATE TABLE REGION_A "
            + "(regionkey INT PRIMARY KEY NOT NULL,"
            + " name TEXT,"
            + " comment TEXT)";
-   String query = "SELECT * FROM COMPANY;";
-   String query2 = "INSERT INTO REGION_A (regionkey,name,comment)"
+    static String query = "SELECT * FROM COMPANY;";
+    static String query2 = "INSERT INTO REGION_A (regionkey,name,comment)"
                + "VALUES (1, 'Vietnam', 'Hanoi');";
     public void main() throws Exception { 
     switch (username) {
@@ -55,7 +55,7 @@ public class TestPostgreSQLDatabase {
                 break;
             case "letrung":  
                 {
-                password = readpass();
+                password = readpass(FILENAME);
                 }
                 break;
             case "le": 
@@ -65,7 +65,7 @@ public class TestPostgreSQLDatabase {
                 }
                 break;
             default:
-                password = readpass();
+                password = readpass(FILENAME);
                 break;
     } 
 //        testconnection();
@@ -243,7 +243,7 @@ public class TestPostgreSQLDatabase {
        System.out.println("Operation done successfully");
      }
     
-    public String readpass() {
+    public static String readpass(String FILENAME) {
        String sCurrentLine = "nothing";
        try (BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
 			while ((sCurrentLine = br.readLine()) != null) {

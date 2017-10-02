@@ -78,7 +78,6 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import trctree.TupleTree;
 
 //import trctree.TupleTree;
 
@@ -138,7 +137,17 @@ public class AppTest{
         String file_test = test;
         String training_file = training;
         String testing_file = testing;
-//        parseQuery.main("query0");
+        //SparkExample.JavaSQLDataSourceExample.main(new String[] {"arg"});
+        //SparkExample.JavaSparkHiveExample.main_test();
+        //SparkExample.JavaSparkSQLExample.main(new String[] {"arg"});
+        //SparkExample.JavaUserDefinedTypedAggregation.main(new String[] {"arg"});
+        //SparkExample.JavaUserDefinedUntypedAggregation.main(new String[] {"arg"});
+        Irisa.Enssat.Rennes1.TestCatalys.should_get_dataframe_from_database();
+//        com.sparkexample.testSparkDataFrame.test();
+//        RATree.test_ratree();
+//        System.out.println(System.getenv().get("HOME"));
+//        thesis.experiments.Experiment1.main(new String[] {"arg1", "arg2", "arg3"});
+//        thesis.enumeration_algorithms.IDP1_Balanced.main(new String[] {"arg1", "arg2", "arg3"});
 //        TupleTree.main();
 //        LinearRegressionManual.testLinearRegression(file_test);
 //        LinearRegressionManual.small_test(training_file,testing_file);
