@@ -82,7 +82,7 @@ public final class JavaStructuredNetworkWordCountWindowed {
       .load();
 
     // Split the lines into words, retaining timestamps
-    Dataset<Row> words = lines
+/*    Dataset<Row> words = lines
       .as(Encoders.tuple(Encoders.STRING(), Encoders.TIMESTAMP()))
       .flatMap((FlatMapFunction<Tuple2<String, Timestamp>, Tuple2<String, Timestamp>>) t -> {
           List<Tuple2<String, Timestamp>> result = new ArrayList<>();
@@ -108,5 +108,5 @@ public final class JavaStructuredNetworkWordCountWindowed {
       .start();
 
     query.awaitTermination();
-  }
+*/  }
 }

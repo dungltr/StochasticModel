@@ -39,7 +39,7 @@ public class TestCatalys {
   // such as: treeString(true), asCode()
   // To see full execution details, fileteredDataset.explain(true)
   // should be called
-//  assertThat(filteredDataset.count()).isEqualTo(3);
+  //assertThat(filteredDataset.count()).isEqualTo(3);
 }
  
 public static Dataset<Row> getBaseDataset(String dbTable) {

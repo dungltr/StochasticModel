@@ -30,7 +30,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.10</version>
             <type>jar</type>
         </dependency>
     <!-- Spark -->
@@ -71,21 +71,32 @@
             <version>${spark.version}</version>
             <type>jar</type>
         </dependency>
-    <!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-library -->
+    
+    <!--Scala-->
+    <dependency>
+        <groupId>org.scala-lang</groupId>
+        <artifactId>scala-library</artifactId>
+        <version>2.11.8</version>
+    </dependency>
+    <dependency>
+	<groupId>org.scalatest</groupId>
+	<artifactId>scalatest_2.11</artifactId>
+	<version>2.2.2</version>
+	<scope>test</scope>
+    </dependency> 
+    <dependency>
+        <groupId>org.hamcrest</groupId>
+        <artifactId>hamcrest-core</artifactId>
+        <version>1.3</version>
+      <type>jar</type>
+    </dependency>
     <dependency>
         <groupId>org.hamcrest</groupId>
         <artifactId>hamcrest-library</artifactId>
         <version>1.3</version>
         <scope>test</scope>
-    </dependency>  
-    <dependency>
-          <groupId>org.assertj</groupId>
-          <artifactId>assertj-guava</artifactId>
-          <!-- Use 2.x version if you rely on Java 7 / AssertJ Core 2.x -->
-          <version>3.1.0</version>
-          <scope>test</scope>
-    </dependency>  
-        <!-- gr.ntua.cslab -->
+    </dependency>    
+    <!-- gr.ntua.cslab -->
     <dependency>
       <groupId>gr.ntua.cslab</groupId>
       <artifactId>asap-client</artifactId>
@@ -152,7 +163,30 @@
  </plugins>
 -->
 <plugins>
+   <!-- This plugin compiles Scala files -->
+        <plugin>
+            <groupId>net.alchim31.maven</groupId>
+            <artifactId>scala-maven-plugin</artifactId>
+            <executions>
+                <execution>
+                    <id>scala-compile-first</id>
+                    <phase>process-resources</phase>
+                    <goals>
+                        <goal>add-source</goal>
+                        <goal>compile</goal>
+                    </goals>
+                </execution>
+                <execution>
+                    <id>scala-test-compile</id>
+                    <phase>process-test-resources</phase>
+                    <goals>
+                        <goal>testCompile</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
       <plugin>
+
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.0.0</version>
@@ -187,7 +221,7 @@
         </configuration>
       </plugin>
     </plugins> 
-
+    
 </build>
- 
+
 </project>
