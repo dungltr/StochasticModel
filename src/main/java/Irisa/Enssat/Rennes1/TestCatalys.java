@@ -32,8 +32,8 @@ public class TestCatalys {
 //    Dataset<Row> dataset = getBaseDataset("database_hive_postgres");
  
 //    Dataset<Row> filteredDataset = dataset.where("LENGTH(name) > 5")
-            .where("name != 'mushrooms'")
-            .limit(3);
+//            .where("name != 'mushrooms'")
+//            .limit(3);
  
   // To see logical plan, filteredDataset.logicalPlan() methods can be used,
   // such as: treeString(true), asCode()
