@@ -11,7 +11,7 @@ import java.io.File;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.catalyst.CatalystConf;
+//import org.apache.spark.sql.catalyst.CatalystConf;
 
 /**
  *
@@ -29,9 +29,9 @@ public class TestCatalys {
 
     public static void should_get_dataframe_from_database() {   
   // categories as 18 entries
-    Dataset<Row> dataset = getBaseDataset("database_hive_postgres");
+//    Dataset<Row> dataset = getBaseDataset("database_hive_postgres");
  
-    Dataset<Row> filteredDataset = dataset.where("LENGTH(name) > 5")
+//    Dataset<Row> filteredDataset = dataset.where("LENGTH(name) > 5")
             .where("name != 'mushrooms'")
             .limit(3);
  
@@ -41,7 +41,7 @@ public class TestCatalys {
   // should be called
   //assertThat(filteredDataset.count()).isEqualTo(3);
 }
- 
+/* 
 public static Dataset<Row> getBaseDataset(String dbTable) {
   // Please note that previous query won't generate real SQL query. It will only
   // check if specified column exists. It can be observed with RDBMS query logs.
@@ -62,6 +62,7 @@ public static Dataset<Row> getBaseDataset(String dbTable) {
     .option("user", username)
     .option("password", password)
     .load();
+*/
 /*  return SESSION.read() // Backup origin
     .format("jdbc")
     .option("url", "jdbc:mysql://localhost:3306/fooder")
@@ -71,5 +72,5 @@ public static Dataset<Row> getBaseDataset(String dbTable) {
     .option("password", "")
     .load();
 */  
-}
+//}
 }
