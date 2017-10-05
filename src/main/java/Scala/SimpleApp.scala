@@ -5,29 +5,66 @@
  */
 
 package Scala
+import java.io.File
 
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.Row
+import org.apache.spark.SparkConf
+import org.apache.spark.SparkContext
 case class Person(name: String, age: Long){}
 class SimpleApp {
   def main() {
   //def main(args: Array[String]) {
     println("\n Hello world")
-    val spark = SparkSession
-      .builder()
-      .appName("Spark SQL basic example")
-      .master("local[*]")
-      .config("spark.sql.warehouse.dir", "/user/hive/warehouse")
-      .getOrCreate()
-    val textFile = spark.read.textFile("hdfs://localhost:9000/user/hive/warehouse/people.txt")
-    println("\n The number of word in file is:=" + textFile.count)
-    runBasicDataFrameExample(spark)
+//    val spark = SparkSession
+//      .builder()
+//      .appName("Spark SQL basic example")
+//      .master("local[*]")
+//      .config("spark.sql.warehouse.dir", "/user/hive/warehouse")
+//      .getOrCreate()
+//    val textFile = spark.read.textFile("hdfs://localhost:9000/user/hive/warehouse/people.txt")
+//    println("\n The number of word in file is:=" + textFile.count)
+    firstExample()
+    //runBasicDataFrameExample(spark)
     //runDatasetCreationExample(spark)
     //UntypedUserDefinedAggregate(spark)
     //runInferSchemaExample(spark)
     //runProgrammaticSchemaExample(spark) // can not run in this example
-    spark.stop()
+//    spark.stop()
     println("\n Goodbye")
+  }
+  private def firstExample(): Unit = {
+//    SparkConf conf = SparkConf.setAppName("jdf-dt-rtoc-withSQL").set("spark.serializer", "org.apache.spark.serializer.KryoSerializer").setMaster("local[*]")
+//    JavaSparkContext sc = new JavaSparkContext(conf)
+//    val hiveContext = new org.apache.spark.sql.hive.HiveContext(sc)
+    val warehouseLocation = new File("spark-warehouse").getAbsolutePath
+    val spark = SparkSession
+      .builder()
+      .appName("Spark Hive Example")
+      .master("local[*]")
+      .config("hive.metastore.uris", "thrift://localhost:9083")
+      .config("spark.sql.warehouse.dir", "/user/hive/warehouse")
+      .enableHiveSupport()
+      .getOrCreate()
+    import spark.implicits._
+    import spark.sql
+    val frame = Seq(("one", 1), ("two", 2), ("three", 3)).toDF("word", "count")
+        // see the frame created
+    frame.show()
+        /**
+         * +-----+-----+
+         * | word|count|
+         * +-----+-----+
+         * |  one|    1|
+         * |  two|    2|
+         * |three|    3|
+         * +-----+-----+
+         */
+        // write the frame
+    frame.write.mode("overwrite").saveAsTable("t4")    
+    //sql("CREATE TABLE IF NOT EXISTS ABC AS (SELECT * FROM DUNGBINH)").show()
+    //sql.show()
+    spark.stop()
   }
   private def runBasicDataFrameExample(spark: SparkSession): Unit = {
     val df = spark.read.json("hdfs://localhost:9000/user/hive/warehouse/people.json")

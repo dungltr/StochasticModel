@@ -62,8 +62,7 @@
         <groupId>org.apache.hive</groupId>
         <artifactId>hive-jdbc</artifactId>
         <version>${spark.version}</version>
-    </dependency>
-    
+    </dependency>   
     <!--Catalyst-->
         <dependency>
             <groupId>org.apache.spark</groupId>

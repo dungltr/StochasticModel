@@ -15,7 +15,7 @@ class SecondScala {
   object MultiplyOptimizationRule extends Rule[LogicalPlan] {
     def apply(plan: LogicalPlan): LogicalPlan = plan transformAllExpressions {
       case Multiply(left,right) if right.isInstanceOf[Literal] &&
-        right.asInstanceOf[Literal].value.asInstanceOf[Double] == 1.0 =>
+        right.asInstanceOf[Literal].value.asInstanceOf[Double] < 1.0 =>
         println("optimization of one applied")
         left
     }
@@ -39,10 +39,20 @@ class SecondScala {
       println("\n Goodbye")
   }
   private def OriginalExample(spark: SparkSession): Unit = {
-    val df = spark.read.option("header","true").csv("src/main/resources/sales.csv")
-    val multipliedDF = df.selectExpr("amountPaid * 1")
-    println(multipliedDF.queryExecution.optimizedPlan.numberedTreeString)
+    val sales = spark.read.option("header","true").csv("src/main/resources/sales.csv")
+    sales.createOrReplaceTempView("sales")
+    val customers = spark.read.option("header","true").csv("src/main/resources/customers.csv")
+    customers.createOrReplaceTempView("customers")
+    //val multipliedDF = df.selectExpr("amountPaid * 1")
+    val SalesJoinCustomers = sales.join(customers, sales("customerID") === customers("customerID"))
+//    println(SalesJoinCustomers)
+    val WhereCustomersID = SalesJoinCustomers.where(sales("customerID")<3)
+    val GroupBy = WhereCustomersID.groupBy(sales("customerID"), customers("customerID"))
     
+    val query = spark.sql("select * from sales, customers where sales.customerId = customers.customerId and sales.customerId < 3")
+    query.show()
+    println(query.queryExecution.optimizedPlan.numberedTreeString)
+    println(GroupBy.toString)
 /*    //add our custom optimization
     spark.experimental.extraOptimizations = Seq(MultiplyOptimizationRule)
     val multipliedDFWithOptimization = df.selectExpr("amountPaid * 1")

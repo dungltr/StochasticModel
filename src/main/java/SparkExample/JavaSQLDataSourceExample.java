@@ -120,8 +120,7 @@ public class JavaSQLDataSourceExample {
 //    usersDF.select("name", "favorite_color").write().save(warehouseLocation + "/namesAndFavColors.parquet");
     // $example off:generic_load_save_functions$
     // $example on:manual_load_options$
-    Dataset<Row> peopleDF =
-      spark.read().format("json").load("examples/src/main/resources/people.json");
+    Dataset<Row> peopleDF = spark.read().format("json").load("examples/src/main/resources/people.json");
 //    peopleDF.select("name", "age").write().format("parquet").save(warehouseLocation + "/namesAndAges.parquet");
     // $example off:manual_load_options$
     // $example on:direct_sql$
