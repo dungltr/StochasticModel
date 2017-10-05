@@ -17,7 +17,7 @@ class ThirdScala {
   object MultiplyOptimizationRule extends Rule[LogicalPlan] {
     def apply(plan: LogicalPlan): LogicalPlan = plan transformAllExpressions {
       case Multiply(left,right) if right.isInstanceOf[Literal] &&
-        right.asInstanceOf[Literal].value.asInstanceOf[Double] == 1.0 =>
+        right.asInstanceOf[Literal].value.asInstanceOf[Double] < 1.0 =>
         println("optimization of one applied")
         left
     }
@@ -30,7 +30,7 @@ class ThirdScala {
         .master("local[*]")
         .config("spark.sql.warehouse.dir", "/user/hive/warehouse")
         .getOrCreate()
-      val textFile = spark.read.textFile("hdfs://localhost:9000/user/hive/warehouse/people.txt")
+      val textFile = spark.read.textFile("hdfs://master:9000/user/hive/warehouse/people.txt")
       println("\n The number of word in file is:=" + textFile.count)
 
       //////////////////////////////////////////////////////////////
