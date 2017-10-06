@@ -6,6 +6,9 @@
 
 package Scala
 
+import org.apache.spark.SparkConf
+import org.apache.spark.SparkContext
+import org.apache.spark.sql.SQLContext
 import org.apache.spark.sql.SparkSession
 //import org.apache.spark.sql.hive
 //import org.apache.spark.sql.SQLContext
@@ -21,6 +24,50 @@ class ThirdScala {
         println("optimization of one applied")
         left
     }
+  }
+  def main () {
+    println("\n Hello from Scala")
+    first()
+    println("\n Goodbye")
+  }
+  
+  def first(){
+    val conf = new SparkConf()
+            .setAppName("jdf-dt-rtoc-withSQL")
+            .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+            .set("hive.metastore.uris", "thrift://localhost:9083")
+            .set("spark.sql.warehouse.dir", "/user/hive/warehouse")
+            .setMaster("local[*]")
+    val sc = new SparkContext(conf)
+    val sqlContext = new org.apache.spark.sql.SQLContext(sc)
+//    SQLContext sqlContext = new HiveContext(sc) // The error occurred.
+    val data_hive = sqlContext.table("tpch100m.orders")
+    data_hive.createOrReplaceTempView("orders")
+    data_hive.show();
+    
+    val spark = SparkSession
+        .builder()
+        .appName("Spark Postgres Example")
+        .master("local[*]")
+        .getOrCreate();
+//    val dataDF_postgres = spark.read.jdbc.jdbc("jdbc:postgresql://localhost:5432/tpch100m", "lineitem")
+//        .option("user", username)
+//        .option("password", password)
+//        .load()
+    val dataDF_postgres = sqlContext.read.format("jdbc").options(
+        Map("url" -> "jdbc:postgresql:localhost:5432",
+        "dbtable" -> "tpch100m.lineitem")).load()
+    dataDF_postgres.createOrReplaceTempView("lineitem");
+    dataDF_postgres.show();
+    
+    
+    val query = spark.sql("select * from orders,lineitem where l_orderkey = o_orderkey")
+    query.show()
+    println(query.queryExecution.optimizedPlan.numberedTreeString)
+    spark.experimental.extraOptimizations = Seq(MultiplyOptimizationRule);
+    sc.stop();
+//    sc.close();
+    spark.stop();
   }
   def main_third() {
     println("\n Hello world")

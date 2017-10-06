@@ -5,6 +5,7 @@
  */
 package Irisa.Enssat.Rennes1;
 import java.io.File;
+import java.io.Serializable;
 import java.util.Properties;
 import org.apache.spark.SparkConf;
 import org.apache.spark.SparkContext;
@@ -25,8 +26,28 @@ import org.apache.spark.sql.hive.HiveContext;
  * @author letrung
  */
 public class TestJava {
+    public static class Person implements Serializable {
+    private String name;
+    private int age;
+
+    public String getName() {
+      return name;
+    }
+
+    public void setName(String name) {
+      this.name = name;
+    }
+
+    public int getAge() {
+      return age;
+    }
+
+    public void setAge(int age) {
+      this.age = age;
+    }
+  }
     public static void main (){
-    System.out.println("\n Hello world");
+    System.out.println("\n Hello from Java");
 /*    SparkSession spark = SparkSession
         .builder()
         .appName("Spark SQL basic example")
@@ -37,7 +58,7 @@ public class TestJava {
     System.out.println("\n The number of word in file is:=" + jsonFile.count());
 */    //////////////////////////////////////////////////////////////
 //    OriginalExample(spark);
-    //FirstExample();
+//    FirstExample();
 //    CustomExample(spark);
       /////////////////////////////////////////////////////////////
 //    spark.stop();
@@ -71,83 +92,79 @@ public class TestJava {
     String HOME=System.getenv().get("HOME");
     String FILENAME = HOME + "/Documents/password.txt";
     String password = com.sparkexample.TestPostgreSQLDatabase.readpass(FILENAME);
-    
+/*    SparkSession spark = SparkSession
+      .builder()
+      .appName("Spark Hive Example")
+      .master("local[*]")
+      .config("hive.metastore.uris", "thrift://localhost:9083")
+      .config("spark.sql.warehouse.dir", "/user/hive/warehouse")
+      .enableHiveSupport()
+      .getOrCreate();
+//    import spark.implicits._
+//    import spark.sql
+    Dataset<Row> query = spark.sql("CREATE TABLE IF NOT EXISTS tpch100m.order_lineitem AS (SELECT * FROM tpch100m.orders,tpch100m.lineitem WHERE l_orderkey = o_orderkey)");
+    //Dataset<Row> frame = (("one", 1), ("two", 2), ("three", 3)).toDF("word", "count");
+        // see the frame created
+    //frame.show()
+        /**
+         * +-----+-----+
+         * | word|count|
+         * +-----+-----+
+         * |  one|    1|
+         * |  two|    2|
+         * |three|    3|
+         * +-----+-----+
+         */
+        // write the frame
+    //frame.write.mode("overwrite").saveAsTable("t4")    
+    //sql("CREATE TABLE IF NOT EXISTS ABC AS (SELECT * FROM DUNGBINH)").show()
+    //sql.show()
+//    query.show();
+//    spark.stop();
+
     SparkConf conf = new SparkConf()
             .setAppName("jdf-dt-rtoc-withSQL")
             .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+            .set("hive.metastore.uris", "thrift://localhost:9083")
             .set("spark.sql.warehouse.dir", "/user/hive/warehouse")
             .setMaster("local[*]");
     JavaSparkContext sc = new JavaSparkContext(conf);
 
     SQLContext sqlContext = new HiveContext(sc); // The error occurred.
-//    Dataset<Row> data_hive = 
-            String[] listTable = sqlContext.tableNames("mydb");
-    System.out.println(listTable[0]);        
-//    data_hive.show();
+    Dataset<Row> data_hive = sqlContext.table("tpch100m.orders");
+    data_hive.createOrReplaceTempView("orders");
+    
+//            String[] listTable = sqlContext.tableNames("mydb");
+//    System.out.println(listTable[0]);  
+
+    data_hive.show();
+    
+    SparkSession spark = SparkSession
+        .builder()
+        .appName("Spark Postgres Example")
+        .master("local[*]")
+        .getOrCreate();
+    Dataset<Row> dataDF_postgres = spark.read()
+        .format("jdbc")
+        .option("url", "jdbc:postgresql://localhost:5432/tpch100m")
+        .option("dbtable", "lineitem")
+        .option("user", username)
+        .option("password", password)
+        .load();
+    dataDF_postgres.createOrReplaceTempView("lineitem");
+    dataDF_postgres.show();
+    
+    
+    Dataset<Row> query = spark.sql("select * from orders,lineitem where l_orderkey = o_orderkey");
+    query.show();
+    System.out.println(query.queryExecution().optimizedPlan().numberedTreeString());
+        
+//    spark.experimental.extraOptimizations = Seq(MultiplyOptimizationRule);
     sc.stop();
     sc.close();
-    /*
-    Dataset<Row> dataDF_postgres = spark.read()
-      .format("jdbc")
-      .option("url", "jdbc:postgresql://localhost:5432/mydb")
-      .option("dbtable", "database_hive_postgres")
-      .option("user", username)
-      .option("password", password)
-      .load();
-    dataDF_postgres.createOrReplaceTempView("database_hive_postgres");
-    Dataset<Row> query = spark.sql("select * from database_hive_postgres");
-    query.show();
-    */
-    
-/*    
-    SparkSession spark_hive = SparkSession
-        .builder()
-        .appName("Java Spark SQL Hive basic example")
-        .enableHiveSupport()
-        .config("spark.sql.warehouse.dir", "hdfs://localhost:9000/user/hive/warehouse")
-        .master("local")
-        .getOrCreate();
-    
-    
-    Dataset<Row> df2 = spark_hive.read()
-//        .format("org.apache.derby.jdbc.EmbeddedDriver")
-	.format("jdbc")
-        .option("url", "jdbc:hive2://")
-//	.option("database", "mydb")
-        .option("dbtable", "dungbinh")
-        .option("user", "APP")//username)
-        .option("password", "mine")//password)
-        .load();
-    df2.createOrReplaceTempView("customer");
+    spark.stop();
 
-//    Dataset<Row> query2 = spark_hive.sql("select * from customer");
-//    query2.show();
-/*    
-    DataFrameReader dataDF_hive = spark_hive.read()
-      .format("jdbc")
-Y      .option("url", "jdbc:derby://usr/local/share/hive/metastore_db");//hive2://localhost:10000/mydb")
-//      .option("dbtable", "customer")
-//      .option("user", "")
-//      .option("password", "")
-//      .load();
-    Dataset<Row> df2 = dataDF_hive.table("mydb.customer");
-    df2.createOrReplaceTempView("customer");
-    Dataset<Row> query2 = spark.sql("select * from customer");
-    query2.show();
-/*    
-    SparkConf conf = new SparkConf().setAppName("SparkHive Example");
-    SparkContext sc = new SparkContext(conf);
-    HiveContext hiveContext = new org.apache.spark.sql.hive.HiveContext(sc);
-    Dataset<Row> df = hiveContext.sql("show databases");
-    df.show();
-*/
-    /*
-    Properties connectionProperties = new Properties();
-    connectionProperties.put("user", username);
-    connectionProperties.put("password", password);
-    Dataset<Row> jdbcDF2 = spark.read()
-      .jdbc("jdbc:postgresql://localhost:5432/mydb", "database_hive_postgres", connectionProperties);
-*/    
+  
     
 //    Dataset<Row> customers = spark.read().option("header","true").csv("src/main/resources/customers.csv");
 //    customers.createOrReplaceTempView("customers");

@@ -20,7 +20,7 @@ public class TestScala {
 //        SecondScala Second = new SecondScala();
 //        Second.main_test();
 //        ThirdScala Third = new ThirdScala();
-//        Third.main_third();
+//        Third.main();
     }
     
 }

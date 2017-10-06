@@ -146,7 +146,6 @@ public class AppTest{
         //SparkExample.JavaUserDefinedUntypedAggregation.main(new String[] {"arg"});
         //Irisa.Enssat.Rennes1.TestCatalys.should_get_dataframe_from_database();
         //Bootstrap.main(new String[] {"arg"});
-        com.sparkexample.TestHiveSQLDatabase.main(new String [] {"jdbc:hive2:// APP mine"});
         Irisa.Enssat.Rennes1.TestScala.test();
         Irisa.Enssat.Rennes1.TestJava.main();
 //        com.sparkexample.testSparkDataFrame.test();

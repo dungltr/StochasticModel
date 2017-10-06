@@ -5,14 +5,38 @@
  */
 
 package Scala
+
 import java.io.File
 
+import org.apache.spark.sql.SQLContext
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.api.java.JavaSparkContext
 import org.apache.spark.sql.Row
 import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
+
+import org.apache.spark.sql.catalyst.expressions.{Literal, Multiply}
+import org.apache.spark.sql.catalyst.plans.logical.LogicalPlan
+import org.apache.spark.sql.catalyst.rules.Rule
+import org.apache.spark.sql.hive.HiveContext
+
 case class Person(name: String, age: Long){}
 class SimpleApp {
+  val username = System.getProperty("user.name")
+  val HOME = System.getenv().get("HOME")
+  val FILENAME = HOME + "/Documents/password.txt"
+  val password = com.sparkexample.TestPostgreSQLDatabase.readpass(FILENAME)
+  val query4 = com.sparkexample.TestPostgreSQLDatabase.readpass(HOME+"/SQL/tpch_query4.sql")
+  
+  
+  object MultiplyOptimizationRule extends Rule[LogicalPlan] {
+    def apply(plan: LogicalPlan): LogicalPlan = plan transformAllExpressions {
+      case Multiply(left,right) if right.isInstanceOf[Literal] &&
+        right.asInstanceOf[Literal].value.asInstanceOf[Double] < 1.0 =>
+        println("optimization of one applied")
+        left
+    }
+  }
   def main() {
   //def main(args: Array[String]) {
     println("\n Hello world")
@@ -24,7 +48,7 @@ class SimpleApp {
 //      .getOrCreate()
 //    val textFile = spark.read.textFile("hdfs://localhost:9000/user/hive/warehouse/people.txt")
 //    println("\n The number of word in file is:=" + textFile.count)
-    firstExample()
+    first()
     //runBasicDataFrameExample(spark)
     //runDatasetCreationExample(spark)
     //UntypedUserDefinedAggregate(spark)
@@ -33,6 +57,62 @@ class SimpleApp {
 //    spark.stop()
     println("\n Goodbye")
   }
+  def first(){
+    val conf = new SparkConf()
+            .setAppName("jdf-dt-rtoc-withSQL")
+            .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+            .set("hive.metastore.uris", "thrift://localhost:9083")
+            .set("spark.sql.warehouse.dir", "/user/hive/warehouse")
+            .setMaster("local[*]")
+    val sc = new JavaSparkContext(conf)
+    val sqlContext = new HiveContext(sc)
+    import sqlContext.implicits._
+    val data_hive = sqlContext.table("tpch100m.orders")
+    data_hive.createOrReplaceTempView("orders")
+    data_hive.show();
+    
+    val spark = SparkSession
+        .builder()
+        .appName("Spark Postgres Example")
+        .master("local[*]")
+        .getOrCreate();
+//    val dataDF_postgres = spark.read.jdbc.jdbc("jdbc:postgresql://localhost:5432/tpch100m", "lineitem")
+//        .option("user", username)
+//        .option("password", password)
+//        .load()
+    val dataDF_postgres = sqlContext.read.format("jdbc").options(
+        Map("url" -> "jdbc:postgresql:tpch100m",
+        "dbtable" -> "lineitem",
+        "user" -> username,
+        "password" -> password)).load()
+    dataDF_postgres.createOrReplaceTempView("lineitem");
+    dataDF_postgres.show();
+    
+    val query = spark.sql(query4)//"select * from orders,lineitem where l_orderkey = o_orderkey")
+    println("--------------------sparkPlan--------------------------------")
+    println(query.queryExecution.sparkPlan)
+    println("--------------------show()-----------------------------------")
+    query.show()
+    println("---------------------queryExecution--------------------------")
+    println(query.queryExecution)
+    println("---------------------optimizedPlan.numberedTreeString--------")
+    println(query.queryExecution.optimizedPlan.numberedTreeString)
+    
+    //Second(spark)
+    
+    
+    sc.stop();
+    sc.close();
+    spark.stop();
+  }
+  private def Second(spark: SparkSession): Unit = {
+    val df = spark.sql(query4)//"select * from orders,lineitem where l_orderkey = o_orderkey")
+    //add our custom optimization
+    spark.experimental.extraOptimizations = Seq(MultiplyOptimizationRule)
+    val multipliedDFWithOptimization = df.selectExpr("order_count")
+    println("after optimization")
+    println(multipliedDFWithOptimization.queryExecution.optimizedPlan.numberedTreeString)
+  }  
   private def firstExample(): Unit = {
 //    SparkConf conf = SparkConf.setAppName("jdf-dt-rtoc-withSQL").set("spark.serializer", "org.apache.spark.serializer.KryoSerializer").setMaster("local[*]")
 //    JavaSparkContext sc = new JavaSparkContext(conf)
@@ -42,13 +122,13 @@ class SimpleApp {
       .builder()
       .appName("Spark Hive Example")
       .master("local[*]")
-      .config("hive.metastore.uris", "thrift://master:9083")
+      .config("hive.metastore.uris", "thrift://localhost:9083")
       .config("spark.sql.warehouse.dir", "/user/hive/warehouse")
       .enableHiveSupport()
       .getOrCreate()
     import spark.implicits._
     import spark.sql
-    sql("CREATE TABLE IF NOT EXISTS tpch100m_order_lineitem AS (SELECT * FROM tpch100m.orders,tpch100m.lineitem WHERE l_orderkey = o_orderkey)").show()
+    sql("CREATE TABLE IF NOT EXISTS tpch100m.order_lineitem AS (SELECT * FROM tpch100m.orders,tpch100m.lineitem WHERE l_orderkey = o_orderkey)").show()
     val frame = Seq(("one", 1), ("two", 2), ("three", 3)).toDF("word", "count")
         // see the frame created
     frame.show()
