@@ -42,12 +42,13 @@ class SimpleApp {
       .builder()
       .appName("Spark Hive Example")
       .master("local[*]")
-      .config("hive.metastore.uris", "thrift://localhost:9083")
+      .config("hive.metastore.uris", "thrift://master:9083")
       .config("spark.sql.warehouse.dir", "/user/hive/warehouse")
       .enableHiveSupport()
       .getOrCreate()
     import spark.implicits._
     import spark.sql
+    sql("CREATE TABLE IF NOT EXISTS tpch100m_order_lineitem AS (SELECT * FROM tpch100m.orders,tpch100m.lineitem WHERE l_orderkey = o_orderkey)").show()
     val frame = Seq(("one", 1), ("two", 2), ("three", 3)).toDF("word", "count")
         // see the frame created
     frame.show()
