@@ -22,9 +22,12 @@ import org.apache.spark.sql.hive.HiveContext
 
 case class Person(name: String, age: Long){}
 class SimpleApp {
-  val username = System.getProperty("user.name")
+//System.getProperty("user.name")
   val HOME = System.getenv().get("HOME")
-  val FILENAME = HOME + "/Documents/password.txt"
+  val FILEUSER = HOME + "/username.txt"
+  val username = com.sparkexample.TestPostgreSQLDatabase.readpass(FILEUSER)
+
+  val FILENAME = HOME + "/password.txt"
   val password = com.sparkexample.TestPostgreSQLDatabase.readpass(FILENAME)
   val query4 = IRES.TPCHQuery.readSQL(HOME+"/SQL/tpch_query4")
   
@@ -68,15 +71,18 @@ class SimpleApp {
     val sqlContext = new HiveContext(sc)
     import sqlContext.implicits._
     val data_hive = sqlContext.table("tpch100m.orders")
-    data_hive.createOrReplaceTempView("orders")
-    data_hive.show();
-    
+    val dbHive = "orders"
+    data_hive.createOrReplaceTempView(dbHive)
+    data_hive.show()
+
+    val dbTablePostgres = "lineitem"
+
     val spark = SparkSession
         .builder()
         .appName("Spark Postgres Example")
         .master("local[*]")
         .getOrCreate();
-//    val dataDF_postgres = spark.read.jdbc.jdbc("jdbc:postgresql://master:5432/tpch100m", "lineitem")
+//    val dataDF_postgres = spark.read.jdbc("jdbc:postgresql://localhost:5432", "tpch100m.lineitem")
 //        .option("user", username)
 //        .option("password", password)
 //        .load()
@@ -84,10 +90,10 @@ class SimpleApp {
         Map("url" -> "jdbc:postgresql:tpch100m",
         "dbtable" -> "lineitem",
         "user" -> username,
-        "password" -> "ubuntu")).load()
+        "password" -> password)).load()
     dataDF_postgres.createOrReplaceTempView("lineitem");
-    dataDF_postgres.show();
-    
+    dataDF_postgres.show();    
+/*
     val query = spark.sql(query4)//"select * from orders,lineitem where l_orderkey = o_orderkey")
     println("--------------------sparkPlan--------------------------------")
     println(query.queryExecution.sparkPlan)
@@ -97,13 +103,13 @@ class SimpleApp {
     println(query.queryExecution)
     println("---------------------optimizedPlan.numberedTreeString--------")
     println(query.queryExecution.optimizedPlan.numberedTreeString)
-    
+*/    
     //Second(spark)
     
     
-    sc.stop();
-    sc.close();
-    spark.stop();
+    sc.stop()
+    sc.close()
+    spark.stop()
   }
   private def Second(spark: SparkSession): Unit = {
     val df = spark.sql(query4)//"select * from orders,lineitem where l_orderkey = o_orderkey")
