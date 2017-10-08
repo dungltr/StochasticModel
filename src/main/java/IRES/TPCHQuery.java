@@ -428,10 +428,14 @@ public class TPCHQuery {
 			while ((sCurrentLine = br.readLine()) != null) {
                             SQL = SQL + " " + sCurrentLine;                            
 			}
+			SQL = SQL.replace("\t", "");
+       			SQL = SQL.replace(";", "");      
                         return SQL;
 		} catch (IOException e) {
 			e.printStackTrace();                       
 		}
+       SQL = SQL.replace("\t", "");
+       SQL = SQL.replace(";", "");	
        return SQL;
     }
     public static double[] calculateSize(String[] randomQuery, String From, String To, String Size_tpch) {

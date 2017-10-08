@@ -54,7 +54,7 @@ public class TestJava {
         .master("local[*]")
         .config("spark.sql.warehouse.dir", "/user/hive/warehouse")
         .getOrCreate();
-    Dataset<Row> jsonFile = spark.read().format("json").load("hdfs://localhost:9000/user/hive/warehouse/people.json");
+    Dataset<Row> jsonFile = spark.read().format("json").load("hdfs://master:9000/user/hive/warehouse/people.json");
     System.out.println("\n The number of word in file is:=" + jsonFile.count());
 */    //////////////////////////////////////////////////////////////
 //    OriginalExample(spark);
@@ -96,7 +96,7 @@ public class TestJava {
       .builder()
       .appName("Spark Hive Example")
       .master("local[*]")
-      .config("hive.metastore.uris", "thrift://localhost:9083")
+      .config("hive.metastore.uris", "thrift://master:9083")
       .config("spark.sql.warehouse.dir", "/user/hive/warehouse")
       .enableHiveSupport()
       .getOrCreate();
@@ -125,7 +125,7 @@ public class TestJava {
     SparkConf conf = new SparkConf()
             .setAppName("jdf-dt-rtoc-withSQL")
             .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-            .set("hive.metastore.uris", "thrift://localhost:9083")
+            .set("hive.metastore.uris", "thrift://master:9083")
             .set("spark.sql.warehouse.dir", "/user/hive/warehouse")
             .setMaster("local[*]");
     JavaSparkContext sc = new JavaSparkContext(conf);
@@ -146,7 +146,7 @@ public class TestJava {
         .getOrCreate();
     Dataset<Row> dataDF_postgres = spark.read()
         .format("jdbc")
-        .option("url", "jdbc:postgresql://localhost:5432/tpch100m")
+        .option("url", "jdbc:postgresql://master:5432/tpch100m")
         .option("dbtable", "lineitem")
         .option("user", username)
         .option("password", password)

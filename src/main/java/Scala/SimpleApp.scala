@@ -26,7 +26,7 @@ class SimpleApp {
   val HOME = System.getenv().get("HOME")
   val FILENAME = HOME + "/Documents/password.txt"
   val password = com.sparkexample.TestPostgreSQLDatabase.readpass(FILENAME)
-  val query4 = com.sparkexample.TestPostgreSQLDatabase.readpass(HOME+"/SQL/tpch_query4.sql")
+  val query4 = IRES.TPCHQuery.readSQL(HOME+"/SQL/tpch_query4")
   
   
   object MultiplyOptimizationRule extends Rule[LogicalPlan] {
@@ -46,7 +46,7 @@ class SimpleApp {
 //      .master("local[*]")
 //      .config("spark.sql.warehouse.dir", "/user/hive/warehouse")
 //      .getOrCreate()
-//    val textFile = spark.read.textFile("hdfs://localhost:9000/user/hive/warehouse/people.txt")
+//    val textFile = spark.read.textFile("hdfs://master:9000/user/hive/warehouse/people.txt")
 //    println("\n The number of word in file is:=" + textFile.count)
     first()
     //runBasicDataFrameExample(spark)
@@ -61,7 +61,7 @@ class SimpleApp {
     val conf = new SparkConf()
             .setAppName("jdf-dt-rtoc-withSQL")
             .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-            .set("hive.metastore.uris", "thrift://localhost:9083")
+            .set("hive.metastore.uris", "thrift://master:9083")
             .set("spark.sql.warehouse.dir", "/user/hive/warehouse")
             .setMaster("local[*]")
     val sc = new JavaSparkContext(conf)
@@ -76,7 +76,7 @@ class SimpleApp {
         .appName("Spark Postgres Example")
         .master("local[*]")
         .getOrCreate();
-//    val dataDF_postgres = spark.read.jdbc.jdbc("jdbc:postgresql://localhost:5432/tpch100m", "lineitem")
+//    val dataDF_postgres = spark.read.jdbc.jdbc("jdbc:postgresql://master:5432/tpch100m", "lineitem")
 //        .option("user", username)
 //        .option("password", password)
 //        .load()
@@ -84,7 +84,7 @@ class SimpleApp {
         Map("url" -> "jdbc:postgresql:tpch100m",
         "dbtable" -> "lineitem",
         "user" -> username,
-        "password" -> password)).load()
+        "password" -> "ubuntu")).load()
     dataDF_postgres.createOrReplaceTempView("lineitem");
     dataDF_postgres.show();
     
@@ -122,7 +122,7 @@ class SimpleApp {
       .builder()
       .appName("Spark Hive Example")
       .master("local[*]")
-      .config("hive.metastore.uris", "thrift://localhost:9083")
+      .config("hive.metastore.uris", "thrift://master:9083")
       .config("spark.sql.warehouse.dir", "/user/hive/warehouse")
       .enableHiveSupport()
       .getOrCreate()
@@ -148,7 +148,7 @@ class SimpleApp {
     spark.stop()
   }
   private def runBasicDataFrameExample(spark: SparkSession): Unit = {
-    val df = spark.read.json("hdfs://localhost:9000/user/hive/warehouse/people.json")
+    val df = spark.read.json("hdfs://master:9000/user/hive/warehouse/people.json")
   //  val df = spark.read.json("examples/src/main/resources/people.json")
     // Displays the content of the DataFrame to stdout
     df.show()
