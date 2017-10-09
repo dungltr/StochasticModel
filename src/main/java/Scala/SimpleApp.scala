@@ -93,7 +93,7 @@ class SimpleApp {
         "password" -> password)).load()
     dataDF_postgres.createOrReplaceTempView("lineitem");
     dataDF_postgres.show();    
-/*
+
     val query = spark.sql(query4)//"select * from orders,lineitem where l_orderkey = o_orderkey")
     println("--------------------sparkPlan--------------------------------")
     println(query.queryExecution.sparkPlan)
@@ -103,7 +103,7 @@ class SimpleApp {
     println(query.queryExecution)
     println("---------------------optimizedPlan.numberedTreeString--------")
     println(query.queryExecution.optimizedPlan.numberedTreeString)
-*/    
+    
     //Second(spark)
     
     
