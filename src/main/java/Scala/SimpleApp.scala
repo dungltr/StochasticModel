@@ -51,7 +51,7 @@ class SimpleApp {
 //      .getOrCreate()
 //    val textFile = spark.read.textFile("hdfs://master:9000/user/hive/warehouse/people.txt")
 //    println("\n The number of word in file is:=" + textFile.count)
-    first()
+//    first()
     //runBasicDataFrameExample(spark)
     //runDatasetCreationExample(spark)
     //UntypedUserDefinedAggregate(spark)

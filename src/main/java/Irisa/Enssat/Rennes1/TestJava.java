@@ -88,9 +88,10 @@ public class TestJava {
     println(multipliedDFWithOptimization.queryExecution.optimizedPlan.numberedTreeString)
 */  }
     public static void FirstExample() {
-    String username = System.getProperty("user.name");
     String HOME=System.getenv().get("HOME");
-    String FILENAME = HOME + "/Documents/password.txt";
+    String FILEUSER = HOME + "/username.txt";
+    String username = com.sparkexample.TestPostgreSQLDatabase.readpass(FILEUSER);
+    String FILENAME = HOME + "/password.txt";
     String password = com.sparkexample.TestPostgreSQLDatabase.readpass(FILENAME);
 /*    SparkSession spark = SparkSession
       .builder()
@@ -146,7 +147,7 @@ public class TestJava {
         .getOrCreate();
     Dataset<Row> dataDF_postgres = spark.read()
         .format("jdbc")
-        .option("url", "jdbc:postgresql://master:5432/tpch100m")
+        .option("url", "jdbc:postgresql://localhost:5432/tpch100m")
         .option("dbtable", "lineitem")
         .option("user", username)
         .option("password", password)

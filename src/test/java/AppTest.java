@@ -160,7 +160,7 @@ public class AppTest{
 //        LinearRegressionManual.test_minDataset(training_file,testing_file,0.8);
 //        LinearRegressionManual.TPCH(0.0, "", "100m", "Hive", "Hive", "predict");
 //        Irisa.Enssat.Rennes1.TestScript.testall();
-
+	TPCHQuery.TPCH(Math.random(),"tpch","100m","Hive","Postgres","training");
     }
 //    @Test
     public void testall() throws Exception{

@@ -24,6 +24,8 @@ public class Script {
     String HDFS = new App().readhome("HDFS");
     String NODE_PC = new App().readhome("NODE_PC");
     String username = new App().readhome("username");
+    String username_remote = new App().readhome("username_remote");
+
     String password = new App().readhome("password");
     String ipmaster = new App().readhome("ipmaster");
     String base_in = new App().readhome("BASE_IN");
@@ -53,6 +55,7 @@ public class Script {
 "export NameOp="+NameOp+"\n" +
 "export NameOpRemote="+NameOp+"_remote.sh"+"\n" + 
 "export username="+username+"\n"+
+"export username_remote="+username_remote+"\n"+
 "export master="+ipmaster+"\n"+ 
 //"export password="+password+"\n"+                
 "HDFS="+HDFS+"\n" +
@@ -79,6 +82,7 @@ public class Script {
 "echo -e \"SPARK_PORT = \" $SPARK_PORT\n"+
 "echo -e \"POSTGRES_HOME = \"$POSTGRES_HOME\n"+
 "echo -e \"USERNAME = \"$username\n"+
+"echo -e \"USERNAME_REMOTE = \"$username_remote\n"+
 "echo -e \"REMOTE_HOST = \"$master\n";        
         return top_sh;
     }  
@@ -103,6 +107,7 @@ public class Script {
 "export NameOp="+NameOp+"\n" +
 "export NameOpRemote="+NameOp+"_remote.sh"+"\n" + 
 "export username="+username+"\n"+
+"export username_remote="+username_remote+"\n"+
 "export master="+ipmaster+"\n"+ 
 //"export password="+password+"\n"+                
 "HDFS="+HDFS+"\n" +
@@ -129,6 +134,7 @@ public class Script {
 "echo -e \"SPARK_PORT = \" $SPARK_PORT\n"+
 "echo -e \"POSTGRES_HOME = \"$POSTGRES_HOME\n"+
 "echo -e \"USERNAME = \"$username\n"+
+"echo -e \"USERNAME_REMOTE = \"$username_remote\n"+
 "echo -e \"REMOTE_HOST = \"$master\n";        
         return top_sh;
     }
@@ -172,9 +178,9 @@ public class Script {
 "else\n" +
 "	rm $BASE_IN/$TABLE/*\n" +
 "fi\n" +
-"ssh -i $key $username@$master 'bash -s' < $OperatorDirectory/$NameOpRemote \n"+
-"scp -i $key $username@$master:$BASE_OUT/$TABLE/$TABLE.csv $BASE_IN/$TABLE/$TABLE.csv \n"+
-"ssh -i $key $username@$master \"rm -r $BASE_OUT/$TABLE/*\"\n"  ;
+"ssh -i $key $username_remote@$master 'bash -s' < $OperatorDirectory/$NameOpRemote \n"+
+"scp -i $key $username_remote@$master:$BASE_OUT/$TABLE/$TABLE.csv $BASE_IN/$TABLE/$TABLE.csv \n"+
+"ssh -i $key $username_remote@$master \"rm -r $BASE_OUT/$TABLE/*\"\n"  ;
         return HIVE2CSV_remote;
     }
     public String POSTGRES2CSV_remote(){
@@ -186,9 +192,9 @@ public class Script {
 "else\n" +
 "	rm $BASE_OUT/$TABLE/*\n" +
 "fi\n" +
-"ssh -i $key $username@$master 'bash -s' < $OperatorDirectory/$NameOpRemote \n"+
-"scp -i $key $username@$master:$BASE_OUT/$TABLE/$TABLE.csv $BASE_IN/$TABLE/$TABLE.csv \n"+
-"ssh -i $key $username@$master \"rm -r $BASE_OUT/$TABLE/*\"\n"  ;
+"ssh -i $key $username_remote@$master 'bash -s' < $OperatorDirectory/$NameOpRemote \n"+
+"scp -i $key $username_remote@$master:$BASE_OUT/$TABLE/$TABLE.csv $BASE_IN/$TABLE/$TABLE.csv \n"+
+"ssh -i $key $username_remote@$master \"rm -r $BASE_OUT/$TABLE/*\"\n"  ;
         return POSTGRES2CSV_remote;
     }
     
@@ -313,12 +319,12 @@ public class Script {
     }
     public String Hive_SQL_remote(Move_Data Data, String Hive_SQL){
         String HIVE_remote =
-        "ssh -i $key $username@$master 'bash -s' < $OperatorDirectory/$NameOpRemote \n";
+        "ssh -i $key $username_remote@$master 'bash -s' < $OperatorDirectory/$NameOpRemote \n";
         return HIVE_remote;
     }
     public String Postgres_SQL_remote(Move_Data Data, String Hive_SQL){
         String POSTGRES_remote =
-        "ssh -i $key $username@$master 'bash -s' < $OperatorDirectory/$NameOpRemote \n";
+        "ssh -i $key $username_remote@$master 'bash -s' < $OperatorDirectory/$NameOpRemote \n";
         return POSTGRES_remote;
     }
 
