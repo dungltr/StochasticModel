@@ -136,9 +136,9 @@ public class AppTest{
     @Test
     public void testConvert_IRES() throws Exception {
         createProperties();
-        String file_test = test;
-        String training_file = training;
-        String testing_file = testing;
+//        String file_test = test;
+//        String training_file = training;
+//        String testing_file = testing;
         //SparkExample.JavaSQLDataSourceExample.main(new String[] {"arg"});
         //SparkExample.JavaSparkHiveExample.main_test();
         //SparkExample.JavaSparkSQLExample.main(new String[] {"arg"});
