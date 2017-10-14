@@ -196,11 +196,11 @@ public class runWorkFlowIRES {
 
         mop1.add("Optimization.Out0.size", "In0.size");// different in Hive-Spark or Postgres-Spark //Optimization.Out0.size=20
         mop1.add("Optimization.cost", "1.0"); 
-        mop1.add("Optimization.execTime", "1.0");//Double.toString(costEstimateValue));//"1.0"); // different in Hive-Spark or in Postgres-Spark// Optimization.execTime=In0.size/1.2
+        mop1.add("Optimization.execTime", Double.toString(costEstimateValue));//"1.0"); // different in Hive-Spark or in Postgres-Spark// Optimization.execTime=In0.size/1.2
         mop1.add("Optimization.inputSpace.In0.size", "Double,1E8,1E10,l");
         mop1.add("Optimization.model.Out0.size", "gr.ntua.ece.cslab.panic.core.models.UserFunction");
-        mop1.add("Optimization.model.cost",      "gr.ntua.ece.cslab.panic.core.models.UserFunction");//UserFunction");       
-        mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.UserFunction");//UserFunction");//AbstractWekaModel");//UserFunction");
+        mop1.add("Optimization.model.cost",      "gr.ntua.ece.cslab.panic.core.models.LinearRegression");//UserFunction");       
+        mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.LinearRegression");//UserFunction");//AbstractWekaModel");//UserFunction");
         mop1.add("Optimization.outputSpace.Out0.size", "Double");
         mop1.add("Optimization.outputSpace.cost", "Double");        
         mop1.add("Optimization.outputSpace.execTime", "Double");
