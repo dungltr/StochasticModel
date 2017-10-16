@@ -160,5 +160,32 @@ public class testWriteMatrix2CSV {
         String directory_operator = IRES_library+"/target/asapLibrary/operators/"+ NameOp + "/" ;
         return directory_operator;
     }
+
+    static void storeValueServer(Move_Data Data, String SQL, double[] Value, String NameValue) throws IOException {
+        String directory = testWriteMatrix2CSV.getDirectory(Data);
+        String fileName = directory + "/data/" + NameValue +".csv";
+        double[][] a = new double[1][Value.length];
+        for (int i = 0; i < Value.length; i++)
+            a[0][i] = Value[i];
+        Path filePath = Paths.get(fileName);
+            if (!Files.exists(filePath)) {
+                Files.createFile(filePath);                
+		String FILE_HEADER = "";
+                for (int i= 0; i < Value.length-1; i++)
+                FILE_HEADER = FILE_HEADER + "Variable["+i+"]" + COMMA_DELIMITER;
+                int last = Value.length-1;
+                FILE_HEADER = FILE_HEADER + NameValue;
+                Writematrix2CSV.Writematrix2CSV(a, fileName, FILE_HEADER);
+                }
+            else {
+                String add = "";
+            int i = 0;
+            for (i = 0; a[0].length - 1 > i; i++)
+            add = add + a[0][i] + COMMA_DELIMITER;
+            if (a[0].length - 1 == i)
+            add = add + a[0][i] + NEW_LINE_SEPARATOR;
+            Files.write(filePath, add.getBytes(), StandardOpenOption.APPEND);
+            }
+    }
 }
     

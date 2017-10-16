@@ -96,9 +96,9 @@ public class AppTest{
     static String ASAP_HOME = IRES_HOME;
     static String IRES_library = ASAP_HOME+"/asap-platform/asap-server";
     static String node_pc = new App().readhome("NODE_PC");
-    static String test = new App().readhome("TEST");
-    static String training = new App().readhome("TRAINING");
-    static String testing = new App().readhome("TESTING");
+//    static String test = new App().readhome("TEST");
+//    static String training = new App().readhome("TRAINING");
+//    static String testing = new App().readhome("TESTING");
     @BeforeClass
     /**
     * Start up the asap-server before executing the unit tests.
