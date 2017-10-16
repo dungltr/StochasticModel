@@ -610,7 +610,7 @@ public class Algorithms {
 //	double costEstimateValue2 = batchgradientdescent.estimateGradient(sizeOfValue, realValue, parameter, StochasticValue, R_2_limit);
 //        System.out.println("\n Estimate Value of Batch Gradient Descent is: " + costEstimateValue2);
 	costEstimateValue = estimateCostValue(sizeOfValue, realValue, parameter, StochasticValue, R_2_limit);
-        IRES.createDatasetMove_Hive_Postgres(Data, SQL);//createDatasetMove(Data, SQL);
+        IRES.createDatasetMove_Hive_Postgres(Data, size, SQL, TimeOfDay);//createDatasetMove(Data, SQL);
         IRES.createOperatorMove(Data, SQL, costEstimateValue);
         IRES.createDataMove2(Data, SQL, yarnValue);
         
@@ -698,7 +698,7 @@ public class Algorithms {
                     testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random, TimeRepsonse)), "execTime");
 		    testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfEstimateValue);
                     testWriteMatrix2CSV.storeParameter(Data, Parameter, NameOfParameter);
-                    IRES.createDatasetMove_Hive_Postgres(Data, SQL);//createDatasetMove(Data, SQL);
+                    IRES.createDatasetMove_Hive_Postgres(Data, size, SQL, TimeOfDay);//createDatasetMove(Data, SQL);
                     IRES.createDataMove2(Data, SQL, yarnValue);                    
                 } 
 //        }

@@ -1,9 +1,5 @@
 #
-<<<<<<< HEAD
-#Fri Oct 13 17:43:27 CEST 2017
-=======
-#Mon Oct 16 20:21:54 CEST 2017
->>>>>>> 5c9995552887a2fa123167b52fe8605c70470376
+#Tue Oct 17 01:00:01 CEST 2017
 Constraints.Output.number=1
 Constraints.OpSpecification.Algorithm.name=move
 Constraints.Input.number=1
