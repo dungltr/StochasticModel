@@ -1,10 +1,25 @@
 -------------------------------------------------------------------------------
 Test set: AppTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 2.202 sec <<< FAILURE!
-testConvert_IRES(AppTest)  Time elapsed: 0.019 sec  <<< ERROR!
-java.lang.ExceptionInInitializerError
-	at AppTest.testConvert_IRES(AppTest.java:149)
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 33.577 sec <<< FAILURE!
+testConvert_IRES(AppTest)  Time elapsed: 31.369 sec  <<< ERROR!
+java.io.IOException: Server returned HTTP response code: 500 for URL: http://localhost:1323/abstractWorkflows/materialize/TPCH_100m_Hive_Postgres_Workflow?policy=metrics%2Ccost%2CexecTime%0AgroupInputs%2CexecTime%2Cmax%0AgroupInputs%2Ccost%2Csum%0Afunction%2CexecTime%2Cmin
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at sun.net.www.protocol.http.HttpURLConnection$10.run(HttpURLConnection.java:1926)
+	at sun.net.www.protocol.http.HttpURLConnection$10.run(HttpURLConnection.java:1921)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at sun.net.www.protocol.http.HttpURLConnection.getChainedException(HttpURLConnection.java:1920)
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1490)
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1474)
+	at gr.ntua.cslab.asap.client.RestClient.issueRequest(RestClient.java:90)
+	at gr.ntua.cslab.asap.client.WorkflowClient.materializeWorkflow(WorkflowClient.java:65)
+	at IRES.runWorkFlowIRES.runWorkflow(runWorkFlowIRES.java:83)
+	at Algorithms.Algorithms.mainIRES(Algorithms.java:622)
+	at IRES.TPCHQuery.TPCH(TPCHQuery.java:308)
+	at AppTest.testConvert_IRES(AppTest.java:163)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -36,9 +51,10 @@ java.lang.ExceptionInInitializerError
 	at org.apache.maven.surefire.booter.ProviderFactory.invokeProvider(ProviderFactory.java:85)
 	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:115)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:75)
-Caused by: java.lang.RuntimeException: Uncompilable source code - cannot find symbol
-  symbol:   class SimpleApp
-  location: package Scala
-	at Irisa.Enssat.Rennes1.TestScala.<clinit>(TestScala.java:8)
-	... 32 more
+Caused by: java.io.IOException: Server returned HTTP response code: 500 for URL: http://localhost:1323/abstractWorkflows/materialize/TPCH_100m_Hive_Postgres_Workflow?policy=metrics%2Ccost%2CexecTime%0AgroupInputs%2CexecTime%2Cmax%0AgroupInputs%2Ccost%2Csum%0Afunction%2CexecTime%2Cmin
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1876)
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1474)
+	at java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:480)
+	at gr.ntua.cslab.asap.client.RestClient.issueRequest(RestClient.java:86)
+	... 36 more
 

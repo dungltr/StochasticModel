@@ -120,7 +120,10 @@ public class runWorkFlowIRES {
         d1.add("Execution.schema", Data.get_Schema());
         d1.add("Execution.path", "hdfs://"+HDFS+"/"+Data.get_DatabaseIn()+".db/"+Data.get_DataIn());
 	d1.add("Optimization.size",Data.get_DataInSize());      
-        d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
+        d1.add("Optimization.page",Data.get_DataInSize());
+        d1.add("Optimization.tuple",Data.get_DataInSize());
+        d1.add("Optimization.random",Data.get_DataInSize());
+	d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
         
         Dataset d2 = new Dataset(Data.get_DataOut()+Data.get_Operator());
         d2.add("Constraints.Engine.SQL",Data.get_To()+Data.get_Operator());
@@ -129,7 +132,9 @@ public class runWorkFlowIRES {
 	d2.add("Execution.name",Data.get_DataOut());
         d2.add("Execution.schema", Data.get_Schema());
 	d2.add("Optimization.size",Data.get_DataInSize());      
-        d2.writeToPropertiesFile(directory_datasets + d2.datasetName);
+        d2.add("Optimization.page",Data.get_DataInSize());
+        d2.add("Optimization.tuple",Data.get_DataInSize());
+	d2.writeToPropertiesFile(directory_datasets + d2.datasetName);
     }
     public void createAbstractOperatorMove(Move_Data Data, String SQL) throws IOException, Exception {
         String node_pc = new App().getComputerName();
@@ -198,7 +203,13 @@ public class runWorkFlowIRES {
         mop1.add("Optimization.cost", "1.0"); 
         mop1.add("Optimization.execTime", "1.0"); // Double.toString(costEstimateValue));//"1.0"); // different in Hive-Spark or in Postgres-Spark// Optimization.execTime=In0.size/1.2
         mop1.add("Optimization.inputSpace.In0.size", "Double,1E8,1E10,l");
-        mop1.add("Optimization.model.Out0.size", "gr.ntua.ece.cslab.panic.core.models.UserFunction");
+        mop1.add("Optimization.inputSpace.In0.page", "Double,1E8,1E10,l");
+        mop1.add("Optimization.inputSpace.In0.tuple", "Double,1E8,1E10,l");
+        mop1.add("Optimization.inputSpace.In1.page", "Double,1E8,1E10,l");
+        mop1.add("Optimization.inputSpace.In1.tuple", "Double,1E8,1E10,l");
+        mop1.add("Optimization.inputSpace.In0.random", "Double,1E8,1E10,l");
+
+	mop1.add("Optimization.model.Out0.size", "gr.ntua.ece.cslab.panic.core.models.UserFunction");
         mop1.add("Optimization.model.cost",      "gr.ntua.ece.cslab.panic.core.models.AbstractWekaModel");//UserFunction");       
         mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.AbstractWekaModel");//AbstractWekaModel");//UserFunction");//AbstractWekaModel");//UserFunction");
         mop1.add("Optimization.outputSpace.Out0.size", "Double");
