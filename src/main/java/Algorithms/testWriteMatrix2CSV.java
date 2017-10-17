@@ -161,7 +161,7 @@ public class testWriteMatrix2CSV {
         return directory_operator;
     }
 
-    static void storeValueServer(Move_Data Data, String SQL, double[] Value, String NameValue) throws IOException {
+    public static void storeValueServer(Move_Data Data, String SQL, double[] Value, String NameValue) throws IOException {
         String directory = testWriteMatrix2CSV.getDirectory(Data);
         String fileName = directory + "/data/" + NameValue +".csv";
         double[][] a = new double[1][Value.length];

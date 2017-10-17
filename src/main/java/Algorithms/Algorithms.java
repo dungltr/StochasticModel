@@ -619,15 +619,11 @@ public class Algorithms {
             Files.createFile(filePathEstimateValue); 
         testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size, costEstimateValue)), NameOfEstimateValue); 
 
-        double Time_Cost = IRES.runWorkflow(Data, NameOfWorkflow, policy);
+        double Time_Cost = IRES.runWorkflow(Data, size, NameOfWorkflow, policy);
         long delay = SimulateStochastic.TimeWaiting(Numberuser,TimeOfDay)/1000;
         Time_Cost = Time_Cost + delay;        
         testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), NameOfRealValue);
-<<<<<<< HEAD
         testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), "execTime");
-=======
-        //testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), "execTime");
->>>>>>> eea530ecd2f35b694c10397da815465eb8ec9faf
         System.out.println("\n Estimate Value is: " + costEstimateValue);
         System.out.println("\n Real Value with Delay is: " + Double.toString(Time_Cost));
         System.out.println("\n Real Value without Delay is: " + Double.toString(Time_Cost-delay));
@@ -669,7 +665,7 @@ public class Algorithms {
         int numberParameter = size.length + 1;
         String[] randomQuery = testQueryPlan.createRandomQuery("",Size_tpch);
         
-        double[] size_random = TPCHQuery.calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch);
+        double[] size_random = TPCHQuery.calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch, KindOfRunning);
         double[] yarn_random = testQueryPlan.createRandomYarn();
         
         double Data_size;
@@ -693,14 +689,17 @@ public class Algorithms {
                 {   System.out.println("\nTest Time:"+i+"--------------------------------------------------------");
                     TimeOfDay = 24*Math.random();
                     randomQuery = testQueryPlan.createRandomQuery("",Size_tpch);
-                    size_random = TPCHQuery.calculateSize(randomQuery,Data.get_From(), Data.get_To(),Size_tpch);
+                    size_random = TPCHQuery.calculateSize(randomQuery,Data.get_From(), Data.get_To(),Size_tpch,KindOfRunning);
                     TimeRepsonse =  Math.random()*500;//IRES.runWorkflow(NameOfWorkflow, policy);
                     double delay = SimulateStochastic.waiting(Numberuser,TimeOfDay);
                     TimeRepsonse = TimeRepsonse + delay;                   
                     size_random[size_random.length-1] = TimeOfDay;    
                     testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfRealValue);
                     testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random, TimeRepsonse)), "execTime");
-		    testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfEstimateValue);
+		    
+                    testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfEstimateValue);
+                    testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), "execTime_estimate");
+                    
                     testWriteMatrix2CSV.storeParameter(Data, Parameter, NameOfParameter);
                     IRES.createDatasetMove_Hive_Postgres(Data, size, SQL, TimeOfDay);//createDatasetMove(Data, SQL);
                     IRES.createDataMove2(Data, SQL, yarnValue);                    

@@ -53,10 +53,10 @@ public class TestScript {
     public static String [] Ask(){
         Console console = System.console();
         String[] tmp = new String [7];
-        tmp[0] = KindCheck(console.readLine("Kind of operator (a-IRES; b-StandAlone): "));
-        tmp[1] = DbCheck(console.readLine("Enter database of operator(default = tpch):"));   
+        tmp[0] = KindCheck(console.readLine("Kind of operator (a-IRES; b-StandAlone; c-Move): "));
+        tmp[1] = DbCheck(console.readLine("Enter database of operator(a-tpch):"));   
         tmp[2] = SizeCheck(console.readLine("Enter database size of operator(default = 100m):"));
-        tmp[3] = FromCheck(console.readLine("Enter First table engine of operator(Hive,Postgres,Spark):"));
+        tmp[3] = FromCheck(console.readLine("Enter First table engine of operator(h-Hive; p- Postgres; s-Spark):"));
         tmp[4] = ToCheck(console.readLine("Enter Second table of operator(Hive,Postgres,Spark):"));
         tmp[5] = MoreCheck(console.readLine("Do you want to add more (yes/no): "));
         tmp[6] = MoreCheck(console.readLine("Do you want to use delay time (yes/no): "));
@@ -66,7 +66,7 @@ public class TestScript {
         double TimeOfDay = 24.00*Math.random();
         Scanner in = new Scanner(System.in);
 	Console console = System.console();
-	String KindOfRunning = KindRunning(console.readLine("Kind of running (a-Training; b-Testing; c-Predict): ")); 
+	String KindOfRunning = KindRunning(console.readLine("Kind of running (a-Training; b-Testing; c-Predicting): ")); 
         System.out.printf("How many operators you want to process(default = 1):  ");
         int k = 1;
         try
@@ -127,26 +127,31 @@ public class TestScript {
         if ((KindOfRunning=="training")||(KindOfRunning=="testing")){
             if (call[0]=="IRES")
                 TPCHQuery.TPCH(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
-            else TPCHStandalone.TPCH_Standalone(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
+            else {  if (call[0]=="Move")
+                        TPCHQuery.Move(TimeOfDay, call[1], call[2], call[3], call[4], "Move");
+                    else TPCHStandalone.TPCH_Standalone(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
+            }           
         }
         else {
-            if (KindOfRunning=="predict"){
+            if (KindOfRunning=="predicting"){
                 LinearRegressionManual.TPCH(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
-            }
+            }   
         }
         
     }
     public static String KindCheck(String Kind){
         if (Kind.toLowerCase().contains("a")) return "IRES";
         else if (Kind.toLowerCase().contains("b")) return "Standalone";
-            else
-                return "IRES";
+            else if (Kind.toLowerCase().contains("c")) return "Move";
+                else
+                    return "IRES";
     }
     public static String KindRunning(String KindOfRunning){
         if (KindOfRunning.toLowerCase().contains("a")) return "training";
         else if (KindOfRunning.toLowerCase().contains("b")) return "testing";
-            else if (KindOfRunning.toLowerCase().contains("c")) return "predict";
-                else return "training";
+            else if (KindOfRunning.toLowerCase().contains("c")) return "predicting";
+                else if (KindOfRunning.toLowerCase().contains("d")) return "creating";
+                    else return "training";
     }
     public static String DbCheck(String DB){
         if (DB.toLowerCase().contains("tpch")) return "tpch";

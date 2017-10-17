@@ -35,7 +35,7 @@ public class TPCHStandalone {
         String[] randomQuery = createRandomQuery("",Size_tpch);
         String From = "Hive";
         String To   = "Postgres";
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch);
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch,"");
         double[] Yarn = testQueryPlan.createRandomYarn();
         size[size.length-1] = TimeOfDay;
        
@@ -96,7 +96,7 @@ public class TPCHStandalone {
         String[] randomQuery = createRandomQuery("",Size_tpch);
         String From = "Hive";
         String To   = "Hive";
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch);
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch,"");
         double[] Yarn = testQueryPlan.createRandomYarn();
 //        size[1] = 1024/Yarn[0];
         size[size.length-1] = TimeOfDay;    
@@ -158,7 +158,7 @@ public class TPCHStandalone {
         String[] randomQuery = createRandomQuery("",Size_tpch);
         String From = "Postgres";
         String To   = "Postgres";
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch);
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch,"");
         double[] Yarn = testQueryPlan.createRandomYarn();
         size[size.length-1] = TimeOfDay;
        
@@ -220,7 +220,7 @@ public class TPCHStandalone {
         String[] randomQuery = createRandomQuery("",Size_tpch);
         String From = from;
         String To   = to;
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch);
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch,"");
         double[] Yarn = testQueryPlan.createRandomYarn();
         size[size.length-1] = TimeOfDay;
        

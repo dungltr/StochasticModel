@@ -6,6 +6,8 @@
 package IRES;
 ////////////////////////////////////////////////////////////////////////////////
 import static Algorithms.Algorithms.estimateCostValue;
+import static Algorithms.Algorithms.setupStochasticValue;
+import static Algorithms.Algorithms.setupValue;
 import Algorithms.testWriteMatrix2CSV;
 import LibraryIres.Move_Data;
 import LibraryIres.YarnValue;
@@ -58,7 +60,7 @@ public class runWorkFlowIRES {
     String[] start = new String[]{"/bin/sh", ASAP_HOME+"/start-ires.sh"};
     String[] stop = new String[]{"/bin/sh", ASAP_HOME+"/stop-ires.sh"};
     
-    public double runWorkflow(Move_Data Data, String workflow, String policy) throws Exception{
+    public double runWorkflow(Move_Data Data, double[] size, String workflow, String policy) throws Exception{
         
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
         WorkflowClient wcli = new WorkflowClient();
@@ -89,7 +91,8 @@ public class runWorkFlowIRES {
         System.out.println(NameOp);
         estimatedTime = Double.parseDouble(wcli.getMaterializedWorkflowDescription(materializedWorkflow).getOperator(NameOp).getExecTime()); 
         estimatedCost = Double.parseDouble(wcli.getMaterializedWorkflowDescription(materializedWorkflow).getOperator(NameOp).getCost());        
-
+        
+        testWriteMatrix2CSV.storeValueServer(Data, "", setupStochasticValue(setupValue(size, estimatedTime)), "execTime_estimate");    
         int count=0;
         
         while(true){
@@ -120,11 +123,13 @@ public class runWorkFlowIRES {
         d1.add("Execution.schema", Data.get_Schema());
         d1.add("Execution.path", "hdfs://"+HDFS+"/"+Data.get_DatabaseIn()+".db/"+Data.get_DataIn());
 	d1.add("Optimization.size",Data.get_DataInSize());      
-        d1.add("Optimization.page",Double.toString(size[1]));
-        d1.add("Optimization.tuple",Double.toString(size[2]));
+        if (!SQL.equals("")){
+            d1.add("Optimization.page",Double.toString(size[1]));
+            d1.add("Optimization.tuple",Double.toString(size[2]));           
+            d1.add("Optimization.page1",Double.toString(size[3]));
+            d1.add("Optimization.tuple1",Double.toString(size[4]));
+        }
         d1.add("Optimization.random",Double.toString(TimeOfDay));
-        d1.add("Optimization.page1",Double.toString(size[3]));
-        d1.add("Optimization.tuple1",Double.toString(size[4]));
 	d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
         
         Dataset d2 = new Dataset(Data.get_DataOut()+Data.get_Operator());
@@ -201,35 +206,24 @@ public class runWorkFlowIRES {
 
         mop1.add("Optimization.Out0.size", "In0.size");// different in Hive-Spark or Postgres-Spark //Optimization.Out0.size=20
         mop1.add("Optimization.cost", "1.0"); 
-<<<<<<< HEAD
         mop1.add("Optimization.execTime", Double.toString(costEstimateValue));//"1.0"); // different in Hive-Spark or in Postgres-Spark// Optimization.execTime=In0.size/1.2
-        
+                 
         mop1.add("Optimization.inputSpace.In0.size", "Double,1E8,1E10,l");
-        mop1.add("Optimization.inputSpace.In0.pages", "Double,1E8,1E10,l");
-        mop1.add("Optimization.inputSpace.In0.tuples", "Double,1E8,1E10,l");
-        mop1.add("Optimization.inputSpace.In1.pages", "Double,1E8,1E10,l");
-        mop1.add("Optimization.inputSpace.In1.tuples", "Double,1E8,1E10,l");
-        mop1.add("Optimization.inputSpace.In2.random", "Double,1E8,1E10,l");
-        
-        mop1.add("Optimization.model.Out0.size", "gr.ntua.ece.cslab.panic.core.models.UserFunction");
-        mop1.add("Optimization.model.cost",      "gr.ntua.ece.cslab.panic.core.models.AbstractWekaModel");//UserFunction");       
-        mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.AbstractWekaModel");//UserFunction");
-=======
-        mop1.add("Optimization.execTime", "1.0"); // Double.toString(costEstimateValue));//"1.0"); // different in Hive-Spark or in Postgres-Spark// Optimization.execTime=In0.size/1.2
-        mop1.add("Optimization.inputSpace.In0.size", "Double,1E8,1E10,l");
-        mop1.add("Optimization.inputSpace.In0.page", "Double,1E8,1E10,l");
-        mop1.add("Optimization.inputSpace.In0.tuple", "Double,1E8,1E10,l");
-        mop1.add("Optimization.inputSpace.In0.page1", "Double,1E8,1E10,l");
-        mop1.add("Optimization.inputSpace.In0.tuple1", "Double,1E8,1E10,l");
+        if ((Data.get_From().toLowerCase().equals("hive"))&&(Data.get_To().toLowerCase().equals("postgres"))&&(!SQL.toLowerCase().equals("")))
+        {
+            mop1.add("Optimization.inputSpace.In0.page", "Double,1E8,1E10,l");
+            mop1.add("Optimization.inputSpace.In0.tuple", "Double,1E8,1E10,l");
+            mop1.add("Optimization.inputSpace.In0.page1", "Double,1E8,1E10,l");
+            mop1.add("Optimization.inputSpace.In0.tuple1", "Double,1E8,1E10,l");           
+        }
         mop1.add("Optimization.inputSpace.In0.random", "Double,1E8,1E10,l");
 
 	mop1.add("Optimization.model.Out0.size", "gr.ntua.ece.cslab.panic.core.models.UserFunction");
         mop1.add("Optimization.model.cost",      "gr.ntua.ece.cslab.panic.core.models.UserFunction");//UserFunction");       
         mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.AbstractWekaModel");//AbstractWekaModel");//UserFunction");//AbstractWekaModel");//UserFunction");
->>>>>>> eea530ecd2f35b694c10397da815465eb8ec9faf
+        
         mop1.add("Optimization.outputSpace.Out0.size", "Double");
         mop1.add("Optimization.outputSpace.cost", "Double");        
-        
         mop1.add("Optimization.outputSpace.execTime", "Double");
         
         mop1.add("Optimization.inputSource.type","csv");

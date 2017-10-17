@@ -32,7 +32,7 @@ public class testCreateDatabase {
         String[] randomQuery = createRandomQuery("",Size_tpch);
         String From = "Hive";
         String To   = "Hive";
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch);
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch, "");
         double[] Yarn = testQueryPlan.createRandomYarn();
         String Operator = "Move";
         String DataIn = "database"; 
@@ -84,12 +84,13 @@ public class testCreateDatabase {
     }
 //    @Test 
     public static void testCreatePostgresDataBase(double TimeOfDay) throws Exception {
+        String KindOfRunning = "Move";
         String Size_tpch = "100m";
         runWorkFlowIRES IRES = new runWorkFlowIRES();
         String[] randomQuery = createRandomQuery("",Size_tpch);
         String From = "Postgres";
         String To   = "Postgres";
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch);
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfRunning);
         double[] Yarn = testQueryPlan.createRandomYarn();
         
         String Operator = "Move";

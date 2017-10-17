@@ -30,7 +30,7 @@ public class testQueryPlan {
         String[] randomQuery = createRandomQuery("",Size_tpch);
         String From = "Hive";
         String To   = "Postgres";
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch);
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch,"");
         double[] Yarn = testQueryPlan.createRandomYarn();
         String Operator = "SQL";
         
@@ -95,7 +95,7 @@ public class testQueryPlan {
         String[] randomQuery = createRandomQuery("",Size_tpch);
         String From = "Postgres";
         String To   = "Postgres";
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch);
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch,"");
         double[] Yarn = testQueryPlan.createRandomYarn();
         String Operator = "SQL";
         

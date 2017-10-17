@@ -31,6 +31,8 @@ public class TPCHQuery {
     private static int numberOfSize_Postgres_Postgres = 6;
     private static int numberOfSize_Hive_Hive = 3;
     
+    private static int numberOfSize_Move_Hive_Postgres = 2;
+    
     public static void TPCH_Hive_Postgres(double TimeOfDay, String Table, String query, String KindOfRunning) throws Exception {
         String Size_tpch = "1000m";
         String database = "tpch";
@@ -40,7 +42,7 @@ public class TPCHQuery {
         String From = "Hive";
         String To   = "Postgres";
         
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch);
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfRunning);
         double[] Yarn = testQueryPlan.createRandomYarn();
         ////////////////////////////////////////////
         size[size.length-1]=TimeOfDay;
@@ -109,7 +111,7 @@ public class TPCHQuery {
         String[] randomQuery = createRandomQuery(KindOfRunning,Size_tpch);
         String From = "Hive";
         String To   = "Hive";
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch);
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfRunning);
         double[] Yarn = testQueryPlan.createRandomYarn();
         ////////////////////////////////////////////
         size[size.length-1]=TimeOfDay;
@@ -174,7 +176,7 @@ public class TPCHQuery {
         String[] randomQuery = createRandomQuery(KindOfRunning,Size_tpch);
         String From = "Postgres";
         String To   = "Postgres";
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch);
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfRunning);
         double[] Yarn = testQueryPlan.createRandomYarn();
         ////////////////////////////////////////////
         size[size.length-1]=TimeOfDay;
@@ -240,7 +242,7 @@ public class TPCHQuery {
         String From = from;
         String To   = to;
         
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch);
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfRunning);
         if (KindOfRunning.equals("testing")&&(From.equals("hive"))&&(To.equals("hive"))) size[1] = Double.parseDouble(randomQuery[0]); 
 	double[] Yarn = testQueryPlan.createRandomYarn();
         ////////////////////////////////////////////
@@ -307,6 +309,83 @@ public class TPCHQuery {
         }
         Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
     }    
+    public static void Move(double TimeOfDay, String DB, String Size, String from, String to, String KindOfRunning) throws Exception {
+        String Size_tpch = Size;
+        String database = DB;
+        String SQL_folder = new App().readhome("SQL");
+        runWorkFlowIRES IRES = new runWorkFlowIRES();
+        String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);
+        String From = from;
+        String To   = to;
+        
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfRunning);
+        if (KindOfRunning.equals("testing")&&(From.equals("hive"))&&(To.equals("hive"))) size[1] = Double.parseDouble(randomQuery[0]); 
+	double[] Yarn = testQueryPlan.createRandomYarn();
+        ////////////////////////////////////////////
+        size[size.length-1]=TimeOfDay;
+        ///////////////////////////////////////////
+        
+        String Operator = "Move_"+ Size_tpch;// +"_"+ randomQuery[2];           
+        //String DataIn = Table;      
+        String DataIn = randomQuery[1];
+        String DataInSize = Double.toString(size[0]);
+        
+        String DatabaseIn = database + Size_tpch;
+        String Schema = Schema(DataIn);
+        //String DataOut = Table.toUpperCase(); 
+        String DataOut = randomQuery[1].toUpperCase();
+        String DatabaseOut = database + Size_tpch;       
+       
+        String SQL_fileName = ""; 
+        if (KindOfRunning.equals("training"))
+	SQL_fileName = SQL_folder + randomQuery[2];
+        else {
+		if (To.toLowerCase().equals("postgres")) SQL_fileName = SQL_folder + randomQuery[2];
+		else SQL_fileName = SQL_folder+randomQuery[2]; 
+        }
+	String SQL = "";
+/*        SQL = "DROP TABLE IF EXISTS "+ randomQuery[2]+"_"+From+"_"+To+"; "
+                + "CREATE TABLE "+ randomQuery[2]+"_"+From+"_"+To+" "
+                + "AS " 
+                + readSQL(SQL_fileName);
+        SQL = SQL.toUpperCase();
+ //               + "drop table " + Table + ";";//SQL_Postgres;
+*/        
+        System.out.println("\n"+SQL_fileName + "----SQL:---" + SQL);
+        System.out.println("\nThe dataset is " + randomQuery[1] + " and the query is " + randomQuery[2]);
+        System.out.println("\nThe Schema is " + Schema);
+               
+        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DatabaseOut);
+        Data.set_Operator(Operator);
+        Data.set_DataIn(DataIn);
+        Data.set_DataInSize(DataInSize);
+        Data.set_DataOut(DataOut);
+        Data.set_DatabaseIn(DatabaseIn);
+        Data.set_DatabaseOut(DatabaseOut);
+        Data.set_From(From);
+        Data.set_To(To);
+        Data.set_Schema(Schema);
+        
+        YarnValue yarnValue = new YarnValue(Yarn[0], Yarn[1]);
+        yarnValue.set_Ram(Yarn[0]);
+        yarnValue.set_Core(Yarn[1]);
+                
+        String realValue, parameter, estimate, directory;
+        directory = testWriteMatrix2CSV.getDirectory(Data);
+        String delay_ys = "";
+	if (TimeOfDay<1) delay_ys = "no_delay_";
+        realValue = directory + "/"+delay_ys+KindOfRunning+"_realValue.csv";
+//        parameter = directory + "/"+delay_ys+"Parameter.csv";
+//        estimate = directory + "/"+delay_ys+"Estimate.csv";
+        Path filePathRealValue = Paths.get(realValue); 
+
+        if (!Files.exists(filePathRealValue))
+        {   IRES.createOperatorMove(Data, SQL, 0);            
+//            Files.createFile(filePathRealValue);
+            Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,KindOfRunning);
+        }
+        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
+    } 
     public static String Schema(String Table) {
         String Schema = "";
         String nation= "(N_NATIONKEY  INT, "
@@ -438,16 +517,25 @@ public class TPCHQuery {
        SQL = SQL.replace(";", "");	
        return SQL;
     }
-    public static double[] calculateSize(String[] randomQuery, String From, String To, String Size_tpch) {
+    public static double[] calculateSize(String[] randomQuery, String From, String To, String Size_tpch, String KindOfRuning) {
         double R1,R2;
         if ((From.toLowerCase().contains("hive"))&&(To.toLowerCase().contains("postgres"))) {
-            double[] size = new double[numberOfSize_Hive_Postgres];
-            size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
-            size[1] = testQueryPlan.pageDataset(randomQuery[1],Size_tpch);
-            size[2] = testQueryPlan.tupleDataset(randomQuery[1],Size_tpch);
-            size[3] = testQueryPlan.pageDataset(randomQuery[3],Size_tpch);
-            size[4] = testQueryPlan.tupleDataset(randomQuery[3],Size_tpch);
-            return size;
+            if (!KindOfRuning.toLowerCase().equals("move")){   
+                double[] size = new double[numberOfSize_Hive_Postgres];
+                size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
+                size[1] = testQueryPlan.pageDataset(randomQuery[1],Size_tpch);
+                size[2] = testQueryPlan.tupleDataset(randomQuery[1],Size_tpch);
+                size[3] = testQueryPlan.pageDataset(randomQuery[3],Size_tpch);
+                size[4] = testQueryPlan.tupleDataset(randomQuery[3],Size_tpch);
+                return size;
+            }
+            else {   
+                double[] size = new double[numberOfSize_Move_Hive_Postgres];
+                size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
+                size[1] = 0;
+                return size;
+            }
+            
         }
         else {
             if ((From.toLowerCase().contains("hive"))&&(To.toLowerCase().contains("hive"))) {
