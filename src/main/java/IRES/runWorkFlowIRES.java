@@ -80,7 +80,7 @@ public class runWorkFlowIRES {
         if ((Data.get_Operator().contains("TPCH_query22"))&&(Data.get_From().contains("Hive"))&&(Data.get_To().contains("Postgres"))) i = 0;
         if ((Data.get_Operator().toLowerCase().contains("tpch"))&&(Data.get_From().toLowerCase().contains("hive"))&&(Data.get_To().toLowerCase().contains("postgres"))) i = 1;
         if ((Data.get_Operator().toLowerCase().contains("tpch"))&&(Data.get_From().toLowerCase().contains("postgres"))&&(Data.get_To().toLowerCase().contains("postgres"))) i = 3;
-        i = 1;
+        i = 0;
         String NameOp = Nameop(Data) +"_"+i;
         String materializedWorkflow = wcli.materializeWorkflow(workflow, policy);
         System.out.println(materializedWorkflow);
