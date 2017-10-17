@@ -43,12 +43,12 @@ class SimpleApp {
   def main() {
   //def main(args: Array[String]) {
     println("\n Hello world")
-//    val spark = SparkSession
-//      .builder()
-//      .appName("Spark SQL basic example")
-//      .master("local[*]")
-//      .config("spark.sql.warehouse.dir", "/user/hive/warehouse")
-//      .getOrCreate()
+    val spark = SparkSession
+      .builder()
+      .appName("Spark SQL basic example")
+      .master("local[*]")
+      .config("spark.sql.warehouse.dir", "/user/hive/warehouse")
+      .getOrCreate()
 //    val textFile = spark.read.textFile("hdfs://master:9000/user/hive/warehouse/people.txt")
 //    println("\n The number of word in file is:=" + textFile.count)
 //    first()
@@ -57,7 +57,7 @@ class SimpleApp {
     //UntypedUserDefinedAggregate(spark)
     //runInferSchemaExample(spark)
     //runProgrammaticSchemaExample(spark) // can not run in this example
-//    spark.stop()
+    spark.stop()
     println("\n Goodbye")
   }
   def first(){

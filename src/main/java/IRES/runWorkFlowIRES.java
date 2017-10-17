@@ -78,7 +78,7 @@ public class runWorkFlowIRES {
         if ((Data.get_Operator().contains("TPCH_query22"))&&(Data.get_From().contains("Hive"))&&(Data.get_To().contains("Postgres"))) i = 0;
         if ((Data.get_Operator().toLowerCase().contains("tpch"))&&(Data.get_From().toLowerCase().contains("hive"))&&(Data.get_To().toLowerCase().contains("postgres"))) i = 1;
         if ((Data.get_Operator().toLowerCase().contains("tpch"))&&(Data.get_From().toLowerCase().contains("postgres"))&&(Data.get_To().toLowerCase().contains("postgres"))) i = 3;
-//        i = 0;
+        i = 0;
         String NameOp = Nameop(Data) +"_"+i;
         String materializedWorkflow = wcli.materializeWorkflow(workflow, policy);
         System.out.println(materializedWorkflow);
@@ -87,8 +87,8 @@ public class runWorkFlowIRES {
         double estimatedTime = 0;
         double estimatedCost = 0;
         System.out.println(NameOp);
-//        estimatedTime = Double.parseDouble(wcli.getMaterializedWorkflowDescription(materializedWorkflow).getOperator(NameOp).getExecTime()); 
-//        estimatedCost = Double.parseDouble(wcli.getMaterializedWorkflowDescription(materializedWorkflow).getOperator(NameOp).getCost());        
+        estimatedTime = Double.parseDouble(wcli.getMaterializedWorkflowDescription(materializedWorkflow).getOperator(NameOp).getExecTime()); 
+        estimatedCost = Double.parseDouble(wcli.getMaterializedWorkflowDescription(materializedWorkflow).getOperator(NameOp).getCost());        
 
         int count=0;
         
@@ -110,7 +110,7 @@ public class runWorkFlowIRES {
         
         return actualTime;
     }
-    public void createDatasetMove_Hive_Postgres(Move_Data Data, String SQL) throws Exception {
+    public void createDatasetMove_Hive_Postgres(Move_Data Data, double [] size, String SQL, double TimeOfDay) throws Exception {
         String node_pc = new App().getComputerName();
         Dataset d1 = new Dataset(Data.get_DataIn()+Data.get_Operator());
         d1.add("Constraints.Engine.SQL",Data.get_From()+Data.get_Operator());
@@ -120,7 +120,12 @@ public class runWorkFlowIRES {
         d1.add("Execution.schema", Data.get_Schema());
         d1.add("Execution.path", "hdfs://"+HDFS+"/"+Data.get_DatabaseIn()+".db/"+Data.get_DataIn());
 	d1.add("Optimization.size",Data.get_DataInSize());      
-        d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
+        d1.add("Optimization.page",Double.toString(size[1]));
+        d1.add("Optimization.tuple",Double.toString(size[2]));
+        d1.add("Optimization.random",Double.toString(TimeOfDay));
+        d1.add("Optimization.page1",Double.toString(size[3]));
+        d1.add("Optimization.tuple1",Double.toString(size[4]));
+	d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
         
         Dataset d2 = new Dataset(Data.get_DataOut()+Data.get_Operator());
         d2.add("Constraints.Engine.SQL",Data.get_To()+Data.get_Operator());
@@ -129,7 +134,7 @@ public class runWorkFlowIRES {
 	d2.add("Execution.name",Data.get_DataOut());
         d2.add("Execution.schema", Data.get_Schema());
 	d2.add("Optimization.size",Data.get_DataInSize());      
-        d2.writeToPropertiesFile(directory_datasets + d2.datasetName);
+	d2.writeToPropertiesFile(directory_datasets + d2.datasetName);
     }
     public void createAbstractOperatorMove(Move_Data Data, String SQL) throws IOException, Exception {
         String node_pc = new App().getComputerName();
@@ -196,6 +201,7 @@ public class runWorkFlowIRES {
 
         mop1.add("Optimization.Out0.size", "In0.size");// different in Hive-Spark or Postgres-Spark //Optimization.Out0.size=20
         mop1.add("Optimization.cost", "1.0"); 
+<<<<<<< HEAD
         mop1.add("Optimization.execTime", Double.toString(costEstimateValue));//"1.0"); // different in Hive-Spark or in Postgres-Spark// Optimization.execTime=In0.size/1.2
         
         mop1.add("Optimization.inputSpace.In0.size", "Double,1E8,1E10,l");
@@ -208,6 +214,19 @@ public class runWorkFlowIRES {
         mop1.add("Optimization.model.Out0.size", "gr.ntua.ece.cslab.panic.core.models.UserFunction");
         mop1.add("Optimization.model.cost",      "gr.ntua.ece.cslab.panic.core.models.AbstractWekaModel");//UserFunction");       
         mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.AbstractWekaModel");//UserFunction");
+=======
+        mop1.add("Optimization.execTime", "1.0"); // Double.toString(costEstimateValue));//"1.0"); // different in Hive-Spark or in Postgres-Spark// Optimization.execTime=In0.size/1.2
+        mop1.add("Optimization.inputSpace.In0.size", "Double,1E8,1E10,l");
+        mop1.add("Optimization.inputSpace.In0.page", "Double,1E8,1E10,l");
+        mop1.add("Optimization.inputSpace.In0.tuple", "Double,1E8,1E10,l");
+        mop1.add("Optimization.inputSpace.In0.page1", "Double,1E8,1E10,l");
+        mop1.add("Optimization.inputSpace.In0.tuple1", "Double,1E8,1E10,l");
+        mop1.add("Optimization.inputSpace.In0.random", "Double,1E8,1E10,l");
+
+	mop1.add("Optimization.model.Out0.size", "gr.ntua.ece.cslab.panic.core.models.UserFunction");
+        mop1.add("Optimization.model.cost",      "gr.ntua.ece.cslab.panic.core.models.UserFunction");//UserFunction");       
+        mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.AbstractWekaModel");//AbstractWekaModel");//UserFunction");//AbstractWekaModel");//UserFunction");
+>>>>>>> eea530ecd2f35b694c10397da815465eb8ec9faf
         mop1.add("Optimization.outputSpace.Out0.size", "Double");
         mop1.add("Optimization.outputSpace.cost", "Double");        
         
