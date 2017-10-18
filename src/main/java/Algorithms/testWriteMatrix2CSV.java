@@ -5,6 +5,7 @@
  */
 package Algorithms;
 
+import static Algorithms.Algorithms.initParamter;
 import LibraryIres.Move_Data;
 import com.sparkexample.App;
 import java.io.IOException;
@@ -101,6 +102,7 @@ public class testWriteMatrix2CSV {
     }
     public static void storeParameter(Move_Data Data, double[] Parameter, String fileParameter) throws IOException {
         String directory = testWriteMatrix2CSV.getDirectory(Data);
+        directory = Algorithms.preapreFile(directory);
         String fileName = directory + "/" + fileParameter + ".csv";
         double[][] a = new double[1][Parameter.length];
         for (int i = 0; i < Parameter.length; i++)
