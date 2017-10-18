@@ -51,12 +51,12 @@ public class OptimizeWorkFlow {
         abstractWorkflow.getWorkflow(d2);
 
         abstractWorkflow.addMaterializedDatasets(materializedDatasets);               
-/*        System.out.println("\nShowing of abstractWorkflow is here----------------------------------------------------------------:");
+        System.out.println("\nShowing of abstractWorkflow is here----------------------------------------------------------------:");
         System.out.println(abstractWorkflow.getWorkflow(d1));
         System.out.println("\nShowing of abstractWorkflow is finished------------------------------------------------------------:");
 		
         materializedDatasets.add(d2);                
-*/
+
         Workflow workflow0 = abstractWorkflow.getWorkflow(d2);
 
         System.out.println("\nShowing of original workflow is here----------------------------------------------------------------:");
