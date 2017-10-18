@@ -234,7 +234,8 @@ public class runWorkFlowIRES {
             
             mop1.add("Execution.Argument3", "In0.page");
             mop1.add("Execution.Argument4", "In0.tuple"); 
-            numberArgument = "5";
+            mop1.add("Execution.Argument5", "In0.random");
+            numberArgument = "6";
         }
         mop1.add("Optimization.inputSpace.In0.random", "Double,1E8,1E10,l");
 
