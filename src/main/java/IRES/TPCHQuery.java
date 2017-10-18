@@ -27,13 +27,16 @@ public class TPCHQuery {
     private static int numberOfTmp = 5;
     private static int YarnParamter = 2;
     private static int numberOfSize = 3;
+    
     private static int numberOfSize_Hive_Postgres = 6;
     private static int numberOfSize_Postgres_Hive = 6;
     private static int numberOfSize_Postgres_Postgres = 6;
     private static int numberOfSize_Hive_Hive = 3;
     
-    private static int numberOfSize_Move_Hive_Postgres = 2;
+    private static int numberOfSize_Move_Hive_Hive = 2;   
+    private static int numberOfSize_Move_Hive_Postgres = 4;
     private static int numberOfSize_Move_Postgres_Hive = 4;
+    private static int numberOfSize_Move_Postgres_Postgres = 4;
     
     public static void TPCH_Hive_Postgres(double TimeOfDay, String Table, String query, String KindOfRunning) throws Exception {
         String Size_tpch = "1000m";
@@ -529,7 +532,9 @@ public class TPCHQuery {
             else {   
                 double[] size = new double[numberOfSize_Move_Hive_Postgres];
                 size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
-                size[1] = 0;
+                size[1] = testQueryPlan.pageDataset(randomQuery[1],Size_tpch);
+                size[2] = testQueryPlan.tupleDataset(randomQuery[1],Size_tpch);
+                size[3] = 0;
                 return size;
             }
             
@@ -557,13 +562,22 @@ public class TPCHQuery {
         }
 
         if ((From.toLowerCase().contains("hive"))&&(To.toLowerCase().contains("hive"))) {
-        double[] size = new double[numberOfSize_Hive_Hive];
-        size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
-        size[1] = testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);
-        return size;
+            if (!KindOfRuning.toLowerCase().equals("move")){
+                double[] size = new double[numberOfSize_Hive_Hive];
+                size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
+                size[1] = testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);
+                return size;
+            }
+            else {
+                double[] size = new double[numberOfSize_Move_Hive_Hive];
+                size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
+                size[1] = 0;
+                return size;
+            }
         } 
-        else {
-            if ((From.toLowerCase().contains("postgres"))&&(To.toLowerCase().contains("postgres"))) {
+        
+        if ((From.toLowerCase().contains("postgres"))&&(To.toLowerCase().contains("postgres"))) {
+            if (!KindOfRuning.toLowerCase().equals("move")){ 
                 double[] size = new double[numberOfSize_Postgres_Postgres];
                 size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
                 size[1] = testQueryPlan.pageDataset(randomQuery[1],Size_tpch);
@@ -573,15 +587,24 @@ public class TPCHQuery {
                 return size;
             }
             else {
-            double[] size = new double[numberOfSize];
-            R1 = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);// Size of Data In R1
-            R2 = testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);// Size of Data In R2
-            size[0] = R1;// + R2 + R1*Math.log(R1) + R2*Math.log(R2);
-            size[1] = R1*R2;
-            size[2] = R2;
-            return size;
+                double[] size = new double[numberOfSize_Move_Postgres_Postgres];
+                size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
+                size[1] = testQueryPlan.pageDataset(randomQuery[1],Size_tpch);
+                size[2] = testQueryPlan.tupleDataset(randomQuery[1],Size_tpch);
+                size[3] = 0;
+                return size;               
             }
-        }           
+        }
+        else {
+        double[] size = new double[numberOfSize];
+        R1 = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);// Size of Data In R1
+        R2 = testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);// Size of Data In R2
+        size[0] = R1;// + R2 + R1*Math.log(R1) + R2*Math.log(R2);
+        size[1] = R1*R2;
+        size[2] = R2;
+        return size;
+        }
+         
     }
     
 }
