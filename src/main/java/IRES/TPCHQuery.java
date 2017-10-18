@@ -323,9 +323,8 @@ public class TPCHQuery {
 	double[] Yarn = testQueryPlan.createRandomYarn();
         ////////////////////////////////////////////
         size[size.length-1]=TimeOfDay;
-        ///////////////////////////////////////////
-        
-        String Operator = "Move_"+ Size_tpch;// +"_"+ randomQuery[2];           
+        ///////////////////////////////////////////       
+        String Operator = "Move_";// +"_"+ randomQuery[2];           
         //String DataIn = Table;      
         String DataIn = randomQuery[1];
         String DataInSize = Double.toString(size[0]);
@@ -375,14 +374,10 @@ public class TPCHQuery {
         String delay_ys = "";
 	if (TimeOfDay<1) delay_ys = "no_delay_";
         realValue = directory + "/data/"+delay_ys+KindOfRunning+"_realValue.csv";
-//        parameter = directory + "/"+delay_ys+"Parameter.csv";
-//        estimate = directory + "/"+delay_ys+"Estimate.csv";
         Path filePathRealValue = Paths.get(realValue); 
-
         if (!Files.exists(filePathRealValue))
-        {   IRES.createOperatorMove(Data, SQL, 0);            
-//            Files.createFile(filePathRealValue);
-            Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,KindOfRunning);
+        {   Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,KindOfRunning);
+            IRES.createOperatorMove(Data, SQL, 0);                       
         }
         Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
     } 
