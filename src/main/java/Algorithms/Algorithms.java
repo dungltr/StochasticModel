@@ -25,6 +25,7 @@ import gr.ntua.cslab.asap.operators.Dataset;
 import gr.ntua.cslab.asap.operators.MaterializedOperators;
 import gr.ntua.cslab.asap.workflow.AbstractWorkflow;
 import gr.ntua.cslab.asap.workflow.Workflow;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -551,10 +552,34 @@ public class Algorithms {
         updateParameter(fileParameter,B);    
         return estimateCurrentCostValue(X, B);
     }
+    public static String preapreFile(String directory) throws IOException{
+        String directoryData = directory;
+        File dir = new File(directoryData);
+		if (!dir.exists()) {
+			dir.mkdir();
+		}
+        directoryData = directoryData+ "/data";        
+        File dirData = new File(directoryData);
+		if (!dirData.exists()) {
+			dirData.mkdir();
+		}        
+        Path filePathCostValue = Paths.get(directoryData+"/cost.csv"); 
+        if (!Files.exists(filePathCostValue))
+            Files.createFile(filePathCostValue);
+        
+        Path filePathExecTimeValue = Paths.get(directoryData+"/execTime.csv"); 
+        if (!Files.exists(filePathExecTimeValue))
+            Files.createFile(filePathExecTimeValue);
+        return directoryData;
+    }
     public static void mainIRES(Move_Data Data, String SQL, YarnValue yarnValue, double TimeOfDay, double[] size, String KindOfRunning ) throws Exception{
         String IRES_HOME = new App().readhome("IRES_HOME");       
         String IRES_library = IRES_HOME+"/asap-platform/asap-server";    
         String OperatorFolder = IRES_library+"/target/asapLibrary/operators/";
+        String realValue, parameter, estimate, directory, Error;
+        directory = testWriteMatrix2CSV.getDirectory(Data) ;
+        directory = preapreFile(directory);
+        
         runWorkFlowIRES IRES = new runWorkFlowIRES();
         int numberParameter = size.length + 1;
         int numerOfVariable = numberParameter-1;
@@ -562,8 +587,7 @@ public class Algorithms {
         IRES.createAbstractOperatorMove(Data, SQL);
         
         IRES.createWorkflowMove(Data, SQL);
-        String realValue, parameter, estimate, directory, Error;
-        directory = testWriteMatrix2CSV.getDirectory(Data);
+        
         String delay_ys = "";
 	if (TimeOfDay<1) delay_ys = "no_delay";
 
@@ -575,6 +599,7 @@ public class Algorithms {
         Error = fileName(directory,delay_ys,"error",KindOfRunning);
         
         estimate = fileName(directory,delay_ys,"estimate",KindOfRunning);
+        
         String NameOfEstimateValue = NameOfFileName(delay_ys,"estimate",KindOfRunning);
         
 	int Max = 0;
