@@ -129,6 +129,11 @@ public class runWorkFlowIRES {
             d1.add("Optimization.page1",Double.toString(size[3]));
             d1.add("Optimization.tuple1",Double.toString(size[4]));
         }
+        if (Data.get_To().toLowerCase().equals("postgres")||
+                Data.get_From().toLowerCase().equals("postgres")){
+            d1.add("Optimization.page",Double.toString(size[1]));
+            d1.add("Optimization.tuple",Double.toString(size[2]));
+        }
         d1.add("Optimization.random",Double.toString(TimeOfDay));
 	d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
         
