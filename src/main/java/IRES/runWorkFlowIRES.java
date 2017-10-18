@@ -219,7 +219,10 @@ public class runWorkFlowIRES {
             mop1.add("Optimization.inputSpace.In0.page", "Double,1E8,1E10,l");
             mop1.add("Optimization.inputSpace.In0.tuple", "Double,1E8,1E10,l");
             mop1.add("Optimization.inputSpace.In0.page1", "Double,1E8,1E10,l");
-            mop1.add("Optimization.inputSpace.In0.tuple1", "Double,1E8,1E10,l");           
+            mop1.add("Optimization.inputSpace.In0.tuple1", "Double,1E8,1E10,l");  
+            
+            mop1.add("Execution.Argument3", "In0.page");
+            mop1.add("Execution.Argument4", "In0.tuple"); 
         }
         if ((Data.get_To().toLowerCase().equals("postgres")||
                 Data.get_From().toLowerCase().equals("postgres"))&&(SQL.equals(""))){
@@ -260,6 +263,8 @@ public class runWorkFlowIRES {
             numberArgument = "4";
             mop1.add("Execution.Argument3", "local[*]");//Execution.Argument2=spark://master:7077
         }
+        
+
         mop1.add("Execution.Arguments.number", numberArgument);    
         mop1.add("Execution.Output0.name", "In0.name");
         mop1.add("Execution.Output0.schema", "In0.schema");
