@@ -56,8 +56,8 @@ public class TestScript {
         tmp[0] = KindCheck(console.readLine("Kind of operator (a-IRES; b-StandAlone; c-Move): "));
         tmp[1] = DbCheck(console.readLine("Enter database of operator(a-tpch):"));   
         tmp[2] = SizeCheck(console.readLine("Enter database size of operator(default = 100m):"));
-        tmp[3] = FromCheck(console.readLine("Enter First table engine of operator(h-Hive; p- Postgres; s-Spark):"));
-        tmp[4] = ToCheck(console.readLine("Enter Second table of operator(Hive,Postgres,Spark):"));
+        tmp[3] = FromCheck(console.readLine("Enter First table engine of operator(h-Hive; p-Postgres; s-Spark):"));
+        tmp[4] = ToCheck(console.readLine("Enter Second table of operator(h-Hive; p-Postgres; s-Spark):"));
         tmp[5] = MoreCheck(console.readLine("Do you want to add more (yes/no): "));
         tmp[6] = MoreCheck(console.readLine("Do you want to use delay time (yes/no): "));
 	return tmp;
@@ -188,7 +188,7 @@ public class TestScript {
         if ((Kind.toLowerCase().contains("yes"))||(Kind.toLowerCase().equals("y"))) return "yes";
         else if ((Kind.toLowerCase().contains("no"))||(Kind.toLowerCase().equals("n"))) return "no";
             else
-                return "yes";
+                return "no";
     }
     
 }

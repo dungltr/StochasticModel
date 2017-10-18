@@ -575,10 +575,14 @@ public class Algorithms {
             Files.createFile(filePathExecTimeValue);
         return directoryData;
     }
-    public static void mainIRES(Move_Data Data, String SQL, YarnValue yarnValue, double TimeOfDay, double[] size, String KindOfRunning ) throws Exception{
+    public static String operatorFolder (){
         String IRES_HOME = new App().readhome("IRES_HOME");       
         String IRES_library = IRES_HOME+"/asap-platform/asap-server";    
-        String OperatorFolder = IRES_library+"/target/asapLibrary/operators/";
+        String OperatorFolder = IRES_library+"/target/asapLibrary/operators";
+        return OperatorFolder;
+    }
+    public static void mainIRES(Move_Data Data, String SQL, YarnValue yarnValue, double TimeOfDay, double[] size, String KindOfRunning ) throws Exception{      
+        String OperatorFolder = operatorFolder();
         String realValue, parameter, estimate, directory, Error;
         directory = testWriteMatrix2CSV.getDirectory(Data) ;
         directory = preapreFile(directory);
