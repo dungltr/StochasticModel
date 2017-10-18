@@ -74,6 +74,7 @@ public class testWriteMatrix2CSV {
     }
     public static void storeValue(Move_Data Data, String SQL, double[] Value, String NameValue) throws IOException {
         String directory = testWriteMatrix2CSV.getDirectory(Data);
+        directory = Algorithms.preapreFile(directory);
         String fileName = directory + "/" + NameValue + ".csv";
         double[][] a = new double[1][Value.length];
         for (int i = 0; i < Value.length; i++)
@@ -163,7 +164,8 @@ public class testWriteMatrix2CSV {
 
     public static void storeValueServer(Move_Data Data, String SQL, double[] Value, String NameValue) throws IOException {
         String directory = testWriteMatrix2CSV.getDirectory(Data);
-        String fileName = directory + "/data/" + NameValue +".csv";
+        directory = Algorithms.preapreFile(directory);
+        String fileName = directory + "/" + NameValue +".csv";
         double[][] a = new double[1][Value.length];
         for (int i = 0; i < Value.length; i++)
             a[0][i] = Value[i];
