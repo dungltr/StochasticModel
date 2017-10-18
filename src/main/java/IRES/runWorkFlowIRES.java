@@ -129,8 +129,8 @@ public class runWorkFlowIRES {
             d1.add("Optimization.page1",Double.toString(size[3]));
             d1.add("Optimization.tuple1",Double.toString(size[4]));
         }
-        if (Data.get_To().toLowerCase().equals("postgres")||
-                Data.get_From().toLowerCase().equals("postgres")){
+        if ((Data.get_To().toLowerCase().equals("postgres")||
+                Data.get_From().toLowerCase().equals("postgres"))&&SQL.equals("")){
             d1.add("Optimization.page",Double.toString(size[1]));
             d1.add("Optimization.tuple",Double.toString(size[2]));
         }
@@ -220,6 +220,11 @@ public class runWorkFlowIRES {
             mop1.add("Optimization.inputSpace.In0.tuple", "Double,1E8,1E10,l");
             mop1.add("Optimization.inputSpace.In0.page1", "Double,1E8,1E10,l");
             mop1.add("Optimization.inputSpace.In0.tuple1", "Double,1E8,1E10,l");           
+        }
+        if ((Data.get_To().toLowerCase().equals("postgres")||
+                Data.get_From().toLowerCase().equals("postgres"))&&(SQL.equals(""))){
+            mop1.add("Optimization.inputSpace.In0.page", "Double,1E8,1E10,l");
+            mop1.add("Optimization.inputSpace.In0.tuple", "Double,1E8,1E10,l");
         }
         mop1.add("Optimization.inputSpace.In0.random", "Double,1E8,1E10,l");
 
