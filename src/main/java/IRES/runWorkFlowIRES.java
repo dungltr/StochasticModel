@@ -129,12 +129,12 @@ public class runWorkFlowIRES {
             d1.add("Optimization.page1",Double.toString(size[3]));
             d1.add("Optimization.tuple1",Double.toString(size[4]));
         }
-/*        if ((Data.get_To().toLowerCase().equals("postgres")||
+        if ((Data.get_To().toLowerCase().equals("postgres")||
                 Data.get_From().toLowerCase().equals("postgres"))&&SQL.equals("")){
             d1.add("Optimization.page",Double.toString(size[1]));
             d1.add("Optimization.tuple",Double.toString(size[2]));
         }
-*/        d1.add("Optimization.random",Double.toString(TimeOfDay));
+        d1.add("Optimization.random",Double.toString(TimeOfDay));
 	d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
         
         Dataset d2 = new Dataset(Data.get_DataOut()+Data.get_Operator());
@@ -227,17 +227,17 @@ public class runWorkFlowIRES {
             mop1.add("Execution.Argument6", "In0.tuple1");
             numberArgument = "7";
         }
-/*        if ((Data.get_To().toLowerCase().equals("postgres")||
+        if ((Data.get_To().toLowerCase().equals("postgres")||
                 Data.get_From().toLowerCase().equals("postgres"))&&(SQL.equals(""))){
             mop1.add("Optimization.inputSpace.In0.page", "Double,1E8,1E10,l");
             mop1.add("Optimization.inputSpace.In0.tuple", "Double,1E8,1E10,l");
-            
+/*            
             mop1.add("Execution.Argument3", "In0.page");
             mop1.add("Execution.Argument4", "In0.tuple"); 
             mop1.add("Execution.Argument5", "In0.random");
             numberArgument = "6";
-        }
-*/        mop1.add("Optimization.inputSpace.In0.random", "Double,1E8,1E10,l");
+*/        }
+        mop1.add("Optimization.inputSpace.In0.random", "Double,1E8,1E10,l");
 
 	mop1.add("Optimization.model.Out0.size", "gr.ntua.ece.cslab.panic.core.models.UserFunction");
         mop1.add("Optimization.model.cost",      "gr.ntua.ece.cslab.panic.core.models.UserFunction");//UserFunction");       
