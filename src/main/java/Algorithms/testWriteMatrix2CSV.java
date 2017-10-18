@@ -172,9 +172,11 @@ public class testWriteMatrix2CSV {
         for (int i = 0; i < Value.length; i++)
             a[0][i] = Value[i];
         Path filePath = Paths.get(fileName);
-        if (Files.size(filePath) == 0) System.out.println("\n File size = 0:-------------------------");
-            if (!Files.exists(filePath) || (Files.size(filePath) == 0)) {
-                Files.createFile(filePath);                
+            if (!Files.exists(filePath)) {
+                Files.createFile(filePath);
+            }
+            if (Files.size(filePath) == 0){
+                System.out.println("\n File size = 0:-------------------------");
 		String FILE_HEADER = "";
                 for (int i= 0; i < Value.length-1; i++)
                 FILE_HEADER = FILE_HEADER + "Variable["+i+"]" + COMMA_DELIMITER;
