@@ -303,9 +303,9 @@ public class TPCHQuery {
         Path filePathRealValue = Paths.get(realValue); 
 
         if (!Files.exists(filePathRealValue))
-        {   IRES.createOperatorMove(Data, SQL, 0);            
-//            Files.createFile(filePathRealValue);
-            Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,KindOfRunning);
+        {   Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,KindOfRunning);
+            IRES.createOperatorMove(Data, SQL, 0);            
+//            Files.createFile(filePathRealValue);          
         }
         Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
     }    
@@ -374,7 +374,7 @@ public class TPCHQuery {
         directory = testWriteMatrix2CSV.getDirectory(Data);
         String delay_ys = "";
 	if (TimeOfDay<1) delay_ys = "no_delay_";
-        realValue = directory + "/"+delay_ys+KindOfRunning+"_realValue.csv";
+        realValue = directory + "/data/"+delay_ys+KindOfRunning+"_realValue.csv";
 //        parameter = directory + "/"+delay_ys+"Parameter.csv";
 //        estimate = directory + "/"+delay_ys+"Estimate.csv";
         Path filePathRealValue = Paths.get(realValue); 
