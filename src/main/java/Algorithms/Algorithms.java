@@ -557,11 +557,14 @@ public class Algorithms {
         File dir = new File(directoryData);
 		if (!dir.exists()) {
 			dir.mkdir();
+                        System.out.println("\nCreate directory:-------------------------"+directoryData);
 		}
+                
         directoryData = directoryData+ "/data";        
         File dirData = new File(directoryData);
 		if (!dirData.exists()) {
 			dirData.mkdir();
+                        System.out.println("\nCreate directory:-------------------------"+directoryData);
 		}        
         Path filePathCostValue = Paths.get(directoryData+"/cost.csv"); 
         if (!Files.exists(filePathCostValue))
@@ -692,7 +695,8 @@ public class Algorithms {
         
         double[] size_random = TPCHQuery.calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch, KindOfRunning);
         double[] yarn_random = testQueryPlan.createRandomYarn();
-        
+        String directory = testWriteMatrix2CSV.getDirectory(Data) ;
+        directory = preapreFile(directory);
         double Data_size;
         double Ram;
         double Core;
@@ -701,7 +705,6 @@ public class Algorithms {
         int i = 0;        
         double Numberuser = 100;
             
-        String directory = testWriteMatrix2CSV.getDirectory(Data);
         String delay_ys = "";
 	if (TimeOfDay<1) delay_ys = "no_delay";
         String NameOfRealValue = NameOfFileName(delay_ys,"realValue",KindOfRunning);
