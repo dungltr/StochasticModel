@@ -66,18 +66,21 @@ public class OptimizeWorkFlow {
         Workflow workflow1 = abstractWorkflow.optimizeWorkflow(d2);
         System.out.println("\nHere is optimization workflow is here-----------------------------------------------------------------------:");
         System.out.println(workflow1);
+	System.out.println(workflow1.toString());
         System.out.println("\nEnd of optimization workflow------------------------------------------------------------------------:");
         System.out.println();        
         
-/*  
+  
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
         WorkflowClient wcli = new WorkflowClient();
         wcli.setConfiguration(conf);
-        String materializedWorkflow = wcli.materializeWorkflow(workflow1, policy);
+        ///////////////////////////////////////////////////////////////////////////////////////
+	String materializedWorkflow = wcli.materializeWorkflow(workflow1..toString(), policy);
+	///////////////////////////////////////////////////////////////////////////////////////
         System.out.println(materializedWorkflow);
         System.out.println("----------------------------"+workflow1.toString());
         ////Execution 
         String w = wcli.executeWorkflow(materializedWorkflow);
-*/////////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////// 
     }
 }
