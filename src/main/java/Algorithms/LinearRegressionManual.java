@@ -329,8 +329,9 @@ public class LinearRegressionManual {
         String DatabaseIn = "";
         String Schema = "";
         String DataOut = "";
+        String DataOutSize = "";
         String DatabaseOut = "";  
-        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, from, to, DataOut, DatabaseOut);
+        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, from, to, DataOut, DataOutSize, DatabaseOut);
         Data.set_Operator(Operator);
         Data.set_DataIn(DataIn);
         Data.set_DataInSize(DataInSize);
