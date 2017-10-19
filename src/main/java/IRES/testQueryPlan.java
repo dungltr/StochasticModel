@@ -198,19 +198,19 @@ public class testQueryPlan {
 	double size_multi = 0;
 	String[] tmp = new String[4];       
         if (KindOfRunning.equals("testing")){
-	i = SQLJoin2Table[rand.nextInt(SQLJoin2Table.length)];
-	tmp[1] = dataset_move(Integer.toString(i));
-	//String [] SliceArray = Checkquery(Integer.toString(i));
-        String [] SliceArray = sliceArray(Checkquery(Integer.toString(i)),tmp[1]);
-	for (k = 0; k < SliceArray.length; k++)
-		size_multi = size_multi + testQueryPlan.sizeDataset(SliceArray[k],Size_tpch);
-	tmp[0] = Double.toString(size_multi);
-	System.out.println("Size of tables except:" + tmp[0]);
-        //tmp[1] = dataset_move(Integer.toString(i));
-        tmp[2] = "tpch_query"+Integer.toString(i);
-        tmp[3] = SliceArray[0];
-	System.out.println("Table 1" + tmp[1]);
-	System.out.println("Table 2" + tmp[3]);
+            i = SQLJoin2Table[rand.nextInt(SQLJoin2Table.length)];
+            tmp[1] = dataset_move(Integer.toString(i));
+            //String [] SliceArray = Checkquery(Integer.toString(i));
+            String [] SliceArray = sliceArray(Checkquery(Integer.toString(i)),tmp[1]);
+            for (k = 0; k < SliceArray.length; k++)
+                    size_multi = size_multi + testQueryPlan.sizeDataset(SliceArray[k],Size_tpch);
+            tmp[0] = Double.toString(size_multi);
+            System.out.println("Size of tables except:" + tmp[0]);
+            //tmp[1] = dataset_move(Integer.toString(i));
+            tmp[2] = "tpch_query"+Integer.toString(i);
+            tmp[3] = SliceArray[0];
+            System.out.println("Table 1" + tmp[1]);
+            System.out.println("Table 2" + tmp[3]);
 	}
 	else{
 	tmp[0] = Double.toString(size[i]);
