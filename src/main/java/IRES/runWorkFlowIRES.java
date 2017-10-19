@@ -160,7 +160,7 @@ public class runWorkFlowIRES {
     }
     public void createDatasetJoin(Move_Data Data, double [] size, String SQL, double TimeOfDay) throws Exception {
         String node_pc = new App().getComputerName();
-        Dataset d1 = new Dataset(Data.get_DataIn()+Data.get_Operator()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To());
+        Dataset d1 = new Dataset(Data.get_DataIn()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To());
         d1.add("Constraints.Engine.SQL",Data.get_From()+Data.get_Operator());
 	d1.add("Constraints.Engine.location",node_pc);
         d1.add("Constraints.type","SQL");
@@ -175,7 +175,7 @@ public class runWorkFlowIRES {
         d1.add("Optimization.random",Double.toString(TimeOfDay));
 	d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
         
-        Dataset d2 = new Dataset(Data.get_DataOut()+Data.get_Operator()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To());
+        Dataset d2 = new Dataset(Data.get_DataOut()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To());
         d2.add("Constraints.Engine.SQL",Data.get_From()+Data.get_Operator());
 	d2.add("Constraints.Engine.location",node_pc);
         d2.add("Constraints.type","SQL");
@@ -188,7 +188,7 @@ public class runWorkFlowIRES {
         }
 	d2.writeToPropertiesFile(directory_datasets + d2.datasetName);  
         
-        Dataset d3 = new Dataset(Data.get_DataIn()+Data.get_DataOut()+Data.get_Operator()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To());
+        Dataset d3 = new Dataset(Data.get_DataIn()+Data.get_DataOut()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To());
         d3.add("Constraints.Engine.SQL",Data.get_To()+Data.get_Operator());
 	d3.add("Constraints.Engine.location",node_pc);
         d3.add("Constraints.type","SQL");
@@ -518,8 +518,8 @@ public class runWorkFlowIRES {
         
     }
     public void createWorkflowJoin(Move_Data Data, String SQL) throws Exception{
-        String InPutData1 = Data.get_DataIn()+Data.get_Operator()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To();//"asapServerLog";//Data.get_DataIn();
-        String InPutData2 = Data.get_DataOut()+Data.get_Operator()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To();//"asapServerLog";//Data.get_DataIn();
+        String InPutData1 = Data.get_DataIn()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To();//"asapServerLog";//Data.get_DataIn();
+        String InPutData2 = Data.get_DataOut()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To();//"asapServerLog";//Data.get_DataIn();
         String OutPutData = Data.get_DataOut().toUpperCase()+"_OUT";
         String NameOp = Nameop(Data);
         String AbstractOp = "Abstract_"+NameOp;
