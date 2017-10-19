@@ -172,11 +172,6 @@ public class runWorkFlowIRES {
                 d1.add("Optimization.page",Double.toString(size[1]));
                 d1.add("Optimization.tuple",Double.toString(size[2]));           
             }
-        if (Data.get_From().toLowerCase().equals("postgres")&&
-            Data.get_To().toLowerCase().equals("hive")){
-            d1.add("Optimization.page",Double.toString(size[1]));
-            d1.add("Optimization.tuple",Double.toString(size[2]));           
-        }
         d1.add("Optimization.random",Double.toString(TimeOfDay));
 	d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
         
@@ -191,9 +186,7 @@ public class runWorkFlowIRES {
             d2.add("Optimization.page",Double.toString(size[3]));
             d2.add("Optimization.tuple",Double.toString(size[4]));
         }
-	d2.writeToPropertiesFile(directory_datasets + d2.datasetName);
-        
-        
+	d2.writeToPropertiesFile(directory_datasets + d2.datasetName);        
         Dataset d3 = new Dataset(Data.get_DataIn()+Data.get_DataOut()+Data.get_Operator());
         d3.add("Constraints.Engine.SQL",Data.get_To()+Data.get_Operator());
 	d3.add("Constraints.Engine.location",node_pc);
@@ -426,11 +419,6 @@ public class runWorkFlowIRES {
             mop1.add("Optimization.inputSpace.In0.tuple", "Double,1E8,1E10,l");
             mop1.add("Optimization.inputSpace.In1.page", "Double,1E8,1E10,l");
             mop1.add("Optimization.inputSpace.In1.tuple", "Double,1E8,1E10,l");
-        }
-        if (Data.get_From().toLowerCase().equals("postgres")&&
-            Data.get_To().toLowerCase().equals("hive")){
-            mop1.add("Optimization.inputSpace.In0.page", "Double,1E8,1E10,l");
-            mop1.add("Optimization.inputSpace.In0.tuple", "Double,1E8,1E10,l");
         }
         mop1.add("Optimization.inputSpace.In0.random", "Double,1E8,1E10,l");
 
