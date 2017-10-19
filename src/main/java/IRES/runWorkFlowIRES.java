@@ -194,11 +194,11 @@ public class runWorkFlowIRES {
 	d2.writeToPropertiesFile(directory_datasets + d2.datasetName);
         
         
-        Dataset d3 = new Dataset(Data.get_DataOut()+Data.get_Operator());
+        Dataset d3 = new Dataset(Data.get_DataIn()+Data.get_DataOut()+Data.get_Operator());
         d3.add("Constraints.Engine.SQL",Data.get_To()+Data.get_Operator());
 	d3.add("Constraints.Engine.location",node_pc);
         d3.add("Constraints.type","SQL");
-	d3.add("Execution.name",Data.get_DataOut());
+	d3.add("Execution.name",Data.get_DataIn()+Data.get_DataOut());
         d3.add("Execution.schema", Data.get_Schema());
 	d3.add("Optimization.size",Data.get_DataInSize());      
 	d3.writeToPropertiesFile(directory_datasets + d3.datasetName);
@@ -529,7 +529,8 @@ public class runWorkFlowIRES {
         
     }
     public void createWorkflowJoin(Move_Data Data, String SQL) throws Exception{
-        String InPutData = Data.get_DataIn()+Data.get_Operator();//"asapServerLog";//Data.get_DataIn();
+        String InPutData1 = Data.get_DataIn()+Data.get_Operator();//"asapServerLog";//Data.get_DataIn();
+        String InPutData2 = Data.get_DataOut()+Data.get_Operator();//"asapServerLog";//Data.get_DataIn();
         String OutPutData = Data.get_DataOut()+"_OUT";
         String NameOp = Nameop(Data);
         String AbstractOp = "Abstract_"+NameOp;
@@ -545,20 +546,20 @@ public class runWorkFlowIRES {
         AbstractWorkflow1 abstractWorkflow1 = new AbstractWorkflow1(NameOfAbstractWorkflow);		
         Operator mop1 = new Operator(NameOp,"");
         
-        Dataset d1 = new Dataset(InPutData);        
+        Dataset d1 = new Dataset(InPutData1);        
         d1.inputFor(mop1, 0);
 //        d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
-	WorkflowNode t1 = new WorkflowNode(false,false,InPutData);
+	WorkflowNode t1 = new WorkflowNode(false,false,InPutData1);
 	t1.setDataset(d1);
                 
         AbstractOperator abstractOp = new AbstractOperator(AbstractOp);//AopAbstractOperator);
         WorkflowNode op1 = new WorkflowNode(true,true,AbstractOp);//AopAbstractOperator);
 	op1.setAbstractOperator(abstractOp);
         
-        Dataset d2 = new Dataset(InPutData);
+        Dataset d2 = new Dataset(InPutData2);
         d2.inputFor(mop1, 0);
 //        d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
-	WorkflowNode t2 = new WorkflowNode(false,false,InPutData);
+	WorkflowNode t2 = new WorkflowNode(false,false,InPutData2);
 	t2.setDataset(d2);
                 
 		
