@@ -186,7 +186,7 @@ public class runWorkFlowIRES {
         d2.add("Constraints.type","SQL");
 	d2.add("Execution.name",Data.get_DataOut());
         d2.add("Execution.schema", Data.get_Schema());
-	d2.add("Optimization.size",Data.get_DataInSize());  
+	d2.add("Optimization.size",Data.get_DataOutSize());  
         if (Data.get_To().toLowerCase().equals("postgres")){          
             d2.add("Optimization.page",Double.toString(size[3]));
             d2.add("Optimization.tuple",Double.toString(size[4]));
@@ -427,8 +427,8 @@ public class runWorkFlowIRES {
             mop1.add("Optimization.inputSpace.In1.page", "Double,1E8,1E10,l");
             mop1.add("Optimization.inputSpace.In1.tuple", "Double,1E8,1E10,l");
         }
-        if (Data.get_To().toLowerCase().equals("hive")&&
-            Data.get_From().toLowerCase().equals("postgres")){
+        if (Data.get_From().toLowerCase().equals("postgres")&&
+            Data.get_To().toLowerCase().equals("hive")){
             mop1.add("Optimization.inputSpace.In0.page", "Double,1E8,1E10,l");
             mop1.add("Optimization.inputSpace.In0.tuple", "Double,1E8,1E10,l");
         }
