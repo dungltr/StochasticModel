@@ -55,7 +55,7 @@ public class OptimizeWorkFlow {
         System.out.println(abstractWorkflow.getWorkflow(d1));
         System.out.println("\nShowing of abstractWorkflow is finished------------------------------------------------------------:");
 		
-//        materializedDatasets.add(d2);                
+        materializedDatasets.add(d2);                
 
         Workflow workflow0 = abstractWorkflow.getWorkflow(d2);
 
@@ -70,17 +70,19 @@ public class OptimizeWorkFlow {
         System.out.println("\nEnd of optimization workflow------------------------------------------------------------------------:");
         System.out.println();        
         
-  
+/*  
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
         WorkflowClient wcli = new WorkflowClient();
         wcli.setConfiguration(conf);
-        ///////////////////////////////////////////////////////////////////////////////////////
-	String materializedWorkflow = wcli.materializeWorkflow(workflow1..toString(), policy);
+        Double Cost = workflow1.optimalCost;
 	///////////////////////////////////////////////////////////////////////////////////////
-        System.out.println(materializedWorkflow);
-        System.out.println("----------------------------"+workflow1.toString());
+	//String materializedWorkflow = wcli.materializeWorkflow(workflow1.toString(), policy);
+	///////////////////////////////////////////////////////////////////////////////////////
+        //System.out.println(materializedWorkflow);
+        System.out.println("The cost of workflow of-------------------"+workflow1.toString()+" is "+ Cost+"-------------------------");
+	System.out.println("----------------------------"+workflow1.toString());
         ////Execution 
-        String w = wcli.executeWorkflow(materializedWorkflow);
-/////////////////////////////////////////////////////////////////////////////////////// 
+        //String w = wcli.executeWorkflow(materializedWorkflow);
+*//////////////////////////////////////////////////////////////////////////////////////// 
     }
 }
