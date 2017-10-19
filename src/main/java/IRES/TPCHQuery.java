@@ -641,7 +641,7 @@ public class TPCHQuery {
                 double[] size = new double[numberOfSize_Hive_Hive];
                 size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
                 size[1] = testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);
-                size[3] = 0;
+                size[2] = 0;
                 return size;
             }
             else {
