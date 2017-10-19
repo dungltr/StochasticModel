@@ -172,8 +172,8 @@ public class runWorkFlowIRES {
                 d1.add("Optimization.page",Double.toString(size[1]));
                 d1.add("Optimization.tuple",Double.toString(size[2]));           
             }
-        if (Data.get_To().toLowerCase().equals("hive")&&
-            Data.get_From().toLowerCase().equals("postgres")){
+        if (Data.get_From().toLowerCase().equals("postgres")&&
+            Data.get_To().toLowerCase().equals("hive")){
             d1.add("Optimization.page",Double.toString(size[1]));
             d1.add("Optimization.tuple",Double.toString(size[2]));           
         }
@@ -181,7 +181,7 @@ public class runWorkFlowIRES {
 	d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
         
         Dataset d2 = new Dataset(Data.get_DataOut()+Data.get_Operator());
-        d2.add("Constraints.Engine.SQL",Data.get_To()+Data.get_Operator());
+        d2.add("Constraints.Engine.SQL",Data.get_From()+Data.get_Operator());
 	d2.add("Constraints.Engine.location",node_pc);
         d2.add("Constraints.type","SQL");
 	d2.add("Execution.name",Data.get_DataOut());
