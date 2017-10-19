@@ -405,18 +405,19 @@ public class TPCHQuery {
         double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfRunning);
 	double[] Yarn = testQueryPlan.createRandomYarn();
         ////////////////////////////////////////////
+        for (int i = 0; i < size.length; i++) System.out.println("\nsize ["+i+"] is " + size[i]);
         size[size.length-1]=TimeOfDay;
         ///////////////////////////////////////////       
         String Operator = Join+"_TPCH";// +"_"+ randomQuery[2];           
         //String DataIn = Table;      
-        String DataIn = randomQuery[1];
-        String DataInSize = Double.toString(size[0]); System.out.println("\nDataOutSize is " + size[0]);
+        String DataIn = randomQuery[1]; System.out.println("\nDataIn is " + DataIn);
+        String DataInSize = Double.toString(size[0]); System.out.println("\nDataInSize is " + DataInSize);
         
         String DatabaseIn = database + Size_tpch;
         String Schema = Schema(DataIn);
         //String DataOut = Table.toUpperCase(); 
-        String DataOut = randomQuery[3];
-        String DataOutSize = Double.toString(size[1]); System.out.println("\nDataOutSize is " + size[1]);
+        String DataOut = randomQuery[3]; System.out.println("\nDataOut is " + DataOut);
+        String DataOutSize = Double.toString(size[1]); System.out.println("\nDataOutSize is " + DataOutSize);
         if ((from.toLowerCase().equals("postgres"))&&(to.toLowerCase().equals("hive"))) DataOutSize = Double.toString(size[3]);
         if (to.toLowerCase().equals("postgres")) DataOutSize = Double.toString(testQueryPlan.tupleDataset(randomQuery[3],Size_tpch));
         String DatabaseOut = database + Size_tpch;       
@@ -446,6 +447,7 @@ public class TPCHQuery {
         Data.set_DataInSize(DataInSize);
         Data.set_DataOut(DataOut);
         Data.set_DataOutSize(DataOutSize);
+        
         Data.set_DatabaseIn(DatabaseIn);
         Data.set_DatabaseOut(DatabaseOut);
         Data.set_From(From);
