@@ -590,7 +590,7 @@ public class Algorithms {
         runWorkFlowIRES IRES = new runWorkFlowIRES();
         int numberParameter = size.length + 1;
         int numerOfVariable = numberParameter-1;
-        if (Data.get_Operator().toLowerCase().equals("move")){
+        if (Data.get_Operator().toLowerCase().contains("move")){
             IRES.createAbstractOperatorMove(Data, SQL);      
             IRES.createWorkflowMove(Data, SQL);
         }
@@ -648,7 +648,7 @@ public class Algorithms {
 //	double costEstimateValue2 = batchgradientdescent.estimateGradient(sizeOfValue, realValue, parameter, StochasticValue, R_2_limit);
 //        System.out.println("\n Estimate Value of Batch Gradient Descent is: " + costEstimateValue2);
 	costEstimateValue = estimateCostValue(sizeOfValue, realValue, parameter, StochasticValue, R_2_limit);
-        if (Data.get_Operator().toLowerCase().equals("move")){
+        if (Data.get_Operator().toLowerCase().contains("move")){
             IRES.createDatasetMove_Hive_Postgres(Data, size, SQL, TimeOfDay);//createDatasetMove(Data, SQL);
             IRES.createOperatorMove(Data, SQL, costEstimateValue);
             IRES.createDataMove2(Data, SQL, yarnValue);
@@ -745,7 +745,7 @@ public class Algorithms {
             testWriteMatrix2CSV.storeParameter(Data, Parameter, NameOfParameter);
 
         }
-        if(Data.get_Operator().toLowerCase().equals("move")){
+        if(Data.get_Operator().toLowerCase().contains("move")){
             IRES.createDatasetMove_Hive_Postgres(Data, size, SQL, TimeOfDay);//createDatasetMove(Data, SQL);
             IRES.createDataMove2(Data, SQL, yarnValue);   
             }
