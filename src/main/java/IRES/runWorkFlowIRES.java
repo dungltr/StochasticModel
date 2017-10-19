@@ -113,9 +113,15 @@ public class runWorkFlowIRES {
         
         return actualTime;
     }
+    public static String datasetin (Move_Data Data){
+        return Data.get_DataIn()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To();
+    }
+    public static String datasetout (Move_Data Data){
+        return Data.get_DataOut()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To();
+    }
     public void createDatasetMove_Hive_Postgres(Move_Data Data, double [] size, String SQL, double TimeOfDay) throws Exception {
         String node_pc = new App().getComputerName();
-        Dataset d1 = new Dataset(Data.get_DataIn()+Data.get_Operator());
+        Dataset d1 = new Dataset(datasetin(Data));
         d1.add("Constraints.Engine.SQL",Data.get_From()+Data.get_Operator());
 	d1.add("Constraints.Engine.location",node_pc);
         d1.add("Constraints.type","SQL");
@@ -149,7 +155,7 @@ public class runWorkFlowIRES {
         d1.add("Optimization.random",Double.toString(TimeOfDay));
 	d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
         
-        Dataset d2 = new Dataset(Data.get_DataOut()+Data.get_Operator());
+        Dataset d2 = new Dataset(datasetout(Data)+"_OUT");
         d2.add("Constraints.Engine.SQL",Data.get_To()+Data.get_Operator());
 	d2.add("Constraints.Engine.location",node_pc);
         d2.add("Constraints.type","SQL");
@@ -160,7 +166,7 @@ public class runWorkFlowIRES {
     }
     public void createDatasetJoin(Move_Data Data, double [] size, String SQL, double TimeOfDay) throws Exception {
         String node_pc = new App().getComputerName();
-        Dataset d1 = new Dataset(Data.get_DataIn()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To());
+        Dataset d1 = new Dataset(datasetin(Data));
         d1.add("Constraints.Engine.SQL",Data.get_From()+Data.get_Operator());
 	d1.add("Constraints.Engine.location",node_pc);
         d1.add("Constraints.type","SQL");
@@ -175,7 +181,7 @@ public class runWorkFlowIRES {
         d1.add("Optimization.random",Double.toString(TimeOfDay));
 	d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
         
-        Dataset d2 = new Dataset(Data.get_DataOut()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To());
+        Dataset d2 = new Dataset(datasetout(Data));
         d2.add("Constraints.Engine.SQL",Data.get_From()+Data.get_Operator());
 	d2.add("Constraints.Engine.location",node_pc);
         d2.add("Constraints.type","SQL");
@@ -188,7 +194,7 @@ public class runWorkFlowIRES {
         }
 	d2.writeToPropertiesFile(directory_datasets + d2.datasetName);  
         
-        Dataset d3 = new Dataset(Data.get_DataIn()+Data.get_DataOut()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To());
+        Dataset d3 = new Dataset(Data.get_DataIn()+datasetout(Data));
         d3.add("Constraints.Engine.SQL",Data.get_To()+Data.get_Operator());
 	d3.add("Constraints.Engine.location",node_pc);
         d3.add("Constraints.type","SQL");
@@ -465,8 +471,8 @@ public class runWorkFlowIRES {
         mop1.writeToPropertiesFile(directory_operator+mop1.opName);
     }
     public void createWorkflowMove(Move_Data Data, String SQL) throws Exception{
-        String InPutData = Data.get_DataIn()+Data.get_Operator();//"asapServerLog";//Data.get_DataIn();
-        String OutPutData = Data.get_DataOut()+"_OUT";
+        String InPutData = datasetin(Data);//"asapServerLog";//Data.get_DataIn();
+        String OutPutData = datasetout(Data)+"_OUT";
         String NameOp = Nameop(Data);
         String AbstractOp = "Abstract_"+NameOp;
         String NameOfAbstractWorkflow = NameOp+"_Workflow";
@@ -518,9 +524,9 @@ public class runWorkFlowIRES {
         
     }
     public void createWorkflowJoin(Move_Data Data, String SQL) throws Exception{
-        String InPutData1 = Data.get_DataIn()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To();//"asapServerLog";//Data.get_DataIn();
-        String InPutData2 = Data.get_DataOut()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To();//"asapServerLog";//Data.get_DataIn();
-        String OutPutData = Data.get_DataOut().toUpperCase()+"_OUT";
+        String InPutData1 = datasetin(Data);//"asapServerLog";//Data.get_DataIn();
+        String InPutData2 = datasetout(Data);//"asapServerLog";//Data.get_DataIn();
+        String OutPutData = Data.get_DataIn()+datasetout(Data);
         String NameOp = Nameop(Data);
         String AbstractOp = "Abstract_"+NameOp;
         String NameOfAbstractWorkflow = NameOp+"_Workflow";
