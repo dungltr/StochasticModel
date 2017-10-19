@@ -403,7 +403,6 @@ public class TPCHQuery {
         String To   = to;
         
         double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfRunning);
-        if (KindOfRunning.equals("testing")&&(From.equals("hive"))&&(To.equals("hive"))) size[1] = Double.parseDouble(randomQuery[0]); 
 	double[] Yarn = testQueryPlan.createRandomYarn();
         ////////////////////////////////////////////
         size[size.length-1]=TimeOfDay;
@@ -411,13 +410,13 @@ public class TPCHQuery {
         String Operator = Join+"_TPCH";// +"_"+ randomQuery[2];           
         //String DataIn = Table;      
         String DataIn = randomQuery[1];
-        String DataInSize = Double.toString(size[0]);
+        String DataInSize = Double.toString(size[0]); System.out.println("\nDataOutSize is " + size[0]);
         
         String DatabaseIn = database + Size_tpch;
         String Schema = Schema(DataIn);
         //String DataOut = Table.toUpperCase(); 
         String DataOut = randomQuery[3];
-        String DataOutSize = Double.toString(size[1]);
+        String DataOutSize = Double.toString(size[1]); System.out.println("\nDataOutSize is " + size[1]);
         if ((from.toLowerCase().equals("postgres"))&&(to.toLowerCase().equals("hive"))) DataOutSize = Double.toString(size[3]);
         if (to.toLowerCase().equals("postgres")) DataOutSize = Double.toString(testQueryPlan.tupleDataset(randomQuery[3],Size_tpch));
         String DatabaseOut = database + Size_tpch;       
