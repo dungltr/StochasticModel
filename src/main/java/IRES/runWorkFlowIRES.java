@@ -164,7 +164,7 @@ public class runWorkFlowIRES {
         d1.add("Constraints.Engine.SQL",Data.get_From()+Data.get_Operator());
 	d1.add("Constraints.Engine.location",node_pc);
         d1.add("Constraints.type","SQL");
-	d1.add("Execution.name",Data.get_DataIn());
+	d1.add("Execution.name",Data.get_DataIn()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To());
         d1.add("Execution.schema", Data.get_Schema());
         d1.add("Execution.path", "hdfs://"+HDFS+"/"+Data.get_DatabaseIn()+".db/"+Data.get_DataIn());
 	d1.add("Optimization.size",Data.get_DataInSize());      
@@ -179,7 +179,7 @@ public class runWorkFlowIRES {
         d2.add("Constraints.Engine.SQL",Data.get_From()+Data.get_Operator());
 	d2.add("Constraints.Engine.location",node_pc);
         d2.add("Constraints.type","SQL");
-	d2.add("Execution.name",Data.get_DataOut());
+	d2.add("Execution.name",Data.get_DataOut()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To());
         d2.add("Execution.schema", Data.get_Schema());
 	d2.add("Optimization.size",Data.get_DataOutSize());  
         if (Data.get_To().toLowerCase().equals("postgres")){          
@@ -191,7 +191,7 @@ public class runWorkFlowIRES {
         d3.add("Constraints.Engine.SQL",Data.get_To()+Data.get_Operator());
 	d3.add("Constraints.Engine.location",node_pc);
         d3.add("Constraints.type","SQL");
-	d3.add("Execution.name",Data.get_DataIn()+Data.get_DataOut());
+	d3.add("Execution.name",Data.get_DataIn()+Data.get_DataOut()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To());
         d3.add("Execution.schema", Data.get_Schema());
 	d3.add("Optimization.size",Data.get_DataInSize());      
 	d3.writeToPropertiesFile(directory_datasets + d3.datasetName);
