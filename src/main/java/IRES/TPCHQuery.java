@@ -418,6 +418,8 @@ public class TPCHQuery {
         //String DataOut = Table.toUpperCase(); 
         String DataOut = randomQuery[3];
         String DataOutSize = Double.toString(size[1]);
+        if ((from.toLowerCase().equals("postgres"))&&(to.toLowerCase().equals("hive"))) DataOutSize = Double.toString(size[3]);
+        if (to.toLowerCase().equals("postgres")) DataOutSize = Double.toString(testQueryPlan.tupleDataset(randomQuery[3],Size_tpch));
         String DatabaseOut = database + Size_tpch;       
        
         String SQL_fileName = ""; 
