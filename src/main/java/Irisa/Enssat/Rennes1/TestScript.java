@@ -53,7 +53,7 @@ public class TestScript {
     public static String [] Ask(){
         Console console = System.console();
         String[] tmp = new String [7];
-        tmp[0] = KindCheck(console.readLine("Kind of operator (a-IRES; b-StandAlone; c-Move): "));
+        tmp[0] = KindCheck(console.readLine("Kind of operator (a-IRES; b-StandAlone; c-Move; d-Join): "));
         tmp[1] = DbCheck(console.readLine("Enter database of operator(a-tpch):"));   
         tmp[2] = SizeCheck(console.readLine("Enter database size of operator(default = 100m):"));
         tmp[3] = FromCheck(console.readLine("Enter First table engine of operator(h-Hive; p-Postgres; s-Spark):"));
@@ -129,7 +129,10 @@ public class TestScript {
                 TPCHQuery.TPCH(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
             else {  if (call[0]=="Move")
                         TPCHQuery.Move(TimeOfDay, call[1], call[2], call[3], call[4], "Move");
-                    else TPCHStandalone.TPCH_Standalone(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
+                    else {  if (call[0]=="Join")
+                            TPCHQuery.Join(TimeOfDay, call[1], call[2], call[3], call[4], "Join");
+                        else    TPCHStandalone.TPCH_Standalone(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
+                    }
             }           
         }
         else {
@@ -143,8 +146,9 @@ public class TestScript {
         if (Kind.toLowerCase().contains("a")) return "IRES";
         else if (Kind.toLowerCase().contains("b")) return "Standalone";
             else if (Kind.toLowerCase().contains("c")) return "Move";
-                else
-                    return "IRES";
+                else if (Kind.toLowerCase().contains("d")) return "Join";
+                    else
+                        return "IRES";
     }
     public static String KindRunning(String KindOfRunning){
         if (KindOfRunning.toLowerCase().contains("a")) return "training";
@@ -154,7 +158,7 @@ public class TestScript {
                     else return "training";
     }
     public static String DbCheck(String DB){
-        if (DB.toLowerCase().contains("tpch")) return "tpch";
+        if (DB.toLowerCase().contains("a")) return "tpch";
         else return "tpch";
     }
     public static String SizeCheck(String Size){
