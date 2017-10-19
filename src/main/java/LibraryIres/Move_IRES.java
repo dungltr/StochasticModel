@@ -47,8 +47,8 @@ public class Move_IRES {
     String directory_datasets = IRES_library+"/target/asapLibrary/datasets/";
     String OperatorFolder = IRES_library+"/target/asapLibrary/operators/";
     
-    public void MoveData (String Operator, String DataIn, String DataInSize, String DatabaseIn, String Schema, String From, String To, String DataOut, String DatabaseOut) throws Exception {
-        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DatabaseOut);
+    public void MoveData (String Operator, String DataIn, String DataInSize, String DatabaseIn, String Schema, String From, String To, String DataOut, String DataOutSize, String DatabaseOut) throws Exception {
+        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DataOutSize, DatabaseOut);
         String SQL = "";
         createMove(Data);//In, DatabaseIn, Schema, From, To, DataOut, DatabaseOut);
         createData(Data,SQL);//In, DatabaseIn, Schema, From, To, DataOut, DatabaseOut);       		

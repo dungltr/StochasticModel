@@ -42,6 +42,7 @@ public class testQueryPlan {
         String Schema_Hive = "(KEY int, GENDER varchar(40))";
         Schema = Schema_Hive;
         String DataOut = "database_part_hive"; 
+        String DataOutSize = "200";
         String DatabaseOut = "mydb";
         
         
@@ -61,7 +62,7 @@ public class testQueryPlan {
         YarnValue yarnValue = new YarnValue(Yarn[0], Yarn[1]);
         yarnValue.set_Ram(Yarn[0]);
         yarnValue.set_Core(Yarn[1]);
-        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DatabaseOut);
+        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DataOutSize, DatabaseOut);
         Data.set_Operator(Operator);
         Data.set_DataIn(DataIn);
         Data.set_DataOut(DataOut);
@@ -107,6 +108,7 @@ public class testQueryPlan {
         String Schema_Hive = "(KEY int, GENDER varchar(40))";
         Schema = Schema_Hive;
         String DataOut = "database_postgres_result"; 
+        String DataOutSize = "200";
         String DatabaseOut = "mydb";
 
 //        String SQL_Hive = "DROP TABLE IF EXISTS "+DatabaseOut+"."+DataOut+"; CREATE TABLE "+DatabaseOut+"."+DataOut+" AS SELECT * FROM "+DatabaseIn+"."+DataIn+";";
@@ -121,7 +123,7 @@ public class testQueryPlan {
                 + "where database_part_hive.key=50;";
 */        String SQL = SQL_Postgres;
         
-        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DatabaseOut);
+        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DataOutSize, DatabaseOut);
         Data.set_Operator(Operator);
         Data.set_DataIn(DataIn);
         Data.set_DataOut(DataOut);

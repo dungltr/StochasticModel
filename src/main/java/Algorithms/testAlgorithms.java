@@ -46,13 +46,14 @@ public class testAlgorithms {
         String Schema = "(CUSTKEY int, NAME varchar(25), ADDRESS varchar(40), NATIONKEY int, PHONE varchar(25), ACCTBAL float, MKTSEGMENT varchar(15), COMMENT varchar(120), LAST varchar(10))";
         
         String DataOut = "customer_hive"; 
+        String DataOutSize = "200";
         String DatabaseOut = "mydb";
         
         String From = "HIVE";
         String To   = "POSTGRES";
         String SQL = "";
         
-        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DatabaseOut);
+        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DataOutSize, DatabaseOut);
         Data.set_DataIn(DataIn);
         Data.set_DataOut(DataOut);
         Data.set_DatabaseIn(DatabaseIn);

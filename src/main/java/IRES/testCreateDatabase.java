@@ -41,6 +41,7 @@ public class testCreateDatabase {
         String Schema = "(CUSTKEY int, NAME varchar(25), ADDRESS varchar(40), NATIONKEY int, PHONE varchar(25), ACCTBAL float, MKTSEGMENT varchar(15), COMMENT varchar(120), LAST varchar(10))";
         String Schema_Hive = "(KEY int, GENDER varchar(40))";
         String DataOut = "database_tmp"; 
+        String DataOutSize = "200";
         String DatabaseOut = "mydb";
         
         
@@ -49,7 +50,7 @@ public class testCreateDatabase {
         String SQL;// = SQL_Postgres;
 //        SQL = CreateDatabase.setupDataBasePostgres(DataOut, Schema);
         SQL = CreateDatabase.setupDataBase_HIVE(DataOut, Schema_Hive);
-        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DatabaseOut);
+        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DataOutSize, DatabaseOut);
         Data.set_Operator(Operator);
         Data.set_DataIn(DataIn);
         Data.set_DataOut(DataOut);
@@ -100,6 +101,7 @@ public class testCreateDatabase {
         String Schema = "(CUSTKEY int, NAME varchar(25), ADDRESS varchar(40), NATIONKEY int, PHONE varchar(25), ACCTBAL float, MKTSEGMENT varchar(15), COMMENT varchar(120), LAST varchar(10))";
         String Schema_Hive = "(KEY int, GENDER varchar(40))";
         String DataOut = "database_part_postgres"; 
+        String DataOutSize = "200";
         String DatabaseOut = "mydb";
         
         
@@ -108,7 +110,7 @@ public class testCreateDatabase {
         String SQL;// = SQL_Postgres;
         SQL = CreateDatabase.setupDataBasePostgres(DataOut, Schema);
 //        SQL = CreateDatabase.setupDataBase_HIVE(DataOut, Schema_Hive);
-        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DatabaseOut);
+        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DataOutSize, DatabaseOut);
         Data.set_Operator(Operator);
         Data.set_DataIn(DataIn);
         Data.set_DataOut(DataOut);

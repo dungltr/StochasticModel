@@ -62,6 +62,7 @@ public class TPCHQuery {
         String Schema = Schema(DataIn);
         //String DataOut = Table.toUpperCase(); 
         String DataOut = randomQuery[1].toUpperCase();
+        String DataOutSize = Double.toString(size[0]);
         String DatabaseOut = database + Size_tpch;       
        
         //String SQL_fileName = SQL_folder + "tpch_" + query; 
@@ -78,7 +79,7 @@ public class TPCHQuery {
         System.out.println("\nThe dataset is " + randomQuery[1] + " and the query is " + randomQuery[2]);
         System.out.println("\nThe Schema is " + Schema);
                
-        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DatabaseOut);
+        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DataOutSize, DatabaseOut);
         Data.set_Operator(Operator);
         Data.set_DataIn(DataIn);
         Data.set_DataInSize(DataInSize);
@@ -131,6 +132,7 @@ public class TPCHQuery {
         String Schema = Schema(DataIn);
         String DataOut = Table.toUpperCase(); 
                DataOut = randomQuery[1].toUpperCase();
+        String DataOutSize = Double.toString(size[1]);       
         String DatabaseOut = database + Size_tpch;       
         
      
@@ -144,7 +146,7 @@ public class TPCHQuery {
         System.out.println("\nThe dataset is " + randomQuery[1] + " and the query is " + randomQuery[2]);
         System.out.println("\nThe Schema is " + Schema);
         
-        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DatabaseOut);
+        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DataOutSize, DatabaseOut);
         Data.set_Operator(Operator);
         Data.set_DataIn(DataIn);
         Data.set_DataOut(DataOut);
@@ -194,6 +196,7 @@ public class TPCHQuery {
         String Schema = Schema(DataIn);
         String DataOut = Table.toUpperCase(); 
                 DataOut = randomQuery[1].toUpperCase();
+        String DataOutSize = Double.toString(size[0]);
         String DatabaseOut = database + Size_tpch;       
         
      
@@ -208,7 +211,7 @@ public class TPCHQuery {
         System.out.println("\nThe dataset is " + randomQuery[1] + " and the query is " + randomQuery[2]);
         System.out.println("\nThe Schema is " + Schema);
         
-        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DatabaseOut);
+        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DataOutSize, DatabaseOut);
         Data.set_Operator(Operator);
         Data.set_DataIn(DataIn);
         Data.set_DataOut(DataOut);
@@ -263,6 +266,7 @@ public class TPCHQuery {
         String Schema = Schema(DataIn);
         //String DataOut = Table.toUpperCase(); 
         String DataOut = randomQuery[1].toUpperCase();
+        String DataOutSize = Double.toString(size[0]);
         String DatabaseOut = database + Size_tpch;       
        
         String SQL_fileName = ""; 
@@ -283,7 +287,7 @@ public class TPCHQuery {
         System.out.println("\nThe dataset is " + randomQuery[1] + " and the query is " + randomQuery[2]);
         System.out.println("\nThe Schema is " + Schema);
                
-        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DatabaseOut);
+        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DataOutSize, DatabaseOut);
         Data.set_Operator(Operator);
         Data.set_DataIn(DataIn);
         Data.set_DataInSize(DataInSize);
@@ -339,6 +343,7 @@ public class TPCHQuery {
         String Schema = Schema(DataIn);
         //String DataOut = Table.toUpperCase(); 
         String DataOut = randomQuery[1].toUpperCase();
+        String DataOutSize = Double.toString(size[0]);
         String DatabaseOut = database + Size_tpch;       
        
         String SQL_fileName = ""; 
@@ -360,7 +365,7 @@ public class TPCHQuery {
         System.out.println("\nThe dataset is " + randomQuery[1] + " and the query is " + randomQuery[2]);
         System.out.println("\nThe Schema is " + Schema);
                
-        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DatabaseOut);
+        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DataOutSize, DatabaseOut);
         Data.set_Operator(Operator);
         Data.set_DataIn(DataIn);
         Data.set_DataInSize(DataInSize);
@@ -411,7 +416,8 @@ public class TPCHQuery {
         String DatabaseIn = database + Size_tpch;
         String Schema = Schema(DataIn);
         //String DataOut = Table.toUpperCase(); 
-        String DataOut = randomQuery[1].toUpperCase();
+        String DataOut = randomQuery[3];
+        String DataOutSize = Double.toString(size[1]);
         String DatabaseOut = database + Size_tpch;       
        
         String SQL_fileName = ""; 
@@ -433,11 +439,12 @@ public class TPCHQuery {
         System.out.println("\nThe dataset is " + randomQuery[1] + " and the query is " + randomQuery[2]);
         System.out.println("\nThe Schema is " + Schema);
                
-        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DatabaseOut);
+        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DataOutSize, DatabaseOut);
         Data.set_Operator(Operator);
         Data.set_DataIn(DataIn);
         Data.set_DataInSize(DataInSize);
         Data.set_DataOut(DataOut);
+        Data.set_DataOutSize(DataOutSize);
         Data.set_DatabaseIn(DatabaseIn);
         Data.set_DatabaseOut(DatabaseOut);
         Data.set_From(From);

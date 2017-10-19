@@ -18,9 +18,10 @@ public class Move_Data  {
     String From;
     String To;
     String DataOut;
+    String DataOutSize;
     String DatabaseOut;
     
-    public Move_Data (String Operator, String DataIn, String DataInSize, String DatabaseIn, String Schema, String From, String To, String DataOut, String DatabaseOut) {
+    public Move_Data (String Operator, String DataIn, String DataInSize, String DatabaseIn, String Schema, String From, String To, String DataOut, String DataOutSize, String DatabaseOut) {
         this.Operator = Operator;
         this.DataIn = DataIn;
         this.DataInSize = DataInSize;
@@ -29,6 +30,7 @@ public class Move_Data  {
         this.From = From;
         this.To = To;
         this.DataOut = DataOut;
+        this.DataOutSize = DataOutSize;
         this.DatabaseOut = DatabaseOut;
     }
     public String get_Operator () {return Operator;}
@@ -39,6 +41,7 @@ public class Move_Data  {
     public String get_From () {return From;}
     public String get_To () {return To;}
     public String get_DataOut () {return DataOut;}
+    public String get_DataOutSize () {return DataOutSize;}
     public String get_DatabaseOut () {return DatabaseOut;}
     
     public void set_Operator (String Operator) {this.Operator = Operator;}
@@ -49,5 +52,6 @@ public class Move_Data  {
     public void set_From (String From) {this.From = From;}
     public void set_To (String To) {this.To = To;}
     public void set_DataOut (String DataOut) {this.DataOut = DataOut;}
+    public void set_DataOutSize (String DataOutSize) {this.DataInSize = DataOutSize;}
     public void set_DatabaseOut (String DatabaseOut) {this.DatabaseOut = DatabaseOut;}
 }

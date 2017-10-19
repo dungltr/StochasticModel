@@ -531,7 +531,7 @@ public class runWorkFlowIRES {
     public void createWorkflowJoin(Move_Data Data, String SQL) throws Exception{
         String InPutData1 = Data.get_DataIn()+Data.get_Operator();//"asapServerLog";//Data.get_DataIn();
         String InPutData2 = Data.get_DataOut()+Data.get_Operator();//"asapServerLog";//Data.get_DataIn();
-        String OutPutData = Data.get_DataOut()+"_OUT";
+        String OutPutData = Data.get_DataOut().toUpperCase()+"_OUT";
         String NameOp = Nameop(Data);
         String AbstractOp = "Abstract_"+NameOp;
         String NameOfAbstractWorkflow = NameOp+"_Workflow";
