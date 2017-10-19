@@ -590,10 +590,16 @@ public class Algorithms {
         runWorkFlowIRES IRES = new runWorkFlowIRES();
         int numberParameter = size.length + 1;
         int numerOfVariable = numberParameter-1;
+        if (Data.get_Operator().toLowerCase().equals("move")){
+            IRES.createAbstractOperatorMove(Data, SQL);      
+            IRES.createWorkflowMove(Data, SQL);
+        }
+        else{
+            IRES.createAbstractOperatorJoin(Data, SQL);
+            IRES.createWorkflowJoin(Data, SQL);
+        }
+            
        
-        IRES.createAbstractOperatorMove(Data, SQL);
-        
-        IRES.createWorkflowMove(Data, SQL);
         
         String delay_ys = "";
 	if (TimeOfDay<1) delay_ys = "no_delay";
@@ -642,10 +648,16 @@ public class Algorithms {
 //	double costEstimateValue2 = batchgradientdescent.estimateGradient(sizeOfValue, realValue, parameter, StochasticValue, R_2_limit);
 //        System.out.println("\n Estimate Value of Batch Gradient Descent is: " + costEstimateValue2);
 	costEstimateValue = estimateCostValue(sizeOfValue, realValue, parameter, StochasticValue, R_2_limit);
-        IRES.createDatasetMove_Hive_Postgres(Data, size, SQL, TimeOfDay);//createDatasetMove(Data, SQL);
-        IRES.createOperatorMove(Data, SQL, costEstimateValue);
-        IRES.createDataMove2(Data, SQL, yarnValue);
-        
+        if (Data.get_Operator().toLowerCase().equals("move")){
+            IRES.createDatasetMove_Hive_Postgres(Data, size, SQL, TimeOfDay);//createDatasetMove(Data, SQL);
+            IRES.createOperatorMove(Data, SQL, costEstimateValue);
+            IRES.createDataMove2(Data, SQL, yarnValue);
+        }
+        else {
+            IRES.createDatasetJoin(Data, size, SQL, TimeOfDay);//createDatasetMove(Data, SQL);
+            IRES.createOperatorJoin(Data, SQL, costEstimateValue);
+            IRES.createDataMove2(Data, SQL, yarnValue);
+        }      
 	Path filePathEstimateValue = Paths.get(estimate); 
         if (!Files.exists(filePathEstimateValue))
             Files.createFile(filePathEstimateValue); 
@@ -717,25 +729,30 @@ public class Algorithms {
 
         double[] Parameter = initParamter(numberParameter);
 
-        for (i = 0; i < size.length+2; i++)
-                {   System.out.println("\nTest Time:"+i+"--------------------------------------------------------");
-                    TimeOfDay = 24*Math.random();
-                    randomQuery = testQueryPlan.createRandomQuery("",Size_tpch);
-                    size_random = TPCHQuery.calculateSize(randomQuery,Data.get_From(), Data.get_To(),Size_tpch,KindOfRunning);
-                    TimeRepsonse =  Math.random()*500;//IRES.runWorkflow(NameOfWorkflow, policy);
-                    double delay = SimulateStochastic.waiting(Numberuser,TimeOfDay);
-                    TimeRepsonse = TimeRepsonse + delay;                   
-                    size_random[size_random.length-1] = TimeOfDay;    
-                    testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfRealValue);
-                    testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random, TimeRepsonse)), "execTime");
-		    
-                    testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfEstimateValue);
-                    testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), "execTime_estimate");
-                    
-                    testWriteMatrix2CSV.storeParameter(Data, Parameter, NameOfParameter);
-                    IRES.createDatasetMove_Hive_Postgres(Data, size, SQL, TimeOfDay);//createDatasetMove(Data, SQL);
-                    IRES.createDataMove2(Data, SQL, yarnValue);                    
-                } 
+        for (i = 0; i < size.length+2; i++){   
+            System.out.println("\nTest Time:"+i+"--------------------------------------------------------");
+            TimeOfDay = 24*Math.random();
+            randomQuery = testQueryPlan.createRandomQuery("",Size_tpch);
+            size_random = TPCHQuery.calculateSize(randomQuery,Data.get_From(), Data.get_To(),Size_tpch,KindOfRunning);
+            TimeRepsonse =  Math.random()*500;//IRES.runWorkflow(NameOfWorkflow, policy);
+            double delay = SimulateStochastic.waiting(Numberuser,TimeOfDay);
+            TimeRepsonse = TimeRepsonse + delay;                   
+            size_random[size_random.length-1] = TimeOfDay;    
+            testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfRealValue);
+            testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random, TimeRepsonse)), "execTime");
+            testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfEstimateValue);
+            testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), "execTime_estimate");
+            testWriteMatrix2CSV.storeParameter(Data, Parameter, NameOfParameter);
+
+        }
+        if(Data.get_Operator().toLowerCase().equals("move")){
+            IRES.createDatasetMove_Hive_Postgres(Data, size, SQL, TimeOfDay);//createDatasetMove(Data, SQL);
+            IRES.createDataMove2(Data, SQL, yarnValue);   
+            }
+        else{
+            IRES.createDatasetJoin(Data, size, SQL, TimeOfDay);//createDatasetMove(Data, SQL);
+            IRES.createDataMove2(Data, SQL, yarnValue); 
+        }
 //        }
         
     }
