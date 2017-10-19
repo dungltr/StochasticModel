@@ -456,7 +456,7 @@ public class TPCHQuery {
         Path filePathRealValue = Paths.get(realValue); 
         if (!Files.exists(filePathRealValue))
         {   Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,KindOfRunning);
-            IRES.createOperatorMove(Data, SQL, 0);                       
+            IRES.createOperatorJoin(Data, SQL, 0);                       
         }
         Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
     }
