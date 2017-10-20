@@ -664,8 +664,8 @@ public class Algorithms {
             Files.createFile(filePathEstimateValue); 
         testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size, costEstimateValue)), NameOfEstimateValue); 
 
-//        double Time_Cost = IRES.runWorkflow(Data, size, NameOfWorkflow, policy);
-        double Time_Cost = 50*Math.random();
+        double Time_Cost = IRES.runWorkflow(Data, size, NameOfWorkflow, policy);
+//        double Time_Cost = 50*Math.random();
         long delay = SimulateStochastic.TimeWaiting(Numberuser,TimeOfDay)/1000;
         Time_Cost = Time_Cost + delay;        
         testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), NameOfRealValue);
