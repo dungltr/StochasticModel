@@ -5,6 +5,7 @@
  */
 package LibraryIres;
 
+import static IRES.runWorkFlowIRES.datasetout;
 import com.sparkexample.App;
 import gr.ntua.cslab.asap.client.ClientConfiguration;
 import gr.ntua.cslab.asap.client.OperatorClient;
@@ -122,7 +123,7 @@ public class createOperator {
      */
     public void createAbstractOpSQL(Move_Data Data, String SQL) throws Exception {
         String InPutData = "asapServerLog";//Data.get_DataIn();
-        String OutPutData = Data.get_DataOut();
+        String OutPutData = datasetout(Data)+"_OUT";
         String NameOp = "SQL_"+Data.get_From()+"_"+Data.get_To();
         String AbstractOp = "Abstract_"+NameOp;
         String NameOfAbstractWorkflow = NameOp+"_Workflow";

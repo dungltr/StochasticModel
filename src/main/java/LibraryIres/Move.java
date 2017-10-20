@@ -5,6 +5,7 @@
  */
 package LibraryIres;
 
+import static IRES.runWorkFlowIRES.datasetout;
 import com.sparkexample.App;
 import com.sparkexample.TestPostgreSQLDatabase;
 import gr.ntua.cslab.asap.client.ClientConfiguration;
@@ -47,7 +48,7 @@ public class Move {
         String OperatorFolder = IRES_library+"/target/asapLibrary/operators/";
         
         String InPutData = Data.get_DataIn();
-        String OutPutData = Data.get_DataOut();
+        String OutPutData = datasetout(Data)+"_OUT";
         String NameOp = "Move_"+Data.get_From()+"_"+Data.get_To();
         String AbstractOp = "Abstract_"+NameOp;
         String NameOfAbstractWorkflow = NameOp+"_Workflow";

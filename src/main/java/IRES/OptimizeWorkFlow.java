@@ -5,6 +5,7 @@
  */
 package IRES;
 
+import static IRES.runWorkFlowIRES.datasetout;
 import LibraryIres.Move_Data;
 import com.sparkexample.App;
 import gr.ntua.cslab.asap.client.ClientConfiguration;
@@ -39,7 +40,7 @@ public class OptimizeWorkFlow {
     public void OptimizeWorkFlow(Move_Data Data, String policy) throws Exception {
         List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<gr.ntua.cslab.asap.operators.Dataset>();
         Dataset d1 = new Dataset(Data.get_DataIn());
-        Dataset d2 = new Dataset(Data.get_DataOut());
+        Dataset d2 = new Dataset(datasetout(Data)+"_OUT");
         materializedDatasets.add(d1);
 //        materializedDatasets.add(d2);
         MaterializedOperators library =  new MaterializedOperators();

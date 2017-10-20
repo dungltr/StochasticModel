@@ -6,6 +6,7 @@
 package LibraryIres;
 
 import IRES.runWorkFlowIRES;
+import static IRES.runWorkFlowIRES.datasetout;
 import com.sparkexample.App;
 import com.sparkexample.TestPostgreSQLDatabase;
 import gr.ntua.cslab.asap.client.ClientConfiguration;
@@ -87,7 +88,7 @@ public class Move_IRES {
     }
     public void createMove (Move_Data Data) throws Exception {//String DataIn, String DatabaseIn, String Schema, String From, String To, String DataOut, String DatabaseOut) throws Exception {
         String InPutData = "asapServerLog";//Data.get_DataIn();
-        String OutPutData = Data.get_DataOut();
+        String OutPutData = datasetout(Data)+"_OUT";
         String NameOp = runWorkFlowIRES.Nameop(Data);
         String AbstractOp = "Abstract_"+NameOp;
         String NameOfAbstractWorkflow = NameOp+"_Workflow";
