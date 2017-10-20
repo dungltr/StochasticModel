@@ -198,7 +198,7 @@ public class runWorkFlowIRES {
         d3.add("Constraints.Engine.SQL",Data.get_To()+Data.get_Operator());
 	d3.add("Constraints.Engine.location",node_pc);
         d3.add("Constraints.type","SQL");
-	d3.add("Execution.name",Data.get_DataIn());
+	d3.add("Execution.name",Data.get_DataIn()+"_"+Data.get_DataOut());
         d3.add("Execution.schema", Data.get_Schema());
 	d3.add("Optimization.size",Data.get_DataInSize());      
 	d3.writeToPropertiesFile(directory_datasets + d3.datasetName);
@@ -472,7 +472,7 @@ public class runWorkFlowIRES {
     }
     public void createWorkflowMove(Move_Data Data, String SQL) throws Exception{
         String InPutData = datasetin(Data);//"asapServerLog";//Data.get_DataIn();
-        String OutPutData = datasetout(Data)+"_OUT";
+        String OutPutData = datasetout(Data);
         String NameOp = Nameop(Data);
         String AbstractOp = "Abstract_"+NameOp;
         String NameOfAbstractWorkflow = NameOp+"_Workflow";
