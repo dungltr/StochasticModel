@@ -342,7 +342,7 @@ public class TPCHQuery {
         String DatabaseIn = database + Size_tpch;
         String Schema = Schema(DataIn);
         //String DataOut = Table.toUpperCase(); 
-        String DataOut = randomQuery[1].toUpperCase();
+        String DataOut = randomQuery[1];
         String DataOutSize = Double.toString(size[0]);
         String DatabaseOut = database + Size_tpch;       
        
