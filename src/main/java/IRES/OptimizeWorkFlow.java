@@ -66,7 +66,7 @@ public class OptimizeWorkFlow {
         Workflow workflow1 = abstractWorkflow.optimizeWorkflow(d2);
         System.out.println("\nHere is optimization workflow is here-----------------------------------------------------------------------:");
         System.out.println(workflow1);
-	System.out.println(workflow1.toString());
+//	System.out.println(workflow1.toString());
         System.out.println("\nEnd of optimization workflow------------------------------------------------------------------------:");
         System.out.println();        
         
