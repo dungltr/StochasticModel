@@ -37,7 +37,7 @@ public class OptimizeWorkFlow {
     String directory_datasets = IRES_library+"/target/asapLibrary/datasets/";
     String OperatorFolder = IRES_library+"/target/asapLibrary/operators/";
     
-    public void OptimizeWorkFlow(Move_Data Data, String policy) throws Exception {
+    public static void OptimizeWorkFlow(Move_Data Data, String policy) throws Exception {
         List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<gr.ntua.cslab.asap.operators.Dataset>();
         Dataset d1 = new Dataset(Data.get_DataIn());
         Dataset d2 = new Dataset(Data.get_DataOut());
@@ -65,6 +65,93 @@ public class OptimizeWorkFlow {
         System.out.println("\nShowing of original workflow is ended--------------------------------------------------------------:");
 
         Workflow workflow1 = abstractWorkflow.optimizeWorkflow(d2);
+        System.out.println("\nHere is optimization workflow is here-----------------------------------------------------------------------:");
+        System.out.println(workflow1);
+//	System.out.println(workflow1.toString());
+        System.out.println("\nEnd of optimization workflow------------------------------------------------------------------------:");
+        System.out.println();        
+        System.out.println("\nCall for the new workflow******************************************************************************************--------:");
+        TestWorkFlow(Data, policy);
+/*  
+        ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
+        WorkflowClient wcli = new WorkflowClient();
+        wcli.setConfiguration(conf);
+        Double Cost = workflow1.optimalCost;
+	///////////////////////////////////////////////////////////////////////////////////////
+	//String materializedWorkflow = wcli.materializeWorkflow(workflow1.toString(), policy);
+	///////////////////////////////////////////////////////////////////////////////////////
+        //System.out.println(materializedWorkflow);
+        System.out.println("The cost of workflow of-------------------"+workflow1.toString()+" is "+ Cost+"-------------------------");
+	System.out.println("----------------------------"+workflow1.toString());
+        ////Execution 
+        //String w = wcli.executeWorkflow(materializedWorkflow);
+*//////////////////////////////////////////////////////////////////////////////////////// 
+    }
+    public static void TestWorkFlow(Move_Data Data, String policy) throws Exception {
+        String Op1 = "Move_TPCH_Hive_Postgres";
+        String Op2 = "Move_TPCH_Postgres_Hive";
+        String Op3 = "Join_TPCH_Hive_Hive";
+        String Op4 = "Join_TPCH_Postgres_Postgres";
+        String Op5 = "Move_TPCH_Hive_Hive";
+        String Op6 = "Move_TPCH_Postgres_Postgres";
+        
+        String InPutData1 = "orders_"+Op1;
+        String InPutData2 = "lineitem_"+Op6;
+        
+        String AbstractOp1 = "Abstract_"+Op1;
+        String AbstractOp2 = "Abstract_"+Op2;
+        String AbstractOp3 = "Abstract_"+Op3;
+        String AbstractOp4 = "Abstract_"+Op4;
+        String AbstractOp5 = "Abstract_"+Op5;
+        String AbstractOp6 = "Abstract_"+Op6;
+        
+        String NameOfAbstractWorkflow = "Test_Workflow";
+        List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<gr.ntua.cslab.asap.operators.Dataset>();
+        Dataset d1 = new Dataset(InPutData1);
+        Dataset d2 = new Dataset(InPutData2);
+        
+        Dataset d3 = new Dataset("d3");
+        Dataset d4 = new Dataset("d4");
+        Dataset d5 = new Dataset("d5");
+        
+        materializedDatasets.add(d1);
+        materializedDatasets.add(d2);
+        
+        MaterializedOperators library =  new MaterializedOperators();
+        AbstractWorkflow abstractWorkflow = new AbstractWorkflow(library);
+        
+        AbstractOperator abstractOp1 = new AbstractOperator(AbstractOp1);
+        AbstractOperator abstractOp2 = new AbstractOperator(AbstractOp6);
+        AbstractOperator abstractOp3 = new AbstractOperator(AbstractOp4);
+        
+        abstractWorkflow.addInputEdge(d1,abstractOp1,0);
+        abstractWorkflow.addOutputEdge(abstractOp1,d3,0);
+        
+        abstractWorkflow.addInputEdge(d2,abstractOp2,0);
+        abstractWorkflow.addOutputEdge(abstractOp2,d4,0);
+        
+        abstractWorkflow.addInputEdge(d3,abstractOp3,0);
+        abstractWorkflow.addInputEdge(d4,abstractOp3,1);
+        abstractWorkflow.addOutputEdge(abstractOp3,d5,0);
+
+        abstractWorkflow.getWorkflow(d5);
+
+        
+        
+        abstractWorkflow.addMaterializedDatasets(materializedDatasets);               
+        System.out.println("\nShowing of abstractWorkflow is here----------------------------------------------------------------:");
+        System.out.println(abstractWorkflow.getWorkflow(d5));
+        System.out.println("\nShowing of abstractWorkflow is finished------------------------------------------------------------:");
+		
+        materializedDatasets.add(d5);                
+
+        Workflow workflow0 = abstractWorkflow.getWorkflow(d5);
+
+        System.out.println("\nShowing of original workflow is here----------------------------------------------------------------:");
+        System.out.print(workflow0);
+        System.out.println("\nShowing of original workflow is ended--------------------------------------------------------------:");
+
+        Workflow workflow1 = abstractWorkflow.optimizeWorkflow(d5);
         System.out.println("\nHere is optimization workflow is here-----------------------------------------------------------------------:");
         System.out.println(workflow1);
 //	System.out.println(workflow1.toString());
