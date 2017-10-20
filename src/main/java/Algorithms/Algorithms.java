@@ -148,7 +148,7 @@ public class Algorithms {
         return one;    
     }
     public static String fileName (String directory, String delay, String name, String KindOfRunning){
-	return directory +"/"+ delay +"_"+ KindOfRunning +"_"+ name + ".csv";
+	return directory +"/"+ delay +"_"+KindOfRunning+"_"+ name + ".csv";
     }
     public static String NameOfFileName(String delay, String name, String KindOfRunning){
 	return delay+"_"+KindOfRunning+"_"+name;
@@ -605,7 +605,8 @@ public class Algorithms {
 	if (TimeOfDay<1) delay_ys = "no_delay";
 
 	realValue = fileName(directory,delay_ys,"realValue",KindOfRunning);
-        String NameOfRealValue = NameOfFileName(delay_ys,"realValue",KindOfRunning);
+        System.out.println("\nReal Value File:-----------------------------------------------------"+realValue);
+	String NameOfRealValue = NameOfFileName(delay_ys,"realValue",KindOfRunning);
         
         parameter = fileName(directory,delay_ys,"parameter",KindOfRunning);
 
