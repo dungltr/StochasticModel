@@ -472,7 +472,7 @@ public class runWorkFlowIRES {
     }
     public void createWorkflowMove(Move_Data Data, String SQL) throws Exception{
         String InPutData = datasetin(Data);//"asapServerLog";//Data.get_DataIn();
-        String OutPutData = datasetout(Data);
+        String OutPutData = datasetout(Data)+"_OUT";
         String NameOp = Nameop(Data);
         String AbstractOp = "Abstract_"+NameOp;
         String NameOfAbstractWorkflow = NameOp+"_Workflow";
