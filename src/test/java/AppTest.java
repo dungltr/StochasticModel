@@ -161,7 +161,7 @@ public class AppTest{
 //        LinearRegressionManual.TPCH(0.0, "", "100m", "Hive", "Hive", "predict");
 //        Irisa.Enssat.Rennes1.TestScript.testall();
 //	TPCHQuery.TPCH(Math.random(),"tpch","100m","Hive","Postgres","training");
-//        TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move");
+        TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move");
 //        TPCHQuery.Join(Math.random(),"tpch","100m","Postgres","Postgres","Join");
 //        TPCHQuery.Join(Math.random(),"tpch","100m","Hive","Hive","Join");
     }
