@@ -24,8 +24,8 @@ import net.sourceforge.jeval.EvaluationException;
  * @author letrung
  */
 public class OptimizeWorkFlow {
-    int int_localhost = 1323;
-    String name_host = "localhost";
+    static int int_localhost = 1323;
+    static String name_host = "localhost";
     String SPARK_HOME = new App().readhome("SPARK_HOME");
     String HADOOP_HOME = new App().readhome("HADOOP_HOME");
     String HIVE_HOME = new App().readhome("HIVE_HOME");
@@ -50,7 +50,7 @@ public class OptimizeWorkFlow {
         abstractWorkflow.addInputEdge(d1,abstractOp,0);
         abstractWorkflow.addOutputEdge(abstractOp,d2,0);
         abstractWorkflow.getWorkflow(d2);
-
+/*
         abstractWorkflow.addMaterializedDatasets(materializedDatasets);               
         System.out.println("\nShowing of abstractWorkflow is here----------------------------------------------------------------:");
         System.out.println(abstractWorkflow.getWorkflow(d1));
@@ -70,7 +70,7 @@ public class OptimizeWorkFlow {
 //	System.out.println(workflow1.toString());
         System.out.println("\nEnd of optimization workflow------------------------------------------------------------------------:");
         System.out.println();        
-        System.out.println("\nCall for the new workflow******************************************************************************************--------:");
+*/        System.out.println("\nCall for the new workflow******************************************************************************************--------:");
         TestWorkFlow(Data, policy);
 /*  
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
@@ -158,19 +158,21 @@ public class OptimizeWorkFlow {
         System.out.println("\nEnd of optimization workflow------------------------------------------------------------------------:");
         System.out.println();        
         
-/*  
+  
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
         WorkflowClient wcli = new WorkflowClient();
         wcli.setConfiguration(conf);
         Double Cost = workflow1.optimalCost;
 	///////////////////////////////////////////////////////////////////////////////////////
-	//String materializedWorkflow = wcli.materializeWorkflow(workflow1.toString(), policy);
+	String materializedWorkflow;// = wcli.materializeWorkflow(workflow1.toString(), policy);
+        materializedWorkflow = wcli.materializeWorkflow(NameOfAbstractWorkflow, policy);
 	///////////////////////////////////////////////////////////////////////////////////////
-        //System.out.println(materializedWorkflow);
-        System.out.println("The cost of workflow of-------------------"+workflow1.toString()+" is "+ Cost+"-------------------------");
-	System.out.println("----------------------------"+workflow1.toString());
+        System.out.println(materializedWorkflow);
+        //System.out.println("The cost of workflow of-------------------"+workflow1.toString()+" is "+ Cost+"-------------------------");
+	//System.out.println("----------------------------"+workflow1.toString());
         ////Execution 
-        //String w = wcli.executeWorkflow(materializedWorkflow);
-*//////////////////////////////////////////////////////////////////////////////////////// 
+        String w = wcli.executeWorkflow(materializedWorkflow);
+        System.out.println("\nCall for the second new workflow******************************************************************************************");
+//////////////////////////////////////////////////////////////////////////////////////// 
     }
 }
