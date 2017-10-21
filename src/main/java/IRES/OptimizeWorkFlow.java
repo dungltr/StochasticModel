@@ -70,7 +70,8 @@ public class OptimizeWorkFlow {
 //	System.out.println(workflow1.toString());
         System.out.println("\nEnd of optimization workflow------------------------------------------------------------------------:");
         System.out.println();        
-*/        System.out.println("\nCall for the new workflow******************************************************************************************--------:");
+*///
+        System.out.println("\nCall for the new workflow******************************************************************************************--------:");
         TestWorkFlow(Data, policy);
 /*  
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
@@ -88,6 +89,8 @@ public class OptimizeWorkFlow {
 *//////////////////////////////////////////////////////////////////////////////////////// 
     }
     public static void TestWorkFlow(Move_Data Data, String policy) throws Exception {
+	String Table1 = "orders";
+	String Table2 = "lineitem";
         String Op1 = "Move_TPCH_Hive_Postgres";
         String Op2 = "Move_TPCH_Postgres_Hive";
         String Op3 = "Join_TPCH_Hive_Hive";
@@ -95,9 +98,11 @@ public class OptimizeWorkFlow {
         String Op5 = "Move_TPCH_Hive_Hive";
         String Op6 = "Move_TPCH_Postgres_Postgres";
         
-        String InPutData1 = "orders_"+Op1;
-        String InPutData2 = "lineitem_"+Op6;
-        
+        String InPutData1 = Table1+"_"+Op1;
+        String InPutData2 = Table2+"_"+Op6;
+	String InPutData3 = Table1+"_out_"+Op1;
+	String InPutData4 = Table2+"_out_"+Op6;
+        String InPutData5 = InPutData3+InPutData4+"_"+Op4;
         String AbstractOp1 = "Abstract_"+Op1;
         String AbstractOp2 = "Abstract_"+Op2;
         String AbstractOp3 = "Abstract_"+Op3;
@@ -110,14 +115,17 @@ public class OptimizeWorkFlow {
         Dataset d1 = new Dataset(InPutData1);
         Dataset d2 = new Dataset(InPutData2);
         
-        Dataset d3 = new Dataset("d3");
-        Dataset d4 = new Dataset("d4");
-        Dataset d5 = new Dataset("d5");
+        Dataset d3 = new Dataset(InPutData3);
+        Dataset d4 = new Dataset(InPutData4);
+        Dataset d5 = new Dataset(InPutData5);
         
         materializedDatasets.add(d1);
         materializedDatasets.add(d2);
+	materializedDatasets.add(d3);
+	materializedDatasets.add(d4);
+	materializedDatasets.add(d5);        
         
-        MaterializedOperators library =  new MaterializedOperators();
+	MaterializedOperators library =  new MaterializedOperators();
         AbstractWorkflow abstractWorkflow = new AbstractWorkflow(library);
         
         AbstractOperator abstractOp1 = new AbstractOperator(AbstractOp1);
@@ -162,16 +170,16 @@ public class OptimizeWorkFlow {
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
         WorkflowClient wcli = new WorkflowClient();
         wcli.setConfiguration(conf);
-        Double Cost = workflow1.optimalCost;
+        //Double Cost = workflow1.optimalCost;
 	///////////////////////////////////////////////////////////////////////////////////////
-	String materializedWorkflow;// = wcli.materializeWorkflow(workflow1.toString(), policy);
-        materializedWorkflow = wcli.materializeWorkflow(NameOfAbstractWorkflow, policy);
+	// String materializedWorkflow;// = wcli.materializeWorkflow(workflow1.toString(), policy);
+        //materializedWorkflow = wcli.materializeWorkflow(NameOfAbstractWorkflow, policy);
 	///////////////////////////////////////////////////////////////////////////////////////
-        System.out.println(materializedWorkflow);
+        //System.out.println(materializedWorkflow);
         //System.out.println("The cost of workflow of-------------------"+workflow1.toString()+" is "+ Cost+"-------------------------");
 	//System.out.println("----------------------------"+workflow1.toString());
         ////Execution 
-        String w = wcli.executeWorkflow(materializedWorkflow);
+        //String w = wcli.executeWorkflow(materializedWorkflow);
         System.out.println("\nCall for the second new workflow******************************************************************************************");
 //////////////////////////////////////////////////////////////////////////////////////// 
     }

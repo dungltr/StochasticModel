@@ -152,7 +152,10 @@ public class TestWorkFlow {
         
         String InPutData1 = table1+"_"+Op1;
         String InPutData2 = table2+"_"+Op6;
-        
+        String InPutData3 = table1+"_out_"+Op1;
+        String InPutData4 = table2+"_out_"+Op6;
+	String InPutData5 = InPutData1+InPutData2+"_"+Op4;
+
         String AbstractOp1 = "Abstract_"+Op1;
         String AbstractOp2 = "Abstract_"+Op2;
         String AbstractOp3 = "Abstract_"+Op3;
@@ -200,19 +203,19 @@ public class TestWorkFlow {
 	op2.setAbstractOperator(abstractOp2);
                 
         Operator mop3 = new Operator(Op4,"");        
-        Dataset d3 = new Dataset(OutputData1);
+        Dataset d3 = new Dataset(InPutData3);
         d3.inputFor(mop3, 0);        
-	WorkflowNode t3 = new WorkflowNode(false,true,OutputData1);
+	WorkflowNode t3 = new WorkflowNode(false,true,InPutData3);
 	t3.setDataset(d3);
         
-        Dataset d4 = new Dataset(OutputData2);
+        Dataset d4 = new Dataset(InPutData4);
         d4.inputFor(mop3, 1);	
-        WorkflowNode t4 = new WorkflowNode(false,true,OutputData2);
+        WorkflowNode t4 = new WorkflowNode(false,true,InPutData4);
 	t4.setDataset(d4);
         
-        Dataset d5 = new Dataset(OutputData3);
+        Dataset d5 = new Dataset(InPutData5);
 //        d5.inputFor(mop3, 1);	
-        WorkflowNode t5 = new WorkflowNode(false,true,OutputData3);
+        WorkflowNode t5 = new WorkflowNode(false,true,InPutData5);
 	t5.setDataset(d5);
         
         AbstractOperator abstractOp3 = new AbstractOperator(AbstractOp4);//AopAbstractOperator);              
@@ -267,8 +270,8 @@ public class TestWorkFlow {
                 "groupInputs,execTime,max\n"+
                 "groupInputs,cost,sum\n"+
                 "function,execTime,min"; 
-        String materializedWorkflow = cli.materializeWorkflow(NameOfWorkflow, policy);
-        System.out.println(materializedWorkflow);
+        //String materializedWorkflow = cli.materializeWorkflow(NameOfWorkflow, policy);
+        //System.out.println(materializedWorkflow);
         //cli.executeWorkflow(materializedWorkflow);
         
     }
