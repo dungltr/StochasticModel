@@ -1,6 +1,6 @@
 #
-#Tue Oct 17 18:12:16 CEST 2017
+#Sat Oct 21 22:53:49 CEST 2017
 Constraints.Output.number=1
-Constraints.OpSpecification.Algorithm.name=move
-Constraints.Input.number=1
+Constraints.OpSpecification.Algorithm.name=join
+Constraints.Input.number=2
 Constraints.Engine=Postgres

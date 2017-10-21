@@ -325,7 +325,7 @@ public class runWorkFlowIRES {
 
 	mop1.add("Optimization.model.Out0.size", "gr.ntua.ece.cslab.panic.core.models.UserFunction");
         mop1.add("Optimization.model.cost",      "gr.ntua.ece.cslab.panic.core.models.UserFunction");//UserFunction");       
-        mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.AbstractWekaModel");//AbstractWekaModel");//UserFunction");//AbstractWekaModel");//UserFunction");
+        mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.UserFunction");//AbstractWekaModel");//UserFunction");//AbstractWekaModel");//UserFunction");
         
         mop1.add("Optimization.outputSpace.Out0.size", "Double");
         mop1.add("Optimization.outputSpace.cost", "Double");        
@@ -472,7 +472,7 @@ public class runWorkFlowIRES {
     }
     public void createWorkflowMove(Move_Data Data, String SQL) throws Exception{
         String InPutData = datasetin(Data);//"asapServerLog";//Data.get_DataIn();
-        String OutPutData = datasetout(Data)+"_out";
+        String OutPutData = datasetout(Data);
         String NameOp = Nameop(Data);
         String AbstractOp = "Abstract_"+NameOp;
         String NameOfAbstractWorkflow = NameOp+"_Workflow";

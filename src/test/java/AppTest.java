@@ -148,6 +148,7 @@ public class AppTest{
         //Bootstrap.main(new String[] {"arg"});
         Irisa.Enssat.Rennes1.TestScala.test();
         Irisa.Enssat.Rennes1.TestJava.main();
+//	testall();
 //        com.sparkexample.testSparkDataFrame.test();
 //        RATree.test_ratree();
 //        System.out.println(System.getenv().get("HOME"));
@@ -161,32 +162,33 @@ public class AppTest{
 //        LinearRegressionManual.TPCH(0.0, "", "100m", "Hive", "Hive", "predict");
 //        Irisa.Enssat.Rennes1.TestScript.testall();
 	TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move");
-        TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move");
-        TPCHQuery.Join(Math.random(),"tpch","100m","Postgres","Postgres","Join");
-        TPCHQuery.Join(Math.random(),"tpch","100m","Hive","Hive","Join");
-        IRES.TestWorkFlow.createWorkflowJoin();
+//        TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move");
+//        TPCHQuery.Join(Math.random(),"tpch","100m","Postgres","Postgres","Join");
+//        TPCHQuery.Join(Math.random(),"tpch","100m","Hive","Hive","Join");
+//        IRES.TestWorkFlow.createWorkflowJoin();
     }
 //    @Test
     public void testall() throws Exception{
         double TimeOfDay = 24.00*Math.random();
-        int times = 0;
+        int times = 1;
 //        testCreateDatabase.testCreateHiveDataBase(TimeOfDay);
 //        testCreateDatabase.testCreaePostgresDataBase(TimeOfDay);
         for (int i = 0; i < times; i++)
         { 
                     System.out.println("\n This is the "+i+"th round-------------------------------------------------------------------------------------------------------");
 
-            TimeOfDay = 8.00*Math.random();          
+            TimeOfDay = Math.random();          
 //            testCreateDatabase.testCreateHiveDataBase(TimeOfDay);
 //            testCreateDatabase.testCreatePostgresDataBase(TimeOfDay);
 //            testQueryPlan.testQueryPlanIRES_Hive_Postgres(TimeOfDay);
 //            testQueryPlan.testQueryPlanIRES_Postgres(TimeOfDay);        
 //        setup();
-//        TPCHQuery.TPCH_Hive_Postgres(TimeOfDay, "", "");
+        TPCHQuery.TPCH_Hive_Postgres(TimeOfDay, "lineitem", "", "Training");
 //        TPCHQuery.TPCH_Hive_Postgres(TimeOfDay, "", "");
 //        tearDown();
 //        setup();
-//        TPCHQuery.TPCH_Hive_Hive(TimeOfDay, "lineitem");
+
+//        TPCHQuery.TPCH_Hive_Hive(TimeOfDay, "lineitem", "", "training");
 //        tearDown();
 //        setup();
 //            TPCHQuery.TPCH_Postgres_Postgres(TimeOfDay, "lineitem");

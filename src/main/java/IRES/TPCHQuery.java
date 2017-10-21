@@ -39,7 +39,7 @@ public class TPCHQuery {
     private static int numberOfSize_Move_Postgres_Postgres = 4;
     
     public static void TPCH_Hive_Postgres(double TimeOfDay, String Table, String query, String KindOfRunning) throws Exception {
-        String Size_tpch = "1000m";
+        String Size_tpch = "100m";
         String database = "tpch";
         String SQL_folder = new App().readhome("SQL");
         runWorkFlowIRES IRES = new runWorkFlowIRES();
@@ -265,7 +265,7 @@ public class TPCHQuery {
         String DatabaseIn = database + Size_tpch;
         String Schema = Schema(DataIn);
         //String DataOut = Table.toUpperCase(); 
-        String DataOut = randomQuery[1].toUpperCase();
+        String DataOut = randomQuery[1].toUpperCase()+"_OUT";
         String DataOutSize = Double.toString(size[0]);
         String DatabaseOut = database + Size_tpch;       
        
