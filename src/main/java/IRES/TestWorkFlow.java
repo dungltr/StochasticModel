@@ -140,7 +140,8 @@ public class TestWorkFlow {
         Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
     }
     public static void createWorkflowJoin() throws Exception{
-
+	String table1 = "orders";
+        String table2 = "lineitem";
         
         String Op1 = "Move_TPCH_Hive_Postgres";
         String Op2 = "Move_TPCH_Postgres_Hive";
@@ -149,8 +150,8 @@ public class TestWorkFlow {
         String Op5 = "Move_TPCH_Hive_Hive";
         String Op6 = "Move_TPCH_Postgres_Postgres";
         
-        String InPutData1 = "orders_"+Op1;
-        String InPutData2 = "lineitem_"+Op6;
+        String InPutData1 = table1+"_"+Op1;
+        String InPutData2 = table2+"_"+Op6;
         
         String AbstractOp1 = "Abstract_"+Op1;
         String AbstractOp2 = "Abstract_"+Op2;
@@ -159,6 +160,11 @@ public class TestWorkFlow {
         String AbstractOp5 = "Abstract_"+Op5;
         String AbstractOp6 = "Abstract_"+Op6;
         
+	String OutputData1 = InPutData1 + "_OUT";
+        String OutputData2 = InPutData2 + "_OUT";
+        
+        String OutputData3 = "data3";//table1+table2+Op4;
+
         String NameOfAbstractWorkflow = "Test_Workflow";
       
 //        ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
@@ -169,13 +175,13 @@ public class TestWorkFlow {
 	WorkflowClient cli = new WorkflowClient();
 	cli.setConfiguration(conf);
         
-        cli.removeAbstractWorkflow(NameOfAbstractWorkflow);
+//        cli.removeAbstractWorkflow(NameOfAbstractWorkflow);
         
         AbstractWorkflow1 abstractWorkflow = new AbstractWorkflow1(NameOfAbstractWorkflow);		
         
-//        Operator mop1 = new Operator(Op1,"");       
+        Operator mop1 = new Operator(Op1,"");       
         Dataset d1 = new Dataset(InPutData1);        
-//        d1.inputFor(mop1, 0); 
+        d1.inputFor(mop1, 0); 
 	WorkflowNode t1 = new WorkflowNode(false,false,InPutData1);
 	t1.setDataset(d1);
                 
@@ -183,9 +189,9 @@ public class TestWorkFlow {
         WorkflowNode op1 = new WorkflowNode(true,true,AbstractOp1);//AopAbstractOperator);
 	op1.setAbstractOperator(abstractOp1);
              
-//        Operator mop2 = new Operator(Op1,"");       
+        Operator mop2 = new Operator(Op1,"");       
         Dataset d2 = new Dataset(InPutData2);        
-//        d2.inputFor(mop2, 0);       
+        d2.inputFor(mop2, 0);       
         WorkflowNode t2 = new WorkflowNode(false,false,InPutData2);
 	t2.setDataset(d2);
         
@@ -193,20 +199,20 @@ public class TestWorkFlow {
         WorkflowNode op2 = new WorkflowNode(true,true,AbstractOp6);//AopAbstractOperator);
 	op2.setAbstractOperator(abstractOp2);
                 
-//        Operator mop3 = new Operator(Op4,"");        
-        Dataset d3 = new Dataset("d3");
-//        d3.inputFor(mop3, 0);        
-	WorkflowNode t3 = new WorkflowNode(false,true,"d3");
+        Operator mop3 = new Operator(Op4,"");        
+        Dataset d3 = new Dataset(OutputData1);
+        d3.inputFor(mop3, 0);        
+	WorkflowNode t3 = new WorkflowNode(false,true,OutputData1);
 	t3.setDataset(d3);
         
-        Dataset d4 = new Dataset("d4");
-//        d4.inputFor(mop3, 1);	
-        WorkflowNode t4 = new WorkflowNode(false,true,"d4");
+        Dataset d4 = new Dataset(OutputData2);
+        d4.inputFor(mop3, 1);	
+        WorkflowNode t4 = new WorkflowNode(false,true,OutputData2);
 	t4.setDataset(d4);
         
-        Dataset d5 = new Dataset("d5");
+        Dataset d5 = new Dataset(OutputData3);
 //        d5.inputFor(mop3, 1);	
-        WorkflowNode t5 = new WorkflowNode(false,true,"d5");
+        WorkflowNode t5 = new WorkflowNode(false,true,OutputData3);
 	t5.setDataset(d5);
         
         AbstractOperator abstractOp3 = new AbstractOperator(AbstractOp4);//AopAbstractOperator);              
@@ -263,7 +269,7 @@ public class TestWorkFlow {
                 "function,execTime,min"; 
         String materializedWorkflow = cli.materializeWorkflow(NameOfWorkflow, policy);
         System.out.println(materializedWorkflow);
-        cli.executeWorkflow(materializedWorkflow);
+        //cli.executeWorkflow(materializedWorkflow);
         
     }
     public static void main() throws Exception {

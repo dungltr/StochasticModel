@@ -89,8 +89,8 @@ public class runWorkFlowIRES {
         double estimatedTime = 0;
         double estimatedCost = 0;
         System.out.println(NameOp);
-        estimatedTime = Double.parseDouble(wcli.getMaterializedWorkflowDescription(materializedWorkflow).getOperator(NameOp).getExecTime()); 
-        estimatedCost = Double.parseDouble(wcli.getMaterializedWorkflowDescription(materializedWorkflow).getOperator(NameOp).getCost());        
+//        estimatedTime = Double.parseDouble(wcli.getMaterializedWorkflowDescription(materializedWorkflow).getOperator(NameOp).getExecTime()); 
+//        estimatedCost = Double.parseDouble(wcli.getMaterializedWorkflowDescription(materializedWorkflow).getOperator(NameOp).getCost());        
         
         testWriteMatrix2CSV.storeValueServer(Data, "", setupStochasticValue(setupValue(size, estimatedTime)), "execTime_estimate");    
         int count=0;
@@ -472,7 +472,7 @@ public class runWorkFlowIRES {
     }
     public void createWorkflowMove(Move_Data Data, String SQL) throws Exception{
         String InPutData = datasetin(Data);//"asapServerLog";//Data.get_DataIn();
-        String OutPutData = datasetout(Data)+"_OUT";
+        String OutPutData = datasetout(Data)+"_out";
         String NameOp = Nameop(Data);
         String AbstractOp = "Abstract_"+NameOp;
         String NameOfAbstractWorkflow = NameOp+"_Workflow";
