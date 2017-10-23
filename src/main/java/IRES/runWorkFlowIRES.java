@@ -96,9 +96,9 @@ public class runWorkFlowIRES {
         int count=0;
         
         while(true){
-            String w = wcli.executeWorkflow(materializedWorkflow);
+            //String w = wcli.executeWorkflow(materializedWorkflow);
             long start = System.currentTimeMillis();
-            wcli.waitForCompletion(w);
+            //wcli.waitForCompletion(w);
             long stop = System.currentTimeMillis();
             actualTime = (double)(stop-start)/1000.0;// -12.0;
             System.out.println("ActualTime of "+NameOp+" is: "+actualTime+" and EstimatedTime of "+NameOp+" is: "+estimatedTime+"-and EstimateCost of "+NameOp+" is: "+estimatedCost);                    

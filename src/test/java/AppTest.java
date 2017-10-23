@@ -161,12 +161,18 @@ public class AppTest{
 //        LinearRegressionManual.test_minDataset(training_file,testing_file,0.8);
 //        LinearRegressionManual.TPCH(0.0, "", "100m", "Hive", "Hive", "predict");
 //        Irisa.Enssat.Rennes1.TestScript.testall();
-	TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move");
+	for (int i =0; i<1; i++){
+//	TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move");
 //        TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move");
-//        TPCHQuery.Join(Math.random(),"tpch","100m","Postgres","Postgres","Join");
+//        TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Hive","Move");
+//        TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Postgres","Move");
+//	TPCHQuery.Join(Math.random(),"tpch","100m","Postgres","Postgres","Join");
 //        TPCHQuery.Join(Math.random(),"tpch","100m","Hive","Hive","Join");
-        IRES.TestWorkFlow.createWorkflowJoin();
-    }
+//        IRES.TestWorkFlow.createWorkflowJoin();
+        IRES.TestWorkFlow.workflow();
+	}
+//      IRES.TestWorkFlow.createWorkflowJoin();
+	}
 //    @Test
     public void testall() throws Exception{
         double TimeOfDay = 24.00*Math.random();
