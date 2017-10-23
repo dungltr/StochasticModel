@@ -114,10 +114,10 @@ public class runWorkFlowIRES {
         return actualTime;
     }
     public static String datasetin (Move_Data Data){
-        return Data.get_DataIn()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To();
+        return Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To()+"_"+Data.get_DataIn();
     }
     public static String datasetout (Move_Data Data){
-        return Data.get_DataOut()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To();
+        return Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To()+"_"+Data.get_DataOut();
     }
     public void createDatasetMove_Hive_Postgres(Move_Data Data, double [] size, String SQL, double TimeOfDay) throws Exception {
         String node_pc = new App().getComputerName();
@@ -170,7 +170,7 @@ public class runWorkFlowIRES {
         d1.add("Constraints.Engine.SQL",Data.get_From()+Data.get_Operator());
 	d1.add("Constraints.Engine.location",node_pc);
         d1.add("Constraints.type","SQL");
-	d1.add("Execution.name",Data.get_DataIn());
+	d1.add("Execution.name",datasetin(Data));
         d1.add("Execution.schema", Data.get_Schema());
         d1.add("Execution.path", "hdfs://"+HDFS+"/"+Data.get_DatabaseIn()+".db/"+Data.get_DataIn());
 	d1.add("Optimization.size",Data.get_DataInSize());      
@@ -185,7 +185,7 @@ public class runWorkFlowIRES {
         d2.add("Constraints.Engine.SQL",Data.get_From()+Data.get_Operator());
 	d2.add("Constraints.Engine.location",node_pc);
         d2.add("Constraints.type","SQL");
-	d2.add("Execution.name",Data.get_DataOut());
+	d2.add("Execution.name",datasetout(Data));
         d2.add("Execution.schema", Data.get_Schema());
 	d2.add("Optimization.size",Data.get_DataOutSize());  
         if (Data.get_To().toLowerCase().equals("postgres")){          
@@ -198,7 +198,7 @@ public class runWorkFlowIRES {
         d3.add("Constraints.Engine.SQL",Data.get_To()+Data.get_Operator());
 	d3.add("Constraints.Engine.location",node_pc);
         d3.add("Constraints.type","SQL");
-	d3.add("Execution.name",Data.get_DataIn()+"_"+Data.get_DataOut());
+	d3.add("Execution.name",Data.get_DataIn()+datasetout(Data));
         d3.add("Execution.schema", Data.get_Schema());
 	d3.add("Optimization.size",Data.get_DataInSize());      
 	d3.writeToPropertiesFile(directory_datasets + d3.datasetName);

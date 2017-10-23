@@ -150,11 +150,11 @@ public class TestWorkFlow {
         String Op5 = "Move_TPCH_Hive_Hive";
         String Op6 = "Move_TPCH_Postgres_Postgres";
         
-        String InPutData1 = table1+"_"+Op1;
-        String InPutData2 = table2+"_"+Op6;
-        String InPutData3 = table1+"_out_"+Op1;
-        String InPutData4 = table2+"_out_"+Op6;
-	String InPutData5 = InPutData1+InPutData2+"_"+Op4;
+        String InPutData1 = Op1+"_"+table1;
+        String InPutData2 = Op6+"_"+table2;
+        String InPutData3 = InPutData1+"_out";
+        String InPutData4 = InPutData2+"_out";
+	String InPutData5 = Op4+"_"+InPutData3+InPutData4;
 
         String AbstractOp1 = "Abstract_"+Op1;
         String AbstractOp2 = "Abstract_"+Op2;
@@ -331,5 +331,81 @@ public class TestWorkFlow {
 		//cli.executeWorkflow(materializedWorkflow);
 		
 	}
+    public static void workflow () throws Exception{
+        String table1 = "orders";
+        String table2 = "lineitem";
+        
+        String Op1 = "Move_TPCH_Hive_Postgres";
+        String Op2 = "Move_TPCH_Postgres_Hive";
+        String Op3 = "Join_TPCH_Hive_Hive";
+        String Op4 = "Join_TPCH_Postgres_Postgres";
+        String Op5 = "Move_TPCH_Hive_Hive";
+        String Op6 = "Move_TPCH_Postgres_Postgres";
+        
+        String InPutData1 = Op1+"_"+table1;
+        String InPutData2 = Op6+"_"+table2;
+        String InPutData3 = InPutData1+"_out";
+        String InPutData4 = InPutData2+"_out";
+	String InPutData5 = Op4+"_"+InPutData3+InPutData4;
+
+        String AbstractOp1 = "Abstract_"+Op1;
+        String AbstractOp2 = "Abstract_"+Op2;
+        String AbstractOp3 = "Abstract_"+Op3;
+        String AbstractOp4 = "Abstract_"+Op4;
+        String AbstractOp5 = "Abstract_"+Op5;
+        String AbstractOp6 = "Abstract_"+Op6;
+        
+        String NameOfAbstractWorkflow = "Workflow";
+        String Size_tpch = "100m";
+        String database = "tpch";
+        
+        double TimeOfDay = 0;
+        
+        String From ="Hive";
+        String To = "Postgres";
+        String Operator = Op1;// +"_"+ randomQuery[2];                
+        String DataIn = table1;
+        String DataInSize = Double.toString(100);       
+        String DatabaseIn = database + Size_tpch;;
+        String Schema = Schema(DataIn);
+        String DataOut = Op1.toUpperCase();;
+        String DataOutSize = Double.toString(100);
+        String DatabaseOut = database + Size_tpch;;
+        
+        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DataOutSize, DatabaseOut);
+        Data.set_Operator(Operator);
+        Data.set_DataIn(DataIn);
+        Data.set_DataInSize(DataInSize);
+        Data.set_DataOut(DataOut);
+        Data.set_DatabaseIn(DatabaseIn);
+        Data.set_DatabaseOut(DatabaseOut);
+        Data.set_From(From);
+        Data.set_To(To);
+        Data.set_Schema(Schema);
+        String SQL = "";
+        
+        double[] size = new double[numberOfSize_Move_Hive_Postgres];
+                size[0] = testQueryPlan.sizeDataset(table1,Size_tpch);
+                size[1] = testQueryPlan.pageDataset(table1,Size_tpch);
+                size[2] = testQueryPlan.tupleDataset(table1,Size_tpch);
+                size[3] = 0;
+        YarnValue yarnValue = new YarnValue(1024, 1);
+        yarnValue.set_Ram(1024);
+        yarnValue.set_Core(1);        
+                
+        runWorkFlowIRES IRES = new runWorkFlowIRES();
+        IRES.createOperatorMove(Data, SQL, 0);
+        IRES.createDatasetMove_Hive_Postgres(Data, size, SQL, TimeOfDay);//createDatasetMove(Data, SQL);
+        IRES.createDataMove2(Data, SQL, yarnValue);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }
     
 }
