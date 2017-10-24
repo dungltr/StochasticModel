@@ -31,6 +31,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -56,7 +57,7 @@ public class runWorkFlowIRES {
     String directory_operator = IRES_library+"/target/asapLibrary/operators/";
     String directory_datasets = IRES_library+"/target/asapLibrary/datasets/";
     String OperatorFolder = IRES_library+"/target/asapLibrary/operators/";
-    
+    String directory_workflow = directory_library + "workflows/";
     String[] start = new String[]{"/bin/sh", ASAP_HOME+"/start-ires.sh"};
     String[] stop = new String[]{"/bin/sh", ASAP_HOME+"/stop-ires.sh"};
     
@@ -67,21 +68,7 @@ public class runWorkFlowIRES {
         wcli.setConfiguration(conf);
         double actualTime = 1.0;
         int i = 0;
-        if ((Data.get_Operator()=="Move")&&(Data.get_From()=="Postgres")&&(Data.get_To()=="Postgres")) i = 0;
-        if ((Data.get_Operator()=="Move")&&(Data.get_From()=="Hive")&&(Data.get_To()=="Hive")) i = 0;
-        if ((Data.get_Operator()=="SQL")&&(Data.get_From()=="Postgres")&&(Data.get_To()=="Postgres")) i = 0;       
-        if ((Data.get_Operator()=="SQL")&&(Data.get_From()=="Hive")&&(Data.get_To()=="Postgres")) i = 1;
-        if ((Data.get_Operator().contains("TPCH_query4"))&&(Data.get_From().contains("Hive"))&&(Data.get_To().contains("Postgres"))) i = 4;
-        if ((Data.get_Operator().contains("TPCH_query12"))&&(Data.get_From().contains("Hive"))&&(Data.get_To().contains("Postgres"))) i = 5;
-        if ((Data.get_Operator().contains("TPCH_query13"))&&(Data.get_From().contains("Hive"))&&(Data.get_To().contains("Postgres"))) i = 6;
-        if ((Data.get_Operator().contains("TPCH_query14"))&&(Data.get_From().contains("Hive"))&&(Data.get_To().contains("Postgres"))) i = 2;
-        if ((Data.get_Operator().contains("TPCH_query17"))&&(Data.get_From().contains("Hive"))&&(Data.get_To().contains("Postgres"))) i = 1;
-        if ((Data.get_Operator().contains("TPCH_query19"))&&(Data.get_From().contains("Hive"))&&(Data.get_To().contains("Postgres"))) i = 3;
-        if ((Data.get_Operator().contains("TPCH_query22"))&&(Data.get_From().contains("Hive"))&&(Data.get_To().contains("Postgres"))) i = 0;
-        if ((Data.get_Operator().toLowerCase().contains("tpch"))&&(Data.get_From().toLowerCase().contains("hive"))&&(Data.get_To().toLowerCase().contains("postgres"))) i = 1;
-        if ((Data.get_Operator().toLowerCase().contains("tpch"))&&(Data.get_From().toLowerCase().contains("postgres"))&&(Data.get_To().toLowerCase().contains("postgres"))) i = 3;
-        i = 0;
-        String NameOp = Nameop(Data) +"_"+i;
+        String NameOp = Nameop(Data);
         String materializedWorkflow = wcli.materializeWorkflow(workflow, policy);
         System.out.println(materializedWorkflow);
         System.out.println("Add materializedWorkflow successful"+workflow);
@@ -89,35 +76,50 @@ public class runWorkFlowIRES {
         double estimatedTime = 0;
         double estimatedCost = 0;
         System.out.println(NameOp);
-//        estimatedTime = Double.parseDouble(wcli.getMaterializedWorkflowDescription(materializedWorkflow).getOperator(NameOp).getExecTime()); 
-//        estimatedCost = Double.parseDouble(wcli.getMaterializedWorkflowDescription(materializedWorkflow).getOperator(NameOp).getCost());        
-        
+	File folder = new File(directory_workflow+materializedWorkflow+"/operators/");
+        File[] listOfFiles = folder.listFiles();
+        for (int j = 0; j < listOfFiles.length; j++) {
+            NameOp = listOfFiles[j].toString();
+            NameOp = listOfFiles[j].toString().replace(directory_workflow+materializedWorkflow+"/operators/", "");
+	    System.out.println("MaterializedWorkflow successful is: " + NameOp);
+            estimatedTime = Double.parseDouble(wcli.getMaterializedWorkflowDescription(materializedWorkflow).getOperator(NameOp).getExecTime());
+	    estimatedCost = Double.parseDouble(wcli.getMaterializedWorkflowDescription(materializedWorkflow).getOperator(NameOp).getCost());        
+        }
+
         testWriteMatrix2CSV.storeValueServer(Data, "", setupStochasticValue(setupValue(size, estimatedTime)), "execTime_estimate");    
         int count=0;
-        
+
         while(true){
-            //String w = wcli.executeWorkflow(materializedWorkflow);
+            String w = wcli.executeWorkflow(materializedWorkflow);
             long start = System.currentTimeMillis();
-            //wcli.waitForCompletion(w);
+            wcli.waitForCompletion(w);
             long stop = System.currentTimeMillis();
             actualTime = (double)(stop-start)/1000.0;// -12.0;
             System.out.println("ActualTime of "+NameOp+" is: "+actualTime+" and EstimatedTime of "+NameOp+" is: "+estimatedTime+"-and EstimateCost of "+NameOp+" is: "+estimatedCost);                    
             count++;
             Thread.sleep(1000);
             if(count>=1)// old value is 1000
-                
-	break;
+	    break;
         }       
- 
+
         wcli.removeMaterializedWorkflow(materializedWorkflow);
-        
+
         return actualTime;
     }
     public static String datasetin (Move_Data Data){
-        return Data.get_DataIn()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To();
+        return Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To()+"_"+Data.get_DataIn();
     }
     public static String datasetout (Move_Data Data){
-        return Data.get_DataOut()+"_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To();
+        return Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To()+"_"+Data.get_DataOut();
+    }
+    public static String datasetin2 (Move_Data Data){
+        return "Move_TPCH_Hive_Postgres_"+Data.get_DataIn().toUpperCase();
+    }
+    public static String datasetout2 (Move_Data Data){
+        return "Move_TPCH_Postgres_Postgres_"+Data.get_DataOut().toUpperCase();
+    }
+    public static String datasetout3 (Move_Data Data){
+        return "Join_TPCH_Postgres_Postgres_"+Data.get_DataIn().toUpperCase()+Data.get_DataOut().toUpperCase();
     }
     public void createDatasetMove_Hive_Postgres(Move_Data Data, double [] size, String SQL, double TimeOfDay) throws Exception {
         String node_pc = new App().getComputerName();
@@ -203,6 +205,45 @@ public class runWorkFlowIRES {
 	d3.add("Optimization.size",Data.get_DataInSize());      
 	d3.writeToPropertiesFile(directory_datasets + d3.datasetName);
     }
+public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, double TimeOfDay) throws Exception {
+        String node_pc = new App().getComputerName();
+        Dataset d1 = new Dataset(datasetin2(Data));
+        d1.add("Constraints.Engine.SQL",Data.get_From()+Data.get_Operator());
+        d1.add("Constraints.Engine.location",node_pc);
+        d1.add("Constraints.type","SQL");
+        d1.add("Execution.name",Data.get_DataIn());
+        d1.add("Execution.schema", Data.get_Schema());
+        d1.add("Execution.path", "hdfs://"+HDFS+"/"+Data.get_DatabaseIn()+".db/"+Data.get_DataIn());
+        d1.add("Optimization.size",Data.get_DataInSize());      
+        if (Data.get_To().toLowerCase().equals("postgres")){
+                d1.add("Optimization.page",Double.toString(size[1]));
+                d1.add("Optimization.tuple",Double.toString(size[2]));           
+            }
+        d1.add("Optimization.random",Double.toString(TimeOfDay));
+        d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
+        
+        Dataset d2 = new Dataset(datasetout2(Data));
+        d2.add("Constraints.Engine.SQL",Data.get_From()+Data.get_Operator());
+        d2.add("Constraints.Engine.location",node_pc);
+        d2.add("Constraints.type","SQL");
+        d2.add("Execution.name",Data.get_DataOut());
+        d2.add("Execution.schema", Data.get_Schema());
+        d2.add("Optimization.size",Data.get_DataOutSize());  
+        if (Data.get_To().toLowerCase().equals("postgres")){          
+            d2.add("Optimization.page",Double.toString(size[3]));
+            d2.add("Optimization.tuple",Double.toString(size[4]));
+        }
+        d2.writeToPropertiesFile(directory_datasets + d2.datasetName);  
+        
+        Dataset d3 = new Dataset(datasetout3(Data));
+        d3.add("Constraints.Engine.SQL",Data.get_To()+Data.get_Operator());
+        d3.add("Constraints.Engine.location",node_pc);
+        d3.add("Constraints.type","SQL");
+        d3.add("Execution.name",Data.get_DataIn()+"_"+Data.get_DataOut());
+	d3.add("Execution.schema", Data.get_Schema());
+        d3.add("Optimization.size",Data.get_DataInSize());      
+        d3.writeToPropertiesFile(directory_datasets + d3.datasetName);
+	}
     public void createAbstractOperatorMove(Move_Data Data, String SQL) throws IOException, Exception {
         String node_pc = new App().getComputerName();
         String NameOp = Nameop(Data);
@@ -218,7 +259,7 @@ public class runWorkFlowIRES {
 	op.add("Constraints.Output.number", "1");
         op.writeToPropertiesFile(directory_library + "abstractOperators/" + op.opName);                      
         cli.addAbstractOperator(op);
-        op.writeToPropertiesFile(op.opName);
+        //op.writeToPropertiesFile(op.opName);
     }
     public void createAbstractOperatorJoin(Move_Data Data, String SQL) throws IOException, Exception {
         String node_pc = new App().getComputerName();
@@ -235,7 +276,7 @@ public class runWorkFlowIRES {
 	op.add("Constraints.Output.number", "1");
         op.writeToPropertiesFile(directory_library + "abstractOperators/" + op.opName);                      
         cli.addAbstractOperator(op);
-        op.writeToPropertiesFile(op.opName);
+        //op.writeToPropertiesFile(op.opName);
     }
     public void createOperatorMove(Move_Data Data, String SQL, double costEstimateValue) throws IOException, Exception {
         String node_pc = new App().getComputerName();
