@@ -369,6 +369,7 @@ public class TestWorkFlow {
     }
     public static void main(String args[]) throws Exception {
 	createWorkflowJoin();
+	smallworkflow();
 	}
     public static void smallworkflow() throws Exception   
 {
@@ -429,8 +430,8 @@ List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<
                 //abstractOp1.writeToPropertiesFile(abstractOp1.opName);
                 
                 Dataset d2 = new Dataset("customers");
-                d1.readPropertiesFromFile(directory_datasets+"customers");
-        	materializedDatasets.add(d1);
+                d2.readPropertiesFromFile(directory_datasets+"customers");
+        	materializedDatasets.add(d2);
                 WorkflowNode t2 = new WorkflowNode(false,false,"customers");
 		t2.setDataset(d2);
 		filedataset = directory_library + "abstractWorkflows/smallworkflow/datasets/" + d2.datasetName;
@@ -477,8 +478,24 @@ List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<
                                                 "groupInputs,execTime,max\n"+
                                                 "groupInputs,cost,sum\n"+
                                                 "function,2*execTime+3*cost,min";
-                
+		// To show in Materialized Workflow
+        MaterializedOperators library =  new MaterializedOperators();                
+        AbstractWorkflow abstractWorkflow1 = new AbstractWorkflow(library);
+        abstractWorkflow1.addMaterializedDatasets(materializedDatasets); 
+        abstractWorkflow1.addInputEdge(d1,abstractOp,0);
+        abstractWorkflow1.addInputEdge(d2,abstractOp,1);
+        abstractWorkflow1.addOutputEdge(abstractOp,d3,0);
+        
+        abstractWorkflow1.addInputEdge(d3,abstractOp1,0);
+        abstractWorkflow1.addOutputEdge(abstractOp1,d4,0);
+               
+        abstractWorkflow1.getWorkflow(d4);
+
+        abstractWorkflow1.writeToDir(directory_library + "workflows/" + "smallworkflow");
+/////////////////////////////////////////////////////////////////////////////                        
                 String materializedWorkflow = cli.materializeWorkflow("smallworkflow", policy);
+		abstractWorkflow1.addMaterializedDatasets(materializedDatasets);
+        	System.out.println(abstractWorkflow1);
                 System.out.println(materializedWorkflow);
                 //cli.executeWorkflow(materializedWorkflow);
     } 
