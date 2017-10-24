@@ -197,7 +197,7 @@ public class TestWorkFlow {
         Operator mop1 = new Operator(Op1,directory_operator+Op1);       
         mop1.readFromDir();
 	Dataset d1 = new Dataset(InPutData1);        
-        d1.readPropertiesFromFile(directory_datasets+InPutData1);
+//        d1.readPropertiesFromFile(directory_datasets+InPutData1);
         materializedDatasets.add(d1); 
 	String filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d1.datasetName;
         d1.writeToPropertiesFile(filedataset);
@@ -219,7 +219,7 @@ public class TestWorkFlow {
         Operator mop2 = new Operator(Op6,directory_operator+Op6);       
         mop2.readFromDir();
 	Dataset d2 = new Dataset(InPutData2);        
-        d2.readPropertiesFromFile(directory_datasets+InPutData2);
+//        d2.readPropertiesFromFile(directory_datasets+InPutData2);
         materializedDatasets.add(d2);
 	filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d2.datasetName;
         d2.writeToPropertiesFile(filedataset);
@@ -240,7 +240,7 @@ public class TestWorkFlow {
         Operator mop3 = new Operator(Op4,directory_operator+Op4);        
         mop3.readFromDir();
 	Dataset d3 = new Dataset(InPutData3);
-        d3.readPropertiesFromFile(directory_datasets+InPutData3);
+//        d3.readPropertiesFromFile(directory_datasets+InPutData3);
         materializedDatasets.add(d3);
 	filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d3.datasetName;
         d3.writeToPropertiesFile(filedataset);//d3.writeToPropertiesFile(directory_datasets + d3.datasetName);
@@ -258,7 +258,7 @@ public class TestWorkFlow {
 	//mop2.writeToPropertiesFile(directory_operator+mop2.opName);
 	//mop3.writeToPropertiesFile(directory_operator+mop3.opName);
 	Dataset d4 = new Dataset(InPutData4);
-        d4.readPropertiesFromFile(directory_datasets+InPutData4);
+//        d4.readPropertiesFromFile(directory_datasets+InPutData4);
         materializedDatasets.add(d4);
 	filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d4.datasetName;
         d4.writeToPropertiesFile(filedataset);
@@ -268,7 +268,7 @@ public class TestWorkFlow {
 	t4.setDataset(d4);
         
         Dataset d5 = new Dataset(InPutData5);
-        d5.readPropertiesFromFile(directory_datasets+InPutData5);
+//        d5.readPropertiesFromFile(directory_datasets+InPutData5);
         materializedDatasets.add(d5);
 	filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d5.datasetName;
         d5.writeToPropertiesFile(filedataset);
@@ -367,8 +367,7 @@ public class TestWorkFlow {
         //cli.executeWorkflow(NameOfAbstractWorkflow);
         
     }
-    public static void main() throws Exception 
-{
+    public static void main(String args[]) throws Exception {
 	createWorkflowJoin();
 	}
     public static void smallworkflow() throws Exception   
