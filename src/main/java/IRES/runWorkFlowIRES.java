@@ -98,7 +98,7 @@ public class runWorkFlowIRES {
             actualTime = (double)(stop-start)/1000.0;// -12.0;
             System.out.println("ActualTime of "+NameOp+" is: "+actualTime+" and EstimatedTime of "+NameOp+" is: "+estimatedTime+"-and EstimateCost of "+NameOp+" is: "+estimatedCost);                    
             count++;
-            Thread.sleep(1000);
+            Thread.sleep(10000);
             if(count>=1)// old value is 1000
 	    break;
         }       
@@ -430,7 +430,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         String To = Data.get_To();
         switch (To) {
             case "HIVE": case "hive": case "Hive":
-                {
+	                {
                 mop1.add("Constraints.EngineSpecification.Distributed.HIVE.masterLocation", node_pc);
                 }
                 break;    
@@ -482,7 +482,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
 
 	mop1.add("Optimization.model.Out0.size", "gr.ntua.ece.cslab.panic.core.models.UserFunction");
         mop1.add("Optimization.model.cost",      "gr.ntua.ece.cslab.panic.core.models.UserFunction");//UserFunction");       
-        mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.AbstractWekaModel");//AbstractWekaModel");//UserFunction");//AbstractWekaModel");//UserFunction");
+        mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.UserFunction");//AbstractWekaModel");//UserFunction");
         
         mop1.add("Optimization.outputSpace.Out0.size", "Double");
         mop1.add("Optimization.outputSpace.cost", "Double");        
