@@ -119,12 +119,12 @@ public class TestWorkFlow {
         AbstractWorkflow1 abstractWorkflow = new AbstractWorkflow1(NameOfAbstractWorkflow);		
         
         Operator mop1 = new Operator(Op1,directory_operator+Op1);       
-        mop1.readFromDir();
+//        mop1.readFromDir();
 	Dataset d1 = new Dataset(InPutData1);        
 //        d1.readPropertiesFromFile(directory_datasets+InPutData1);
         materializedDatasets.add(d1); 
-	String filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d1.datasetName;
-        d1.writeToPropertiesFile(filedataset);
+//	String filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d1.datasetName;
+//        d1.writeToPropertiesFile(filedataset);
 
 
 	d1.inputFor(mop1, 0); 
@@ -134,20 +134,20 @@ public class TestWorkFlow {
         AbstractOperator abstractOp1 = new AbstractOperator(AbstractOp1);//AopAbstractOperator);              
 	File filename1 = new File(directory_library + "abstractOperators/" + abstractOp1.opName);
         abstractOp1.readPropertiesFromFile(filename1);
-        abstractOp1.writeToPropertiesFile(directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/operators/" + abstractOp1.opName);     
+//        abstractOp1.writeToPropertiesFile(directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/operators/" + abstractOp1.opName);     
 	ocli.addAbstractOperator(abstractOp1);
 	
 	WorkflowNode op1 = new WorkflowNode(true,true,AbstractOp1);//AopAbstractOperator);
 	op1.setAbstractOperator(abstractOp1);
              
         Operator mop2 = new Operator(Op6,directory_operator+Op6);       
-        mop2.readFromDir();
+//        mop2.readFromDir();
 	Dataset d2 = new Dataset(InPutData2);        
 //        d2.readPropertiesFromFile(directory_datasets+InPutData2);
         materializedDatasets.add(d2);
-	filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d2.datasetName;
-        d2.writeToPropertiesFile(filedataset);
-	d2.writeToPropertiesFile(directory_datasets + d2.datasetName);
+//	filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d2.datasetName;
+//        d2.writeToPropertiesFile(filedataset);
+//	d2.writeToPropertiesFile(directory_datasets + d2.datasetName);
 	d2.inputFor(mop2, 0);       
         WorkflowNode t2 = new WorkflowNode(false,false,InPutData2);
 	t2.setDataset(d2);
@@ -155,19 +155,19 @@ public class TestWorkFlow {
         AbstractOperator abstractOp2 = new AbstractOperator(AbstractOp6);//AopAbstractOperator);              
         File filename2 = new File(directory_library + "abstractOperators/" + abstractOp2.opName);
         abstractOp2.readPropertiesFromFile(filename2);
-	abstractOp2.writeToPropertiesFile(directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/operators/" + abstractOp2.opName);   
+//	abstractOp2.writeToPropertiesFile(directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/operators/" + abstractOp2.opName);   
         ocli.addAbstractOperator(abstractOp2);
 
 	WorkflowNode op2 = new WorkflowNode(true,true,AbstractOp6);//AopAbstractOperator);
 	op2.setAbstractOperator(abstractOp2);
                 
         Operator mop3 = new Operator(Op4,directory_operator+Op4);        
-        mop3.readFromDir();
+//        mop3.readFromDir();
 	Dataset d3 = new Dataset(InPutData3);
 //        d3.readPropertiesFromFile(directory_datasets+InPutData3);
         materializedDatasets.add(d3);
-	filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d3.datasetName;
-        d3.writeToPropertiesFile(filedataset);//d3.writeToPropertiesFile(directory_datasets + d3.datasetName);
+//	filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d3.datasetName;
+//        d3.writeToPropertiesFile(filedataset);//d3.writeToPropertiesFile(directory_datasets + d3.datasetName);
 	d3.inputFor(mop3, 0);        
 	WorkflowNode t3 = new WorkflowNode(false,true,InPutData3);
 	t3.setDataset(d3);
@@ -184,19 +184,19 @@ public class TestWorkFlow {
 	Dataset d4 = new Dataset(InPutData4);
 //        d4.readPropertiesFromFile(directory_datasets+InPutData4);
         materializedDatasets.add(d4);
-	filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d4.datasetName;
-        d4.writeToPropertiesFile(filedataset);
+//	filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d4.datasetName;
+//        d4.writeToPropertiesFile(filedataset);
 	d4.inputFor(mop3, 1);
-	d4.writeToPropertiesFile(directory_datasets + d4.datasetName);
+//	d4.writeToPropertiesFile(directory_datasets + d4.datasetName);
         WorkflowNode t4 = new WorkflowNode(false,true,InPutData4);
 	t4.setDataset(d4);
         
         Dataset d5 = new Dataset(InPutData5);
 //        d5.readPropertiesFromFile(directory_datasets+InPutData5);
         materializedDatasets.add(d5);
-	filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d5.datasetName;
-        d5.writeToPropertiesFile(filedataset);
-	d5.writeToPropertiesFile(directory_datasets + d5.datasetName);
+//	filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d5.datasetName;
+//        d5.writeToPropertiesFile(filedataset);
+//	d5.writeToPropertiesFile(directory_datasets + d5.datasetName);
 	d5.outputFor(mop3, 0);	
         WorkflowNode t5 = new WorkflowNode(false,true,InPutData5);
 	t5.setDataset(d5);
@@ -204,7 +204,7 @@ public class TestWorkFlow {
         AbstractOperator abstractOp3 = new AbstractOperator(AbstractOp4);//AopAbstractOperator);              
         File filename3 = new File(directory_library + "abstractOperators/" + abstractOp3.opName);
         abstractOp3.readPropertiesFromFile(filename3);
-	abstractOp3.writeToPropertiesFile(directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/operators/" + abstractOp3.opName);   
+//	abstractOp3.writeToPropertiesFile(directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/operators/" + abstractOp3.opName);   
         ocli.addAbstractOperator(abstractOp3);
 	WorkflowNode op3 = new WorkflowNode(true,true,AbstractOp4);//AopAbstractOperator);
 	op3.setAbstractOperator(abstractOp3);
