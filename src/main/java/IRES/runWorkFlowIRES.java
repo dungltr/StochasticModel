@@ -103,7 +103,7 @@ public class runWorkFlowIRES {
 	    break;
         }       
 
-        wcli.removeMaterializedWorkflow(materializedWorkflow);
+        //wcli.removeMaterializedWorkflow(materializedWorkflow);
         
         return actualTime;
     }
@@ -111,7 +111,7 @@ public class runWorkFlowIRES {
         String dir = directory;
         File filename = new File(dir);
         if (filename.exists()){
-                filename.deleteOnExit();
+                filename.delete();
         }
     }
     public static String datasetin (Move_Data Data){
