@@ -9,6 +9,7 @@ import static Algorithms.Algorithms.estimateCostValue;
 import static Algorithms.Algorithms.setupStochasticValue;
 import static Algorithms.Algorithms.setupValue;
 import Algorithms.testWriteMatrix2CSV;
+import static IRES.TestWorkFlow.directory_library;
 import LibraryIres.Move_Data;
 import LibraryIres.YarnValue;
 import LibraryIres.createWorkflow;
@@ -44,22 +45,22 @@ import java.util.Locale;
 public class runWorkFlowIRES {
     
     
-    int int_localhost = 1323;
-    String name_host = "localhost";
-    String SPARK_HOME = new App().readhome("SPARK_HOME");
-    String HADOOP_HOME = new App().readhome("HADOOP_HOME");
-    String HIVE_HOME = new App().readhome("HIVE_HOME");
-    String IRES_HOME = new App().readhome("IRES_HOME");
-    String HDFS = new App().readhome("HDFS");
-    String ASAP_HOME = IRES_HOME;
-    String IRES_library = ASAP_HOME+"/asap-platform/asap-server";
-    String directory_library = IRES_library+"/target/asapLibrary/";
-    String directory_operator = IRES_library+"/target/asapLibrary/operators/";
-    String directory_datasets = IRES_library+"/target/asapLibrary/datasets/";
-    String OperatorFolder = IRES_library+"/target/asapLibrary/operators/";
-    String directory_workflow = directory_library + "workflows/";
-    String[] start = new String[]{"/bin/sh", ASAP_HOME+"/start-ires.sh"};
-    String[] stop = new String[]{"/bin/sh", ASAP_HOME+"/stop-ires.sh"};
+    static int int_localhost = 1323;
+    static String name_host = "localhost";
+    static String SPARK_HOME = new App().readhome("SPARK_HOME");
+    static String HADOOP_HOME = new App().readhome("HADOOP_HOME");
+    static String HIVE_HOME = new App().readhome("HIVE_HOME");
+    static String IRES_HOME = new App().readhome("IRES_HOME");
+    static String HDFS = new App().readhome("HDFS");
+    static String ASAP_HOME = IRES_HOME;
+    static String IRES_library = ASAP_HOME+"/asap-platform/asap-server";
+    static String directory_library = IRES_library+"/target/asapLibrary/";
+    static String directory_operator = IRES_library+"/target/asapLibrary/operators/";
+    static String directory_datasets = IRES_library+"/target/asapLibrary/datasets/";
+    static String OperatorFolder = IRES_library+"/target/asapLibrary/operators/";
+    static String directory_workflow = directory_library + "workflows/";
+    static String[] start = new String[]{"/bin/sh", ASAP_HOME+"/start-ires.sh"};
+    static String[] stop = new String[]{"/bin/sh", ASAP_HOME+"/stop-ires.sh"};
     
     public double runWorkflow(Move_Data Data, double[] size, String workflow, String policy) throws Exception{
         
@@ -103,8 +104,15 @@ public class runWorkFlowIRES {
         }       
 
         wcli.removeMaterializedWorkflow(materializedWorkflow);
-
+        
         return actualTime;
+    }
+    public static void reset(String directory){
+        String dir = directory;
+        File filename = new File(dir);
+        if (filename.exists()){
+                filename.deleteOnExit();
+        }
     }
     public static String datasetin (Move_Data Data){
         return Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To()+"_"+Data.get_DataIn();
@@ -196,7 +204,7 @@ public class runWorkFlowIRES {
         }
 	d2.writeToPropertiesFile(directory_datasets + d2.datasetName);  
         
-        Dataset d3 = new Dataset(Data.get_DataIn()+datasetout(Data));
+        Dataset d3 = new Dataset(Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To()+"_"+Data.get_DataIn().toUpperCase()+Data.get_DataOut().toUpperCase());
         d3.add("Constraints.Engine.SQL",Data.get_To()+Data.get_Operator());
 	d3.add("Constraints.Engine.location",node_pc);
         d3.add("Constraints.type","SQL");
@@ -257,6 +265,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         op.add("Constraints.Input.number","1");
 	op.add("Constraints.OpSpecification.Algorithm.name",AlgorithmsName);
 	op.add("Constraints.Output.number", "1");
+        reset(directory_library + "abstractOperators/" + op.opName);
         op.writeToPropertiesFile(directory_library + "abstractOperators/" + op.opName);                      
         cli.addAbstractOperator(op);
         //op.writeToPropertiesFile(op.opName);
@@ -274,6 +283,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         op.add("Constraints.Input.number","2");
 	op.add("Constraints.OpSpecification.Algorithm.name",AlgorithmsName);
 	op.add("Constraints.Output.number", "1");
+        reset(directory_library + "abstractOperators/" + op.opName);
         op.writeToPropertiesFile(directory_library + "abstractOperators/" + op.opName);                      
         cli.addAbstractOperator(op);
         //op.writeToPropertiesFile(op.opName);
@@ -517,6 +527,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         String NameOp = Nameop(Data);
         String AbstractOp = "Abstract_"+NameOp;
         String NameOfAbstractWorkflow = NameOp+"_Workflow";
+//        reset(directory_library + "abstractWorkflows/" + NameOfAbstractWorkflow);
         String AlgorithmsName = NameOp + "_query";
 //        createDataset(Data, SQL);
 //        createOperatorMove(Data, SQL);
