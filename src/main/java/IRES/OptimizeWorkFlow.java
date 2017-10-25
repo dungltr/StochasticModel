@@ -71,8 +71,8 @@ public class OptimizeWorkFlow {
         System.out.println("\nEnd of optimization workflow------------------------------------------------------------------------:");
         System.out.println();        
 //
-        System.out.println("\nCall for the new workflow******************************************************************************************--------:");
-        TestWorkFlow(Data, policy);
+//        System.out.println("\nCall for the new workflow******************************************************************************************--------:");
+//        TestWorkFlow(Data, policy);
 /*  
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
         WorkflowClient wcli = new WorkflowClient();
