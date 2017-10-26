@@ -120,6 +120,7 @@ public class runWorkFlowIRES {
 
         testWriteMatrix2CSV.storeValueServer(Data, "", setupStochasticValue(setupValue(size, estimatedTime)), "execTime_estimate");    
         int count=0;
+	copydata(materializedWorkflow);
 
         while(true){
             String w = wcli.executeWorkflow(materializedWorkflow);
@@ -133,7 +134,6 @@ public class runWorkFlowIRES {
             if(count>=1)// old value is 1000
 	    break;
         }       
-	copydata(materializedWorkflow);
         //wcli.removeMaterializedWorkflow(materializedWorkflow);
 
         return actualTime;
@@ -407,7 +407,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
 
 	mop1.add("Optimization.model.Out0.size", "gr.ntua.ece.cslab.panic.core.models.UserFunction");
         mop1.add("Optimization.model.cost",      "gr.ntua.ece.cslab.panic.core.models.UserFunction");//AbstractWekaModel");//UserFunction");//UserFunction");       
-        mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.AbstractWekaModel");//UserFunction");//UserFunction");//AbstractWekaModel");//UserFunction");
+        mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.LinearRegression");//UserFunction");//UserFunction");//AbstractWekaModel");//UserFunction");
         
         mop1.add("Optimization.outputSpace.Out0.size", "Double");
         mop1.add("Optimization.outputSpace.cost", "Double");        
@@ -513,7 +513,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
 
 	mop1.add("Optimization.model.Out0.size", "gr.ntua.ece.cslab.panic.core.models.UserFunction");
         mop1.add("Optimization.model.cost",      "gr.ntua.ece.cslab.panic.core.models.UserFunction");//AbstractWekaModel");//UserFunction");//UserFunction");       
-        mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.AbstractWekaModel");//UserFunction");//UserFunction");
+        mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.LinearRegression");//UserFunction");//UserFunction");
         
         mop1.add("Optimization.outputSpace.Out0.size", "Double");
         mop1.add("Optimization.outputSpace.cost", "Double");        
