@@ -11,6 +11,7 @@ import static IRES.TPCHQuery.Schema;
 import static IRES.TPCHQuery.calculateSize;
 import static IRES.TPCHQuery.readSQL;
 import static IRES.runWorkFlowIRES.Nameop;
+import static IRES.runWorkFlowIRES.copydata;
 import static IRES.runWorkFlowIRES.datasetin;
 import static IRES.runWorkFlowIRES.datasetout;
 import static IRES.testQueryPlan.createRandomQuery;
@@ -36,6 +37,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.io.IOException;
+import org.apache.commons.io.FileUtils;
+import java.util.Locale;
 /**
  *
  * @author letrung
@@ -43,11 +47,7 @@ import java.util.List;
 public class TestWorkFlow {
     static int int_localhost = 1323;
     static String name_host = "localhost";
-    static String SPARK_HOME = new App().readhome("SPARK_HOME");
-    static String HADOOP_HOME = new App().readhome("HADOOP_HOME");
-    static String HIVE_HOME = new App().readhome("HIVE_HOME");
     static String IRES_HOME = new App().readhome("IRES_HOME");
-    static String HDFS = new App().readhome("HDFS");
     static String ASAP_HOME = IRES_HOME;
     static String IRES_library = ASAP_HOME+"/asap-platform/asap-server";
     static String directory_library = IRES_library+"/target/asapLibrary/";
@@ -70,6 +70,44 @@ public class TestWorkFlow {
     private static int numberOfSize_Move_Postgres_Postgres = 4;
 	
     private static List<Operator> operators;
+     public static void copydata(String AbstractWorkflow, String NameMaterialize) throws IOException{
+        String folderName = OperatorFolder;// + NameOp;
+        String folderWorkflow = directory_workflow + NameMaterialize+"/operators";
+        String folderAbstract = directory_library +"abstractWorkflows/"+ AbstractWorkflow + "/operators";
+        
+        File folderSource1 = new File(folderName);
+        File[] listOfSource1 = folderSource1.listFiles();
+        
+        File folderSource2 = new File(folderAbstract);
+        File[] listOfSource2 = folderSource2.listFiles();
+        
+        File folderDest = new File(folderWorkflow);
+        
+             
+            //File srcDir = new File(listOfOperators[j].toString()+"/data");  
+        for (int i = 0; i < listOfSource2.length; i++) {
+ 	       for (int j = 0; j < listOfSource1.length; j++) {
+		if (listOfSource1[j].isDirectory()&&listOfSource2[i].toString()
+                        .replace(folderAbstract, "")
+                        .contains(listOfSource1[j].toString()
+                                .replace(folderName, ""))){                   
+                    //File destDir = new File(listOfOperatorsDest[i].toString()+"/data");
+                    //FileUtils.copyDirectory(srcDir, destDir);
+                    FileUtils.copyDirectory(FileUtils.getFile(listOfSource1[j]
+                            .toString()), 
+                            FileUtils.getFile(folderDest
+                                    .toString()+"/"+listOfSource1[j].toString()
+                                .replace(folderName, "")+"_"+i));
+/*                    System.out.println("Source: "+listOfOperators[j].toString()+" and " 
+                            + listOfOperators[j].toString()
+                            .replace(folderWorkflow+"/operators/", ""));
+                    System.out.println("Destination: "+listOfOperatorsDest[i].toString() + " and " 
+                            +listOfOperatorsDest[i].toString()
+                            .replace(folderName, ""));
+*/                }
+            }
+        }
+    }
     public static void createWorkflowJoin() throws Exception{
 	operators = new ArrayList<Operator>();
 	String table1 = "orders";
@@ -95,16 +133,8 @@ public class TestWorkFlow {
         String AbstractOp5 = "Abstract"+"_"+Op5;
         String AbstractOp6 = "Abstract"+"_"+Op6;
         
-//	String OutputData1 = InPutData1 + "_OUT";
-//        String OutputData2 = InPutData2 + "_OUT";
-        
-//        String OutputData3 = "data3";//table1+table2+Op4;
-
         String NameOfAbstractWorkflow = "Test_Workflow";
       
-//        ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
-//        OperatorClient cli = new OperatorClient();		
-//        cli.setConfiguration(conf);
 	List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<gr.ntua.cslab.asap.operators.Dataset>();
         
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
@@ -118,95 +148,137 @@ public class TestWorkFlow {
         
         AbstractWorkflow1 abstractWorkflow = new AbstractWorkflow1(NameOfAbstractWorkflow);		
         
-        Operator mop1 = new Operator(Op1,directory_operator+Op1);       
-        mop1.readFromDir();
+        Operator mop1 = new Operator(Op1,"");//directory_operator+Op1);       
+//        mop1.readFromDir();
+//	mop1.writeToPropertiesFile(directory_operator+"Op1");
+//	mop1.writeModels(directory_operator+"Op1");
+//	mop1.reConfigureModel();
 	Dataset d1 = new Dataset(InPutData1);        
-//        d1.readPropertiesFromFile(directory_datasets+InPutData1);
-        materializedDatasets.add(d1); 
-	String filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d1.datasetName;
-        d1.writeToPropertiesFile(filedataset);
+//      d1.readPropertiesFromFile(directory_datasets+InPutData1);
+       materializedDatasets.add(d1); 
 
+//	String filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d1.datasetName;
+//        d1.writeToPropertiesFile(filedataset);
 
 	d1.inputFor(mop1, 0); 
 	WorkflowNode t1 = new WorkflowNode(false,false,InPutData1);
 	t1.setDataset(d1);
-                
+ 
         AbstractOperator abstractOp1 = new AbstractOperator(AbstractOp1);//AopAbstractOperator);              
-	File filename1 = new File(directory_library + "abstractOperators/" + abstractOp1.opName);
+/*	abstractOp1.add("Constraints.Engine", "Postgres");
+        abstractOp1.add("Constraints.Input.number","1");
+	abstractOp1.add("Constraints.OpSpecification.Algorithm.name","move");
+	abstractOp1.add("Constraints.Output.number", "1");
+        ocli.addAbstractOperator(abstractOp1);
+/*	File filename1 = new File(directory_library + "abstractOperators/" + abstractOp1.opName);
         abstractOp1.readPropertiesFromFile(filename1);
-        abstractOp1.writeToPropertiesFile(directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/operators/" + abstractOp1.opName);     
+//        abstractOp1.writeToPropertiesFile(directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/operators/" + abstractOp1.opName);     
 	ocli.addAbstractOperator(abstractOp1);
-	
+*/	
 	WorkflowNode op1 = new WorkflowNode(true,true,AbstractOp1);//AopAbstractOperator);
 	op1.setAbstractOperator(abstractOp1);
              
         Operator mop2 = new Operator(Op6,directory_operator+Op6);       
-        mop2.readFromDir();
+//        mop2.readFromDir();
+//	mop2.writeToPropertiesFile(directory_operator+"Op2");
+//        mop2.writeModels(directory_operator+"Op2");
+//        mop2.reConfigureModel();
+	
 	Dataset d2 = new Dataset(InPutData2);        
 //        d2.readPropertiesFromFile(directory_datasets+InPutData2);
         materializedDatasets.add(d2);
-	filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d2.datasetName;
-        d2.writeToPropertiesFile(filedataset);
-	d2.writeToPropertiesFile(directory_datasets + d2.datasetName);
+//	filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d2.datasetName;
+//        d2.writeToPropertiesFile(filedataset);
+//	d2.writeToPropertiesFile(directory_datasets + d2.datasetName);
 	d2.inputFor(mop2, 0);       
         WorkflowNode t2 = new WorkflowNode(false,false,InPutData2);
 	t2.setDataset(d2);
         
         AbstractOperator abstractOp2 = new AbstractOperator(AbstractOp6);//AopAbstractOperator);              
-        File filename2 = new File(directory_library + "abstractOperators/" + abstractOp2.opName);
-        abstractOp2.readPropertiesFromFile(filename2);
-	abstractOp2.writeToPropertiesFile(directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/operators/" + abstractOp2.opName);   
+        ////////
+/*        abstractOp2.add("Constraints.Engine", "Postgres");
+        abstractOp2.add("Constraints.Input.number","1");
+	abstractOp2.add("Constraints.OpSpecification.Algorithm.name","move");
+	abstractOp2.add("Constraints.Output.number", "1");
         ocli.addAbstractOperator(abstractOp2);
-
+        //////// 
+/*	File filename2 = new File(directory_library + "abstractOperators/" + abstractOp2.opName);
+        abstractOp2.readPropertiesFromFile(filename2);
+//	abstractOp2.writeToPropertiesFile(directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/operators/" + abstractOp2.opName);   
+        ocli.addAbstractOperator(abstractOp2);
+*/
 	WorkflowNode op2 = new WorkflowNode(true,true,AbstractOp6);//AopAbstractOperator);
 	op2.setAbstractOperator(abstractOp2);
                 
         Operator mop3 = new Operator(Op4,directory_operator+Op4);        
-        mop3.readFromDir();
-	Dataset d3 = new Dataset(InPutData3);
+//        mop3.readFromDir();
+//	mop3.writeToPropertiesFile(directory_operator+"Op3");
+//        mop3.writeModels(directory_operator+"Op3");
+//        mop3.reConfigureModel();
+
+	Dataset d3 = new Dataset("d3");//InPutData3);
 //        d3.readPropertiesFromFile(directory_datasets+InPutData3);
         materializedDatasets.add(d3);
-	filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d3.datasetName;
-        d3.writeToPropertiesFile(filedataset);//d3.writeToPropertiesFile(directory_datasets + d3.datasetName);
+//	filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d3.datasetName;
+//        d3.writeToPropertiesFile(filedataset);//d3.writeToPropertiesFile(directory_datasets + d3.datasetName);
+//	d3.add("Constraints.Engine.SQL","PostgresMove_TPCH");
+//        d3.add("Constraints.type","SQL");
+//	d3.add("Execution.name",table1);
+	d3.outputFor(mop1,0);
 	d3.inputFor(mop3, 0);        
-	WorkflowNode t3 = new WorkflowNode(false,true,InPutData3);
+	WorkflowNode t3 = new WorkflowNode(false,true,"d3");//InPutData3);
 	t3.setDataset(d3);
-	
+/*	
 	operators.add(mop1);
 	operators.add(mop2);
 	operators.add(mop3);	
         ocli.addOperator(mop1);
 	ocli.addOperator(mop2);
 	ocli.addOperator(mop3);
-        //mop1.writeToPropertiesFile(directory_operator+mop1.opName);
-	//mop2.writeToPropertiesFile(directory_operator+mop2.opName);
-	//mop3.writeToPropertiesFile(directory_operator+mop3.opName);
-	Dataset d4 = new Dataset(InPutData4);
+*/
+//        mop1.writeToPropertiesFile(directory_operator+mop1.opName);
+//	mop2.writeToPropertiesFile(directory_operator+mop2.opName);
+//	mop3.writeToPropertiesFile(directory_operator+mop3.opName);
+	Dataset d4 = new Dataset("d4");//InPutData4);
 //        d4.readPropertiesFromFile(directory_datasets+InPutData4);
         materializedDatasets.add(d4);
-	filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d4.datasetName;
-        d4.writeToPropertiesFile(filedataset);
+//	filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d4.datasetName;
+//        d4.writeToPropertiesFile(filedataset);
+/*	d4.add("Constraints.Engine.SQL","PostgresMove_TPCH");
+        d4.add("Constraints.type","SQL");
+	d4.add("Execution.name",table2);
+*/	d3.outputFor(mop2,0);
 	d4.inputFor(mop3, 1);
-	d4.writeToPropertiesFile(directory_datasets + d4.datasetName);
-        WorkflowNode t4 = new WorkflowNode(false,true,InPutData4);
+//	d4.writeToPropertiesFile(directory_datasets + d4.datasetName);
+        WorkflowNode t4 = new WorkflowNode(false,true,"d4");//InPutData4);
 	t4.setDataset(d4);
         
-        Dataset d5 = new Dataset(InPutData5);
+        Dataset d5 = new Dataset("d5");//InPutData5);
 //        d5.readPropertiesFromFile(directory_datasets+InPutData5);
         materializedDatasets.add(d5);
-	filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d5.datasetName;
-        d5.writeToPropertiesFile(filedataset);
-	d5.writeToPropertiesFile(directory_datasets + d5.datasetName);
+//	filedataset = directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/datasets/" + d5.datasetName;
+
+//        d5.writeToPropertiesFile(filedataset);
+//	d5.writeToPropertiesFile(directory_datasets + d5.datasetName);
+/*	d5.add("Constraints.Engine.SQL","PostgresJoin_TPCH");
+        d5.add("Constraints.type","SQL");
+	d5.add("Execution.name",table1+table2);
+*/	
 	d5.outputFor(mop3, 0);	
-        WorkflowNode t5 = new WorkflowNode(false,true,InPutData5);
+        WorkflowNode t5 = new WorkflowNode(false,true,"d5");//InPutData5);
 	t5.setDataset(d5);
         
         AbstractOperator abstractOp3 = new AbstractOperator(AbstractOp4);//AopAbstractOperator);              
-        File filename3 = new File(directory_library + "abstractOperators/" + abstractOp3.opName);
-        abstractOp3.readPropertiesFromFile(filename3);
-	abstractOp3.writeToPropertiesFile(directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/operators/" + abstractOp3.opName);   
+/*	abstractOp3.add("Constraints.Engine", "Postgres");
+        abstractOp3.add("Constraints.Input.number","1");
+	abstractOp3.add("Constraints.OpSpecification.Algorithm.name","join");
+	abstractOp3.add("Constraints.Output.number", "1");
         ocli.addAbstractOperator(abstractOp3);
-	WorkflowNode op3 = new WorkflowNode(true,true,AbstractOp4);//AopAbstractOperator);
+/*        File filename3 = new File(directory_library + "abstractOperators/" + abstractOp3.opName);
+        abstractOp3.readPropertiesFromFile(filename3);
+//	abstractOp3.writeToPropertiesFile(directory_library + "abstractWorkflows/"+NameOfAbstractWorkflow+"/operators/" + abstractOp3.opName);   
+        ocli.addAbstractOperator(abstractOp3);
+*/	WorkflowNode op3 = new WorkflowNode(true,true,AbstractOp4);//AopAbstractOperator);
 	op3.setAbstractOperator(abstractOp3);
 
         t1.addOutput(0,op1);
@@ -227,11 +299,11 @@ public class TestWorkFlow {
         op3.addOutput(0,t5);
 		
 	t5.addInput(0,op3);
-		
+
 	abstractWorkflow.addTarget(t5);
-        cli.addAbstractWorkflow(abstractWorkflow);
+//        cli.addAbstractWorkflow(abstractWorkflow);
         
-                WorkflowClient wcli = new WorkflowClient();
+        WorkflowClient wcli = new WorkflowClient();
 	wcli.setConfiguration(conf);    
         wcli.addAbstractWorkflow(abstractWorkflow);
 
@@ -251,21 +323,18 @@ public class TestWorkFlow {
 	
         abstractWorkflow1.getWorkflow(d5);
 
-	abstractWorkflow1.writeToDir(directory_workflow + NameOfAbstractWorkflow);
-/////////////////////////////////////////////////////////////////////////////        
+//	abstractWorkflow1.writeToDir(directory_library + "abstractWorkflows/" + NameOfAbstractWorkflow);
+
         String NameOfWorkflow = NameOfAbstractWorkflow;
         
         String policy ="metrics,cost,execTime\n"+
                 "groupInputs,execTime,max\n"+
                 "groupInputs,cost,sum\n"+
                 "function,execTime,min"; 
+//	abstractWorkflow1.addMaterializedDatasets(materializedDatasets);
         String materializedWorkflow = cli.materializeWorkflow(NameOfWorkflow, policy);
-	abstractWorkflow1.addMaterializedDatasets(materializedDatasets);
 	System.out.println(abstractWorkflow1);
 //	abstractWorkflow1.writeToDir(directory_library+"/workflows/workflow1");	
-        //cli.executeWorkflow("workflow1");
-//executeWorkflow(NameOfWorkflow);
-	//materializeWorkflow(NameOfWorkflow, policy);
 /*        filedataset = directory_library + "workflows/"+materializedWorkflow+"/datasets/" + d1.datasetName;
         d1.writeToPropertiesFile(filedataset);
 	filedataset = directory_library + "workflows/"+materializedWorkflow+"/datasets/" + d2.datasetName;
@@ -280,20 +349,31 @@ public class TestWorkFlow {
 	abstractOp1.writeToPropertiesFile(directory_library + "workflows/"+materializedWorkflow+"/operators/" + abstractOp1.opName);   
 	abstractOp2.writeToPropertiesFile(directory_library + "workflows/"+materializedWorkflow+"/operators/" + abstractOp2.opName);   
 	abstractOp3.writeToPropertiesFile(directory_library + "workflows/"+materializedWorkflow+"/operators/" + abstractOp3.opName);   
+	copydata(NameOfWorkflow,materializedWorkflow);
 */	
+	Workflow workflow0 = abstractWorkflow1.getWorkflow(d5);
+
+        System.out.println("\nShowing of original workflow is here----------------------------------------------------------------:");
+        System.out.println(workflow0);
+        System.out.println("\nShowing of original workflow is ended--------------------------------------------------------------:");
+
 	System.out.println(materializedWorkflow);
-	abstractWorkflow1.writeToDir(directory_library+"/workflows/"+materializedWorkflow);	
+//	abstractWorkflow1.writeToDir(directory_library+"/workflows/"+materializedWorkflow);
+	
         Workflow workflow1 = abstractWorkflow1.optimizeWorkflow(d5);
-		System.out.println(workflow1);
-		workflow1.writeToDir(directory_library+"abstractWorkflows/Optimization"+NameOfWorkflow);
-		workflow1.writeToDir(directory_library+"workflow/Optimization"+NameOfWorkflow);
+        System.out.println("\nShowing of optimize workflow is here----------------------------------------------------------------:");
+        System.out.println(workflow1);
+        System.out.println("\nShowing of optimize workflow is ended--------------------------------------------------------------:");
+
+//	workflow1.writeToDir(directory_library+"abstractWorkflows/Optimization"+NameOfWorkflow);
+//	workflow1.writeToDir(directory_library+"workflows/Optimization"+NameOfWorkflow);
 	//cli.executeWorkflow(materializedWorkflow);
         //cli.executeWorkflow(NameOfAbstractWorkflow);
         
     }
     public static void main(String args[]) throws Exception {
 	createWorkflowJoin();
-	smallworkflow();
+//	smallworkflow();
 	}
     public static void smallworkflow() throws Exception   
 {

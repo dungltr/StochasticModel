@@ -1,6 +1,0 @@
-#
-#Wed Jul 19 03:08:23 CEST 2017
-Constraints.Output.number=1
-Constraints.OpSpecification.Algorithm.name=move
-Constraints.Input.number=1
-Constraints.Engine=Postgres

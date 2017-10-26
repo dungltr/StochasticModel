@@ -36,7 +36,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
-
+import org.apache.commons.io.FileUtils;
 /**
  *
  * @author letrung
@@ -44,23 +44,55 @@ import java.util.Locale;
 public class runWorkFlowIRES {
     
     
-    int int_localhost = 1323;
-    String name_host = "localhost";
-    String SPARK_HOME = new App().readhome("SPARK_HOME");
-    String HADOOP_HOME = new App().readhome("HADOOP_HOME");
-    String HIVE_HOME = new App().readhome("HIVE_HOME");
-    String IRES_HOME = new App().readhome("IRES_HOME");
-    String HDFS = new App().readhome("HDFS");
-    String ASAP_HOME = IRES_HOME;
-    String IRES_library = ASAP_HOME+"/asap-platform/asap-server";
-    String directory_library = IRES_library+"/target/asapLibrary/";
-    String directory_operator = IRES_library+"/target/asapLibrary/operators/";
-    String directory_datasets = IRES_library+"/target/asapLibrary/datasets/";
-    String OperatorFolder = IRES_library+"/target/asapLibrary/operators/";
-    String directory_workflow = directory_library + "workflows/";
-    String[] start = new String[]{"/bin/sh", ASAP_HOME+"/start-ires.sh"};
-    String[] stop = new String[]{"/bin/sh", ASAP_HOME+"/stop-ires.sh"};
+    static int int_localhost = 1323;
+    static String name_host = "localhost";
+    static String SPARK_HOME = new App().readhome("SPARK_HOME");
+    static String HADOOP_HOME = new App().readhome("HADOOP_HOME");
+    static String HIVE_HOME = new App().readhome("HIVE_HOME");
+    static String IRES_HOME = new App().readhome("IRES_HOME");
+    static String HDFS = new App().readhome("HDFS");
+    static String ASAP_HOME = IRES_HOME;
+    static String IRES_library = ASAP_HOME+"/asap-platform/asap-server";
+    static String directory_library = IRES_library+"/target/asapLibrary/";
+    static String directory_operator = IRES_library+"/target/asapLibrary/operators/";
+    static String directory_datasets = IRES_library+"/target/asapLibrary/datasets/";
+    static String OperatorFolder = IRES_library+"/target/asapLibrary/operators/";
+    static String directory_workflow = directory_library + "workflows/";
+    static String[] start = new String[]{"/bin/sh", ASAP_HOME+"/start-ires.sh"};
+    static String[] stop = new String[]{"/bin/sh", ASAP_HOME+"/stop-ires.sh"};
     
+    public static void copydata(String NameMaterialize) throws IOException{
+        String folderName = OperatorFolder;// + NameOp;
+        String folderWorkflow = directory_workflow + NameMaterialize;
+	File folder = new File(folderName);
+        File[] listOfOperators = folder.listFiles();
+        
+        File folderOperator = new File(folderWorkflow + "/operators");
+        File[] listOfOperatorsDest = folderOperator.listFiles();
+        
+	for (int j = 0; j < listOfOperators.length; j++) {
+            //File srcDir = new File(listOfOperators[j].toString()+"/data");  
+            for (int i = 0; i < listOfOperatorsDest.length; i++) {
+                if (listOfOperatorsDest[i].toString()
+                        .replace(folderWorkflow+"/operators/", "")
+                        .contains(listOfOperators[j].toString()
+                                .replace(folderName, ""))){                   
+                    //File destDir = new File(listOfOperatorsDest[i].toString()+"/data");
+                    //FileUtils.copyDirectory(srcDir, destDir);
+                    FileUtils.copyDirectory(FileUtils.getFile(listOfOperators[j]
+                            .toString()+"/data"), 
+                            FileUtils.getFile(listOfOperatorsDest[i]
+                                    .toString()+"/data"));
+                    System.out.println("Source: "+listOfOperators[j].toString()+" and " 
+                            + listOfOperators[j].toString()
+                            .replace(folderWorkflow+"/operators/", ""));
+                    System.out.println("Destination: "+listOfOperatorsDest[i].toString() + " and " 
+                            +listOfOperatorsDest[i].toString()
+                            .replace(folderName, ""));
+                }
+            }
+        }
+    }
     public double runWorkflow(Move_Data Data, double[] size, String workflow, String policy) throws Exception{
         
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
@@ -101,10 +133,17 @@ public class runWorkFlowIRES {
             if(count>=1)// old value is 1000
 	    break;
         }       
-
-        wcli.removeMaterializedWorkflow(materializedWorkflow);
+	copydata(materializedWorkflow);
+        //wcli.removeMaterializedWorkflow(materializedWorkflow);
 
         return actualTime;
+    }
+    public static void reset(String directory){
+        String dir = directory;
+        File filename = new File(dir);
+        if (filename.exists()){
+                filename.delete();
+        }
     }
     public static String datasetin (Move_Data Data){
         return Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To()+"_"+Data.get_DataIn();
@@ -196,7 +235,7 @@ public class runWorkFlowIRES {
         }
 	d2.writeToPropertiesFile(directory_datasets + d2.datasetName);  
         
-        Dataset d3 = new Dataset(Data.get_DataIn()+datasetout(Data));
+        Dataset d3 = new Dataset(Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To()+"_"+Data.get_DataIn().toUpperCase()+Data.get_DataOut().toUpperCase());
         d3.add("Constraints.Engine.SQL",Data.get_To()+Data.get_Operator());
 	d3.add("Constraints.Engine.location",node_pc);
         d3.add("Constraints.type","SQL");
@@ -257,6 +296,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         op.add("Constraints.Input.number","1");
 	op.add("Constraints.OpSpecification.Algorithm.name",AlgorithmsName);
 	op.add("Constraints.Output.number", "1");
+	reset(directory_library + "abstractOperators/" + op.opName);
         op.writeToPropertiesFile(directory_library + "abstractOperators/" + op.opName);                      
         cli.addAbstractOperator(op);
         //op.writeToPropertiesFile(op.opName);
@@ -274,6 +314,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         op.add("Constraints.Input.number","2");
 	op.add("Constraints.OpSpecification.Algorithm.name",AlgorithmsName);
 	op.add("Constraints.Output.number", "1");
+	reset(directory_library + "abstractOperators/" + op.opName);
         op.writeToPropertiesFile(directory_library + "abstractOperators/" + op.opName);                      
         cli.addAbstractOperator(op);
         //op.writeToPropertiesFile(op.opName);
@@ -365,8 +406,8 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         mop1.add("Optimization.inputSpace.In0.random", "Double,1E8,1E10,l");
 
 	mop1.add("Optimization.model.Out0.size", "gr.ntua.ece.cslab.panic.core.models.UserFunction");
-        mop1.add("Optimization.model.cost",      "gr.ntua.ece.cslab.panic.core.models.UserFunction");//UserFunction");       
-        mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.UserFunction");//AbstractWekaModel");//UserFunction");//AbstractWekaModel");//UserFunction");
+        mop1.add("Optimization.model.cost",      "gr.ntua.ece.cslab.panic.core.models.UserFunction");//AbstractWekaModel");//UserFunction");//UserFunction");       
+        mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.AbstractWekaModel");//UserFunction");//UserFunction");//AbstractWekaModel");//UserFunction");
         
         mop1.add("Optimization.outputSpace.Out0.size", "Double");
         mop1.add("Optimization.outputSpace.cost", "Double");        
@@ -471,8 +512,8 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         mop1.add("Optimization.inputSpace.In0.random", "Double,1E8,1E10,l");
 
 	mop1.add("Optimization.model.Out0.size", "gr.ntua.ece.cslab.panic.core.models.UserFunction");
-        mop1.add("Optimization.model.cost",      "gr.ntua.ece.cslab.panic.core.models.UserFunction");//UserFunction");       
-        mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.AbstractWekaModel");//AbstractWekaModel");//UserFunction");//AbstractWekaModel");//UserFunction");
+        mop1.add("Optimization.model.cost",      "gr.ntua.ece.cslab.panic.core.models.UserFunction");//AbstractWekaModel");//UserFunction");//UserFunction");       
+        mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.AbstractWekaModel");//UserFunction");//UserFunction");
         
         mop1.add("Optimization.outputSpace.Out0.size", "Double");
         mop1.add("Optimization.outputSpace.cost", "Double");        

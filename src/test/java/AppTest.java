@@ -191,7 +191,7 @@ public class AppTest{
 //            testQueryPlan.testQueryPlanIRES_Hive_Postgres(TimeOfDay);
 //            testQueryPlan.testQueryPlanIRES_Postgres(TimeOfDay);        
 //        setup();
-        TPCHQuery.TPCH_Hive_Postgres(TimeOfDay, "lineitem", "", "Training");
+//        TPCHQuery.TPCH_Hive_Postgres(TimeOfDay, "lineitem", "", "Training");
 //        TPCHQuery.TPCH_Hive_Postgres(TimeOfDay, "", "");
 //        tearDown();
 //        setup();

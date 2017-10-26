@@ -50,7 +50,7 @@ public class OptimizeWorkFlow {
         abstractWorkflow.addInputEdge(d1,abstractOp,0);
         abstractWorkflow.addOutputEdge(abstractOp,d2,0);
         abstractWorkflow.getWorkflow(d2);
-/*
+
         abstractWorkflow.addMaterializedDatasets(materializedDatasets);               
         System.out.println("\nShowing of abstractWorkflow is here----------------------------------------------------------------:");
         System.out.println(abstractWorkflow.getWorkflow(d1));
@@ -70,9 +70,9 @@ public class OptimizeWorkFlow {
 //	System.out.println(workflow1.toString());
         System.out.println("\nEnd of optimization workflow------------------------------------------------------------------------:");
         System.out.println();        
-*///
-        System.out.println("\nCall for the new workflow******************************************************************************************--------:");
-        TestWorkFlow(Data, policy);
+//
+//        System.out.println("\nCall for the new workflow******************************************************************************************--------:");
+//        TestWorkFlow(Data, policy);
 /*  
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
         WorkflowClient wcli = new WorkflowClient();
