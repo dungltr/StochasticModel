@@ -163,15 +163,15 @@ public class AppTest{
 //        Irisa.Enssat.Rennes1.TestScript.testall();
 	for (int i =0; i<1; i++)
         { 
-	TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move");
-        TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move");
-        TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Hive","Move");
-        TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Postgres","Move");
+//	TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move");
+//        TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move");
+//        TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Hive","Move");
+//        TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Postgres","Move");
 	TPCHQuery.Join(Math.random(),"tpch","100m","Postgres","Postgres","Join");
-        TPCHQuery.Join(Math.random(),"tpch","100m","Hive","Hive","Join");
-        IRES.TestWorkFlow.createWorkflowJoin();
+//        TPCHQuery.Join(Math.random(),"tpch","100m","Hive","Hive","Join");
+//        IRES.TestWorkFlow.createWorkflowJoin();
 //	IRES.TestWorkFlow.smallworkflow();
-//        IRES.TestWorkFlow.workflow();
+        IRES.TestWorkFlow.workflow();
 	}
 //      IRES.TestWorkFlow.createWorkflowJoin();
 	}

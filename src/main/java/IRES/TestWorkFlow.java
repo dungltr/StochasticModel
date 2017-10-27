@@ -40,6 +40,9 @@ import java.util.List;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import java.util.Locale;
+
+import java.io.FileInputStream;
+import java.io.InputStream;
 /**
  *
  * @author letrung
@@ -333,6 +336,8 @@ public class TestWorkFlow {
                 "function,execTime,min"; 
 //	abstractWorkflow1.addMaterializedDatasets(materializedDatasets);
         String materializedWorkflow = cli.materializeWorkflow(NameOfWorkflow, policy);
+        copydata(NameOfAbstractWorkflow, materializedWorkflow);
+
 	System.out.println(abstractWorkflow1);
 //	abstractWorkflow1.writeToDir(directory_library+"/workflows/workflow1");	
 /*        filedataset = directory_library + "workflows/"+materializedWorkflow+"/datasets/" + d1.datasetName;
@@ -374,8 +379,160 @@ public class TestWorkFlow {
     public static void main(String args[]) throws Exception {
 	createWorkflowJoin();
 //	smallworkflow();
+	workflow();
 	}
-    public static void smallworkflow() throws Exception   
+public static void workflow() throws Exception   
+        {
+	ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
+        OperatorClient ocli = new OperatorClient();		
+        ocli.setConfiguration(conf);
+                
+	WorkflowClient wcli = new WorkflowClient();
+        wcli.setConfiguration(conf);
+
+        String NameOfAbstractWorkflow = "Workflow";
+        List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<gr.ntua.cslab.asap.operators.Dataset>();	
+
+        //cli.removeAbstractWorkflow("pagerank");
+
+        AbstractWorkflow1 abstractWorkflow = new AbstractWorkflow1(NameOfAbstractWorkflow);
+/*		String dirWorkflow = directory_library+"workflows/smallworkflow";
+        File directoryWorkflows = new File(dirWorkflow);
+        if (!directoryWorkflows.exists()) {
+                directoryWorkflows.mkdir();
+                System.out.println("\nCreate directory:-------------------------"+dirWorkflow);
+        }
+
+        String dirDatasets = dirWorkflow + "/datasets";        
+        File dirDataset = new File(dirDatasets);
+        if (!dirDataset.exists()) {
+                dirDataset.mkdir();
+                System.out.println("\nCreate directory:-------------------------"+dirDatasets);
+        }
+        String dirOperators = dirWorkflow + "/operators";        
+        File dirOperator = new File(dirOperators);
+        if (!dirOperator.exists()) {
+                dirOperator.mkdir();
+                System.out.println("\nCreate directory:-------------------------"+dirOperators);
+        }
+*/      Operator mop1 = new Operator("Operator1","");
+
+	File initialFile = new File(directory_operator+"Join_TPCH_Postgres_Postgres"+"/description");
+        InputStream targetStream = new FileInputStream(initialFile);
+        mop1.readPropertiesFromStream(targetStream);
+	mop1.writeToPropertiesFile(directory_operator+"Join_TPCH_Postgres_Postgres");
+	ocli.addOperator(mop1);
+
+        System.out.println(mop1.toString());
+	
+	Dataset d1 = new Dataset("Input1");
+//        d1.readPropertiesFromFile(directory_datasets+"Move_TPCH_Hive_Postgres_orders");
+	d1.add("Execution.schema", "");//;=(O_ORDERKEY       INT,O_CUSTKEY        INT,O_ORDERSTATUS    CHAR(1),O_TOTALPRICE     DECIMAL(15,2),O_ORDERDATE      DATE ,O_ORDERPRIORITY  CHAR(15),O_CLERK          CHAR(15),O_SH$
+	d1.add("Optimization.tuple","150000.0");
+	d1.add("Optimization.page","2610.0");
+	d1.add("Execution.path","hdfs://"+"/user/hive/warehouse"+"/"+"tpch100"+".db/"+"orders");
+	d1.add("Optimization.random","0.9849681994073411");
+	d1.add("Execution.name","orders");
+	d1.add("Optimization.size","16.1");
+        
+	materializedDatasets.add(d1);
+        WorkflowNode t1 = new WorkflowNode(false,false,"Input1");
+        t1.setDataset(d1);
+	d1.inputFor(mop1, 0);
+	System.out.println(d1.toString());
+	
+	d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
+//		String filedataset = directory_library + "abstractWorkflows/smallworkflow/datasets/" + d1.datasetName;
+//		d1.writeToPropertiesFile(filedataset);
+//		filedataset = dirDatasets +"/" + d1.datasetName;
+//		d1.writeToPropertiesFile(filedataset);
+
+        AbstractOperator abstractOp = new AbstractOperator("Abstract_Operator1");
+        File filename = new File(directory_library + "abstractOperators/" + "Abstract_Join_TPCH_Postgres_Postgres");
+      	abstractOp.readPropertiesFromFile(filename);
+	System.out.println(abstractOp.toString());
+	ocli.addAbstractOperator(abstractOp);
+	abstractOp.writeToPropertiesFile(directory_library + "abstractOperators/" + abstractOp.opName);
+//        	abstractOp.writeToPropertiesFile(directory_library + "abstractWorkflows/smallworkflow/operators/" + abstractOp.opName);     
+//        	abstractOp.writeToPropertiesFile(dirOperators + "/" + abstractOp.opName);     
+        WorkflowNode op1 = new WorkflowNode(true,true,abstractOp.opName);
+        op1.setAbstractOperator(abstractOp);
+        //abstractOp.writeToPropertiesFile(abstractOp.opName);
+
+//        AbstractOperator abstractOp1 = new AbstractOperator("Abstract_Move_TPCH_Postgres_Postgres");
+//                File filename1 = new File(directory_library + "abstractOperators/" + abstractOp1.opName);
+//        	abstractOp1.readPropertiesFromFile(filename1);
+//        	abstractOp1.writeToPropertiesFile(directory_library + "abstractWorkflows/smallworkflow/operators/" + abstractOp1.opName);     
+//        	abstractOp1.writeToPropertiesFile(dirOperators + "/" + abstractOp1.opName);     
+//        WorkflowNode op2 = new WorkflowNode(true,true,abstractOp1.opName);
+//        op2.setAbstractOperator(abstractOp1);
+        //abstractOp1.writeToPropertiesFile(abstractOp1.opName);
+
+        Dataset d2 = new Dataset("Input2");
+//        d2.readPropertiesFromFile(directory_datasets+"Move_TPCH_Hive_Postgres_customer");
+        d2.add("Execution.schema", "");//;=(O_ORDERKEY       INT,O_CUSTKEY        INT,O_ORDERSTATUS    CHAR(1),O_TOTALPRICE     DECIMAL(15,2),O_ORDERDATE      DATE ,O_ORDERPRIORITY  CHAR(15),O_CLERK          CHAR(15),O_SH$
+	d2.add("Optimization.tuple","15000.0");
+	d2.add("Optimization.page","360.0");
+	d2.add("Execution.path","hdfs://"+"/user/hive/warehouse"+"/"+"tpch100"+".db/"+"orders");
+	d2.add("Optimization.random","0.45513538999004943");
+	d2.add("Execution.name","customer");
+	d2.add("Optimization.size","2.3");
+	
+	materializedDatasets.add(d2);
+        WorkflowNode t2 = new WorkflowNode(false,false,"Input2");
+        t2.setDataset(d2);
+	System.out.println(d1.toString());
+	d2.inputFor(mop1, 1);
+	d2.writeToPropertiesFile(directory_datasets + d2.datasetName);
+//		filedataset = directory_library + "abstractWorkflows/smallworkflow/datasets/" + d2.datasetName;
+//                d2.writeToPropertiesFile(filedataset);
+//		filedataset = dirDatasets + "/" + d2.datasetName;
+//                d2.writeToPropertiesFile(filedataset);
+
+        Dataset d3 = new Dataset("d3");
+        WorkflowNode t3 = new WorkflowNode(false,true,"d3");
+	materializedDatasets.add(d3);
+        t3.setDataset(d3);
+	d3.outputFor(mop1, 0);
+
+        t1.addOutput(0,op1);
+        t2.addOutput(0,op1);
+
+        op1.addInput(0,t1);
+        op1.addInput(1,t2);
+        op1.addOutput(0,t3);
+
+	t3.addInput(0,op1);
+
+        abstractWorkflow.addTarget(t3);
+
+        wcli.addAbstractWorkflow(abstractWorkflow);
+        //cli.removeAbstractWorkflow("abstractTest1");
+
+        String policy ="metrics,cost,execTime\n"+
+                                        "groupInputs,execTime,max\n"+
+                                        "groupInputs,cost,sum\n"+
+                                        "function,2*execTime+3*cost,min";
+    // To show in Materialized Workflow
+        MaterializedOperators library =  new MaterializedOperators();                
+        AbstractWorkflow abstractWorkflow1 = new AbstractWorkflow(library);
+        abstractWorkflow1.addMaterializedDatasets(materializedDatasets); 
+        abstractWorkflow1.addInputEdge(d1,abstractOp,0);
+        abstractWorkflow1.addInputEdge(d2,abstractOp,1);
+        abstractWorkflow1.addOutputEdge(abstractOp,d3,0);
+
+        abstractWorkflow1.getWorkflow(d3);
+
+//          abstractWorkflow1.writeToDir(directory_library + "workflows/" + "smallworkflow");
+/////////////////////////////////////////////////////////////////////////////                        
+        String materializedWorkflow = wcli.materializeWorkflow(NameOfAbstractWorkflow, policy);
+        abstractWorkflow1.addMaterializedDatasets(materializedDatasets);
+        System.out.println(abstractWorkflow1);
+        System.out.println(materializedWorkflow);
+//        wcli.executeWorkflow(materializedWorkflow);
+    }
+    
+	public static void smallworkflow() throws Exception   
 {
 String NameOfAbstractWorkflow = "Workflow";
 List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<gr.ntua.cslab.asap.operators.Dataset>();	
