@@ -425,23 +425,23 @@ public static void workflow() throws Exception
 
         System.out.println(mop1.toString());
 	
-	Dataset d1 = new Dataset("Input1");
+	Dataset d11 = new Dataset("Input11");
 //        d1.readPropertiesFromFile(directory_datasets+"Move_TPCH_Hive_Postgres_orders");
-	d1.add("Execution.schema", "");//;=(O_ORDERKEY       INT,O_CUSTKEY        INT,O_ORDERSTATUS    CHAR(1),O_TOTALPRICE     DECIMAL(15,2),O_ORDERDATE      DATE ,O_ORDERPRIORITY  CHAR(15),O_CLERK          CHAR(15),O_SH$
-	d1.add("Optimization.tuple","150000.0");
-	d1.add("Optimization.page","2610.0");
-	d1.add("Execution.path","hdfs://"+"/user/hive/warehouse"+"/"+"tpch100"+".db/"+"orders");
-	d1.add("Optimization.random","0.9849681994073411");
-	d1.add("Execution.name","orders");
-	d1.add("Optimization.size","16.1");
+	d11.add("Execution.schema", "");//;=(O_ORDERKEY       INT,O_CUSTKEY        INT,O_ORDERSTATUS    CHAR(1),O_TOTALPRICE     DECIMAL(15,2),O_ORDERDATE      DATE ,O_ORDERPRIORITY  CHAR(15),O_CLERK          CHAR(15),O_SH$
+	d11.add("Optimization.tuple","150000.0");
+	d11.add("Optimization.page","2610.0");
+	d11.add("Execution.path","hdfs://"+"/user/hive/warehouse"+"/"+"tpch100"+".db/"+"orders");
+	d11.add("Optimization.random","0.9849681994073411");
+	d11.add("Execution.name","orders");
+	d11.add("Optimization.size","16.1");
         
-	materializedDatasets.add(d1);
-        WorkflowNode t1 = new WorkflowNode(false,false,"Input1");
-        t1.setDataset(d1);
-	d1.inputFor(mop1, 0);
-	System.out.println(d1.toString());
+	materializedDatasets.add(d11);
+        WorkflowNode t11 = new WorkflowNode(false,false,"Input11");
+        t11.setDataset(d11);
+	d11.inputFor(mop1, 0);
+	System.out.println(d11.toString());
 	
-	d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
+	d11.writeToPropertiesFile(directory_datasets + d11.datasetName);
 //		String filedataset = directory_library + "abstractWorkflows/smallworkflow/datasets/" + d1.datasetName;
 //		d1.writeToPropertiesFile(filedataset);
 //		filedataset = dirDatasets +"/" + d1.datasetName;
@@ -468,43 +468,43 @@ public static void workflow() throws Exception
 //        op2.setAbstractOperator(abstractOp1);
         //abstractOp1.writeToPropertiesFile(abstractOp1.opName);
 
-        Dataset d2 = new Dataset("Input2");
+        Dataset d22 = new Dataset("Input22");
 //        d2.readPropertiesFromFile(directory_datasets+"Move_TPCH_Hive_Postgres_customer");
-        d2.add("Execution.schema", "");//;=(O_ORDERKEY       INT,O_CUSTKEY        INT,O_ORDERSTATUS    CHAR(1),O_TOTALPRICE     DECIMAL(15,2),O_ORDERDATE      DATE ,O_ORDERPRIORITY  CHAR(15),O_CLERK          CHAR(15),O_SH$
-	d2.add("Optimization.tuple","15000.0");
-	d2.add("Optimization.page","360.0");
-	d2.add("Execution.path","hdfs://"+"/user/hive/warehouse"+"/"+"tpch100"+".db/"+"orders");
-	d2.add("Optimization.random","0.45513538999004943");
-	d2.add("Execution.name","customer");
-	d2.add("Optimization.size","2.3");
+        d22.add("Execution.schema", "");//;=(O_ORDERKEY       INT,O_CUSTKEY        INT,O_ORDERSTATUS    CHAR(1),O_TOTALPRICE     DECIMAL(15,2),O_ORDERDATE      DATE ,O_ORDERPRIORITY  CHAR(15),O_CLERK          CHAR(15),O_SH$
+	d22.add("Optimization.tuple","15000.0");
+	d22.add("Optimization.page","360.0");
+	d22.add("Execution.path","hdfs://"+"/user/hive/warehouse"+"/"+"tpch100"+".db/"+"orders");
+	d22.add("Optimization.random","0.45513538999004943");
+	d22.add("Execution.name","customer");
+	d22.add("Optimization.size","2.3");
 	
-	materializedDatasets.add(d2);
-        WorkflowNode t2 = new WorkflowNode(false,false,"Input2");
-        t2.setDataset(d2);
-	System.out.println(d1.toString());
-	d2.inputFor(mop1, 1);
-	d2.writeToPropertiesFile(directory_datasets + d2.datasetName);
+	materializedDatasets.add(d22);
+        WorkflowNode t22 = new WorkflowNode(false,false,"Input22");
+        t22.setDataset(d22);
+	System.out.println(d22.toString());
+	d22.inputFor(mop1, 1);
+	d22.writeToPropertiesFile(directory_datasets + d22.datasetName);
 //		filedataset = directory_library + "abstractWorkflows/smallworkflow/datasets/" + d2.datasetName;
 //                d2.writeToPropertiesFile(filedataset);
 //		filedataset = dirDatasets + "/" + d2.datasetName;
 //                d2.writeToPropertiesFile(filedataset);
 
-        Dataset d3 = new Dataset("d3");
-        WorkflowNode t3 = new WorkflowNode(false,true,"d3");
-	materializedDatasets.add(d3);
-        t3.setDataset(d3);
-	d3.outputFor(mop1, 0);
+        Dataset d33 = new Dataset("d33");
+        WorkflowNode t33 = new WorkflowNode(false,true,"d33");
+	materializedDatasets.add(d33);
+        t33.setDataset(d33);
+	d33.outputFor(mop1, 0);
 
-        t1.addOutput(0,op1);
-        t2.addOutput(0,op1);
+        t11.addOutput(0,op1);
+        t22.addOutput(0,op1);
 
-        op1.addInput(0,t1);
-        op1.addInput(1,t2);
-        op1.addOutput(0,t3);
+        op1.addInput(0,t11);
+        op1.addInput(1,t22);
+        op1.addOutput(0,t33);
 
-	t3.addInput(0,op1);
+	t33.addInput(0,op1);
 
-        abstractWorkflow.addTarget(t3);
+        abstractWorkflow.addTarget(t33);
 
         wcli.addAbstractWorkflow(abstractWorkflow);
         //cli.removeAbstractWorkflow("abstractTest1");
