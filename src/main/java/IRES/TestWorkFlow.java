@@ -514,7 +514,7 @@ public static void workflow() throws Exception
                                         "groupInputs,cost,sum\n"+
                                         "function,2*execTime+3*cost,min";
     // To show in Materialized Workflow
-        MaterializedOperators library =  new MaterializedOperators();                
+/*        MaterializedOperators library =  new MaterializedOperators();                
         AbstractWorkflow abstractWorkflow1 = new AbstractWorkflow(library);
         abstractWorkflow1.addMaterializedDatasets(materializedDatasets); 
         abstractWorkflow1.addInputEdge(d1,abstractOp,0);
@@ -529,6 +529,7 @@ public static void workflow() throws Exception
         abstractWorkflow1.addMaterializedDatasets(materializedDatasets);
         System.out.println(abstractWorkflow1);
         System.out.println(materializedWorkflow);
+*/
 //        wcli.executeWorkflow(materializedWorkflow);
     }
     
