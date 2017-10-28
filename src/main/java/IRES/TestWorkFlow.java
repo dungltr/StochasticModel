@@ -76,12 +76,12 @@ public class TestWorkFlow {
      public static void copydata(String AbstractWorkflow, String NameMaterialize) throws IOException{
         String folderName = OperatorFolder;// + NameOp;
         String folderWorkflow = directory_workflow + NameMaterialize+"/operators";
-        String folderAbstract = directory_library +"abstractWorkflows/"+ AbstractWorkflow + "/operators";
+//        String folderAbstract = directory_library +"abstractWorkflows/"+ AbstractWorkflow + "/operators";
         
         File folderSource1 = new File(folderName);
         File[] listOfSource1 = folderSource1.listFiles();
         
-        File folderSource2 = new File(folderAbstract);
+        File folderSource2 = new File(folderWorkflow);
         File[] listOfSource2 = folderSource2.listFiles();
         
         File folderDest = new File(folderWorkflow);
@@ -91,7 +91,7 @@ public class TestWorkFlow {
         for (int i = 0; i < listOfSource2.length; i++) {
  	       for (int j = 0; j < listOfSource1.length; j++) {
 		if (listOfSource1[j].isDirectory()&&listOfSource2[i].toString()
-                        .replace(folderAbstract, "")
+                        .replace(folderWorkflow, "")
                         .contains(listOfSource1[j].toString()
                                 .replace(folderName, ""))){                   
                     //File destDir = new File(listOfOperatorsDest[i].toString()+"/data");
@@ -99,8 +99,8 @@ public class TestWorkFlow {
                     FileUtils.copyDirectory(FileUtils.getFile(listOfSource1[j]
                             .toString()), 
                             FileUtils.getFile(folderDest
-                                    .toString()+"/"+listOfSource1[j].toString()
-                                .replace(folderName, "")+"_"+i));
+                                    .toString()+"/"+listOfSource2[i].toString()
+                                .replace(folderWorkflow, "")));
 /*                    System.out.println("Source: "+listOfOperators[j].toString()+" and " 
                             + listOfOperators[j].toString()
                             .replace(folderWorkflow+"/operators/", ""));
@@ -381,7 +381,8 @@ public class TestWorkFlow {
 //	smallworkflow();
 	workflow();
 	}
-public static void workflow() throws Exception   
+   
+   public static void workflow() throws Exception   
         {
 	ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
         OperatorClient ocli = new OperatorClient();		
@@ -396,67 +397,78 @@ public static void workflow() throws Exception
         //cli.removeAbstractWorkflow("pagerank");
 
         AbstractWorkflow1 abstractWorkflow = new AbstractWorkflow1(NameOfAbstractWorkflow);
-/*		String dirWorkflow = directory_library+"workflows/smallworkflow";
-        File directoryWorkflows = new File(dirWorkflow);
-        if (!directoryWorkflows.exists()) {
-                directoryWorkflows.mkdir();
-                System.out.println("\nCreate directory:-------------------------"+dirWorkflow);
-        }
 
-        String dirDatasets = dirWorkflow + "/datasets";        
-        File dirDataset = new File(dirDatasets);
-        if (!dirDataset.exists()) {
-                dirDataset.mkdir();
-                System.out.println("\nCreate directory:-------------------------"+dirDatasets);
-        }
-        String dirOperators = dirWorkflow + "/operators";        
-        File dirOperator = new File(dirOperators);
-        if (!dirOperator.exists()) {
-                dirOperator.mkdir();
-                System.out.println("\nCreate directory:-------------------------"+dirOperators);
-        }
-*/      Operator mop1 = new Operator("Operator1","");
-
-	File initialFile = new File(directory_operator+"Join_TPCH_Postgres_Postgres"+"/description");
+	String OP1 = "Join_TPCH_Postgres_Postgres";
+        Operator mop1 = new Operator("Operator1","");
+	String Dest = directory_operator + mop1.opName;
+	String Source = directory_operator + OP1; 
+	File initialFile = new File(directory_operator + OP1 + "/description");
         InputStream targetStream = new FileInputStream(initialFile);
         mop1.readPropertiesFromStream(targetStream);
-	mop1.writeToPropertiesFile(directory_operator+"Join_TPCH_Postgres_Postgres");
+	mop1.add("Execution.LuaScript",mop1.opName+".lua");  
+	mop1.writeToPropertiesFile(directory_operator+mop1.opName);
+	FileUtils.copyFile(FileUtils.getFile(directory_operator+OP1+"/"+OP1+".lua"), 
+                            FileUtils.getFile(directory_operator+mop1.opName+"/"+mop1.opName+".lua"));
 	ocli.addOperator(mop1);
-
         System.out.println(mop1.toString());
-	
+/*
+	String OP2 = "Move_TPCH_Postgres_Hive";
+        Operator mop2 = new Operator("Operator2","");
+	File initialFile2 = new File(directory_operator+OP2+"/description");
+        InputStream targetStream2 = new FileInputStream(initialFile2);
+        mop2.readPropertiesFromStream(targetStream2);
+	mop2.add("Execution.LuaScript",mop2.opName+".lua");  
+	mop2.writeToPropertiesFile(directory_operator+mop2.opName);
+	FileUtils.copyFile(FileUtils.getFile(directory_operator+OP2+"/"+OP2+".lua"), 
+                            FileUtils.getFile(directory_operator+mop2.opName+"/"+mop2.opName+".lua"));
+	ocli.addOperator(mop2);
+        System.out.println(mop2.toString());
+*/	
 	Dataset d11 = new Dataset("Input11");
-//        d1.readPropertiesFromFile(directory_datasets+"Move_TPCH_Hive_Postgres_orders");
-	d11.add("Execution.schema", "");//;=(O_ORDERKEY       INT,O_CUSTKEY        INT,O_ORDERSTATUS    CHAR(1),O_TOTALPRICE     DECIMAL(15,2),O_ORDERDATE      DATE ,O_ORDERPRIORITY  CHAR(15),O_CLERK          CHAR(15),O_SH$
-	d11.add("Optimization.tuple","150000.0");
-	d11.add("Optimization.page","2610.0");
-	d11.add("Execution.path","hdfs://"+"/user/hive/warehouse"+"/"+"tpch100"+".db/"+"orders");
-	d11.add("Optimization.random","0.9849681994073411");
-	d11.add("Execution.name","orders");
-	d11.add("Optimization.size","16.1");
+        d11.readPropertiesFromFile(directory_datasets+"Join_TPCH_Postgres_Postgres_orders");
+	System.out.println(d11.toString());
+	d11.writeToPropertiesFile(directory_datasets + d11.datasetName);
         
 	materializedDatasets.add(d11);
-        WorkflowNode t11 = new WorkflowNode(false,false,"Input11");
+
+        Dataset d22 = new Dataset("Input22");
+        d22.readPropertiesFromFile(directory_datasets+"Join_TPCH_Postgres_Postgres_customer");
+	System.out.println(d22.toString());
+	d22.writeToPropertiesFile(directory_datasets + d22.datasetName);
+	
+	materializedDatasets.add(d22);
+        
+	WorkflowNode t11 = new WorkflowNode(false,false,"Input11");
         t11.setDataset(d11);
 	d11.inputFor(mop1, 0);
-	System.out.println(d11.toString());
 	
-	d11.writeToPropertiesFile(directory_datasets + d11.datasetName);
 //		String filedataset = directory_library + "abstractWorkflows/smallworkflow/datasets/" + d1.datasetName;
 //		d1.writeToPropertiesFile(filedataset);
 //		filedataset = dirDatasets +"/" + d1.datasetName;
 //		d1.writeToPropertiesFile(filedataset);
 
-        AbstractOperator abstractOp = new AbstractOperator("Abstract_Operator1");
-        File filename = new File(directory_library + "abstractOperators/" + "Abstract_Join_TPCH_Postgres_Postgres");
-      	abstractOp.readPropertiesFromFile(filename);
-	System.out.println(abstractOp.toString());
-	ocli.addAbstractOperator(abstractOp);
-	abstractOp.writeToPropertiesFile(directory_library + "abstractOperators/" + abstractOp.opName);
+        AbstractOperator abstractOp1 = new AbstractOperator("Abstract_Operator1");
+        File filename1 = new File(directory_library + "abstractOperators/" + "Abstract_Join_TPCH_Postgres_Postgres");
+      	abstractOp1.readPropertiesFromFile(filename1);
+	System.out.println(abstractOp1.toString());
+	ocli.addAbstractOperator(abstractOp1);
+	abstractOp1.writeToPropertiesFile(directory_library + "abstractOperators/" + abstractOp1.opName);
+/*
+        AbstractOperator abstractOp2 = new AbstractOperator("Abstract_Operator2");
+        File filename2 = new File(directory_library + "abstractOperators/" + "Abstract_Move_TPCH_Postgres_Hive");
+      	abstractOp2.readPropertiesFromFile(filename2);
+	System.out.println(abstractOp2.toString());
+	ocli.addAbstractOperator(abstractOp2);
+	abstractOp2.writeToPropertiesFile(directory_library + "abstractOperators/" + abstractOp2.opName);
+*/
+
+
 //        	abstractOp.writeToPropertiesFile(directory_library + "abstractWorkflows/smallworkflow/operators/" + abstractOp.opName);     
 //        	abstractOp.writeToPropertiesFile(dirOperators + "/" + abstractOp.opName);     
-        WorkflowNode op1 = new WorkflowNode(true,true,abstractOp.opName);
-        op1.setAbstractOperator(abstractOp);
+        WorkflowNode op1 = new WorkflowNode(true,true,abstractOp1.opName);
+        op1.setAbstractOperator(abstractOp1);
+//        WorkflowNode op2 = new WorkflowNode(true,true,abstractOp2.opName);
+//        op2.setAbstractOperator(abstractOp2);
         //abstractOp.writeToPropertiesFile(abstractOp.opName);
 
 //        AbstractOperator abstractOp1 = new AbstractOperator("Abstract_Move_TPCH_Postgres_Postgres");
@@ -468,32 +480,33 @@ public static void workflow() throws Exception
 //        op2.setAbstractOperator(abstractOp1);
         //abstractOp1.writeToPropertiesFile(abstractOp1.opName);
 
-        Dataset d22 = new Dataset("Input22");
-//        d2.readPropertiesFromFile(directory_datasets+"Move_TPCH_Hive_Postgres_customer");
-        d22.add("Execution.schema", "");//;=(O_ORDERKEY       INT,O_CUSTKEY        INT,O_ORDERSTATUS    CHAR(1),O_TOTALPRICE     DECIMAL(15,2),O_ORDERDATE      DATE ,O_ORDERPRIORITY  CHAR(15),O_CLERK          CHAR(15),O_SH$
-	d22.add("Optimization.tuple","15000.0");
-	d22.add("Optimization.page","360.0");
-	d22.add("Execution.path","hdfs://"+"/user/hive/warehouse"+"/"+"tpch100"+".db/"+"orders");
-	d22.add("Optimization.random","0.45513538999004943");
-	d22.add("Execution.name","customer");
-	d22.add("Optimization.size","2.3");
-	
-	materializedDatasets.add(d22);
         WorkflowNode t22 = new WorkflowNode(false,false,"Input22");
         t22.setDataset(d22);
-	System.out.println(d22.toString());
 	d22.inputFor(mop1, 1);
-	d22.writeToPropertiesFile(directory_datasets + d22.datasetName);
 //		filedataset = directory_library + "abstractWorkflows/smallworkflow/datasets/" + d2.datasetName;
 //                d2.writeToPropertiesFile(filedataset);
 //		filedataset = dirDatasets + "/" + d2.datasetName;
 //                d2.writeToPropertiesFile(filedataset);
 
         Dataset d33 = new Dataset("d33");
-        WorkflowNode t33 = new WorkflowNode(false,true,"d33");
+        d33.readPropertiesFromFile(directory_datasets+"Move_TPCH_Postgres_Hive_customer");
+	System.out.println(d33.toString());
+	d33.writeToPropertiesFile(directory_datasets + d33.datasetName);
+	
 	materializedDatasets.add(d33);
+
+        WorkflowNode t33 = new WorkflowNode(false,true,"d33");
+/*
+        Dataset d44 = new Dataset("d44");
+        WorkflowNode t44 = new WorkflowNode(false,true,"d44");
+	materializedDatasets.add(d44);
+*/
         t33.setDataset(d33);
 	d33.outputFor(mop1, 0);
+//	d33.inputFor(mop2,0);
+
+//        t44.setDataset(d44);
+//	d44.outputFor(mop2, 0);
 
         t11.addOutput(0,op1);
         t22.addOutput(0,op1);
@@ -503,7 +516,13 @@ public static void workflow() throws Exception
         op1.addOutput(0,t33);
 
 	t33.addInput(0,op1);
+/*	t33.addOutput(0,op2);
 
+        op2.addInput(0,t33);
+        op2.addOutput(0,t44);
+	
+	t44.addInput(0,op2);
+*/
         abstractWorkflow.addTarget(t33);
 
         wcli.addAbstractWorkflow(abstractWorkflow);
@@ -514,23 +533,37 @@ public static void workflow() throws Exception
                                         "groupInputs,cost,sum\n"+
                                         "function,2*execTime+3*cost,min";
     // To show in Materialized Workflow
-/*        MaterializedOperators library =  new MaterializedOperators();                
+        MaterializedOperators library =  new MaterializedOperators();                
         AbstractWorkflow abstractWorkflow1 = new AbstractWorkflow(library);
         abstractWorkflow1.addMaterializedDatasets(materializedDatasets); 
-        abstractWorkflow1.addInputEdge(d1,abstractOp,0);
-        abstractWorkflow1.addInputEdge(d2,abstractOp,1);
-        abstractWorkflow1.addOutputEdge(abstractOp,d3,0);
+        abstractWorkflow1.addInputEdge(d11,abstractOp1,0);
+        abstractWorkflow1.addInputEdge(d22,abstractOp1,1);
+        abstractWorkflow1.addOutputEdge(abstractOp1,d33,0);
+//        abstractWorkflow1.addInputEdge(d33,abstractOp2,0);
+//        abstractWorkflow1.addOutputEdge(abstractOp2,d44,0);
 
-        abstractWorkflow1.getWorkflow(d3);
+        abstractWorkflow1.getWorkflow(d33);
 
 //          abstractWorkflow1.writeToDir(directory_library + "workflows/" + "smallworkflow");
 /////////////////////////////////////////////////////////////////////////////                        
         String materializedWorkflow = wcli.materializeWorkflow(NameOfAbstractWorkflow, policy);
         abstractWorkflow1.addMaterializedDatasets(materializedDatasets);
-        System.out.println(abstractWorkflow1);
+        copydata(NameOfAbstractWorkflow, materializedWorkflow);
+	System.out.println(abstractWorkflow1);
         System.out.println(materializedWorkflow);
-*/
-//        wcli.executeWorkflow(materializedWorkflow);
+
+	Workflow workflow0 = abstractWorkflow1.getWorkflow(d33);
+        System.out.println("\nShowing of original workflow is here----------------------------------------------------------------:");
+        System.out.println(workflow0);
+        System.out.println("\nShowing of original workflow is ended--------------------------------------------------------------:");
+
+        
+        Workflow workflow1 = abstractWorkflow1.optimizeWorkflow(d33);
+        System.out.println("\nShowing of optimize workflow is here----------------------------------------------------------------:");
+        System.out.println(workflow1);
+        System.out.println("\nShowing of optimize workflow is ended--------------------------------------------------------------:");
+        
+	wcli.executeWorkflow(materializedWorkflow);
     }
     
 	public static void smallworkflow() throws Exception   
@@ -661,4 +694,107 @@ List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<
                 System.out.println(materializedWorkflow);
                 //cli.executeWorkflow(materializedWorkflow);
     } 
+    public static void workflowMove(Move_Data Data) throws Exception   
+        {
+        ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
+        OperatorClient ocli = new OperatorClient();             
+        ocli.setConfiguration(conf);
+                
+        WorkflowClient wcli = new WorkflowClient();
+        wcli.setConfiguration(conf);
+
+        String NameOfAbstractWorkflow = "Workflow_"+Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To();
+        List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<gr.ntua.cslab.asap.operators.Dataset>();        
+
+        AbstractWorkflow1 abstractWorkflow = new AbstractWorkflow1(NameOfAbstractWorkflow);
+	String NameOp = Nameop(Data);
+        String OP1 = "Move_TPCH_"+Data.get_From()+"_"+Data.get_To();//+NameOp;
+        Operator mop1 = new Operator("Operator1","");
+        String Dest = directory_operator + mop1.opName;
+        String Source = directory_operator + OP1; 
+        File initialFile = new File(directory_operator + OP1 + "/description");
+        InputStream targetStream = new FileInputStream(initialFile);
+        mop1.readPropertiesFromStream(targetStream);
+        mop1.add("Execution.LuaScript",mop1.opName+".lua");  
+        mop1.writeToPropertiesFile(directory_operator+mop1.opName);
+        FileUtils.copyFile(FileUtils.getFile(directory_operator+OP1+"/"+OP1+".lua"), 
+                            FileUtils.getFile(directory_operator+mop1.opName+"/"+mop1.opName+".lua"));
+        ocli.addOperator(mop1);
+        System.out.println(mop1.toString());
+ 	String DataIn = Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataIn();
+	
+	Dataset d11 = new Dataset(DataIn);
+        d11.readPropertiesFromFile(directory_datasets+DataIn);
+        System.out.println(d11.toString());
+        d11.writeToPropertiesFile(directory_datasets + d11.datasetName);
+
+        materializedDatasets.add(d11);
+
+        WorkflowNode t11 = new WorkflowNode(false,false,"Input11");
+        t11.setDataset(d11);
+        d11.inputFor(mop1, 0);
+
+        AbstractOperator abstractOp1 = new AbstractOperator("Abstract_Operator1");
+        File filename1 = new File(directory_library + "abstractOperators/Abstract_" + OP1);
+        abstractOp1.readPropertiesFromFile(filename1);
+        System.out.println(abstractOp1.toString());
+        ocli.addAbstractOperator(abstractOp1);
+        abstractOp1.writeToPropertiesFile(directory_library + "abstractOperators/" + abstractOp1.opName);
+	
+	WorkflowNode op1 = new WorkflowNode(true,true,abstractOp1.opName);
+        op1.setAbstractOperator(abstractOp1);
+ 	
+	String DataOut = Data.get_DataOut();
+        Dataset d33 = new Dataset("d3");
+//        d33.readPropertiesFromFile(directory_datasets+);
+//        System.out.println(d33.toString());
+//        d33.writeToPropertiesFile(directory_datasets + d33.datasetName);
+
+        materializedDatasets.add(d33);
+
+        WorkflowNode t33 = new WorkflowNode(false,true,"d3");
+	t33.setDataset(d33);
+        d33.outputFor(mop1, 0);
+
+        t11.addOutput(0,op1);
+//        t22.addOutput(0,op1);
+
+        op1.addInput(0,t11);
+//        op1.addInput(1,t22);
+        op1.addOutput(0,t33);
+
+        t33.addInput(0,op1);
+ 	abstractWorkflow.addTarget(t33);
+        wcli.addAbstractWorkflow(abstractWorkflow);
+        String policy ="metrics,cost,execTime\n"+
+                                        "groupInputs,execTime,max\n"+
+                                        "groupInputs,cost,sum\n"+
+                                        "function,2*execTime+3*cost,min";
+    // To show in Materialized Workflow
+        MaterializedOperators library =  new MaterializedOperators();
+        AbstractWorkflow abstractWorkflow1 = new AbstractWorkflow(library);
+        abstractWorkflow1.addMaterializedDatasets(materializedDatasets); 
+        abstractWorkflow1.addInputEdge(d11,abstractOp1,0);
+        abstractWorkflow1.addOutputEdge(abstractOp1,d33,0);
+        abstractWorkflow1.getWorkflow(d33);
+
+        String materializedWorkflow = wcli.materializeWorkflow(NameOfAbstractWorkflow, policy);
+        abstractWorkflow1.addMaterializedDatasets(materializedDatasets);
+        copydata(NameOfAbstractWorkflow, materializedWorkflow);
+        System.out.println(abstractWorkflow1);
+        System.out.println(materializedWorkflow);
+
+        Workflow workflow0 = abstractWorkflow1.getWorkflow(d33);
+        System.out.println("\nShowing of original workflow is here----------------------------------------------------------------:");
+        System.out.println(workflow0);
+        System.out.println("\nShowing of original workflow is ended--------------------------------------------------------------:");
+
+
+        Workflow workflow1 = abstractWorkflow1.optimizeWorkflow(d33);
+        System.out.println("\nShowing of optimize workflow is here----------------------------------------------------------------:");
+        System.out.println(workflow1);
+        System.out.println("\nShowing of optimize workflow is ended--------------------------------------------------------------:");
+
+        wcli.executeWorkflow(materializedWorkflow);
+    }
 }

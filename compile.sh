@@ -1,1 +1,1 @@
-seq 5 | xargs -Iz  mvn package
+seq 20 | xargs -Iz  mvn package

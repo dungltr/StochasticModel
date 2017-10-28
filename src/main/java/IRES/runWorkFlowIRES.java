@@ -146,10 +146,10 @@ public class runWorkFlowIRES {
         }
     }
     public static String datasetin (Move_Data Data){
-        return Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To()+"_"+Data.get_DataIn();
+        return Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataIn();
     }
     public static String datasetout (Move_Data Data){
-        return Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To()+"_"+Data.get_DataOut();
+        return Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataOut();
     }
     public static String datasetin2 (Move_Data Data){
         return "Move_TPCH_Hive_Postgres_"+Data.get_DataIn().toUpperCase();
@@ -159,6 +159,35 @@ public class runWorkFlowIRES {
     }
     public static String datasetout3 (Move_Data Data){
         return "Join_TPCH_Postgres_Postgres_"+Data.get_DataIn().toUpperCase()+Data.get_DataOut().toUpperCase();
+    }
+    public void createDataset(Move_Data Data, double size, double page, double tuple, String SQL, double TimeOfDay) throws Exception{
+	String node_pc = new App().getComputerName();
+	Dataset d = new Dataset(Data.get_DataIn()+"_"+Data.get_DatabaseIn()+"_"+Data.get_From());
+        d.add("Constraints.Engine.SQL",Data.get_From()+Data.get_Operator());
+        d.add("Constraints.Engine.location",node_pc);
+        d.add("Constraints.type","SQL");
+        d.add("Execution.name",Data.get_DataIn());
+        d.add("Execution.schema", Data.get_Schema());
+        d.add("Execution.path", "hdfs://"+HDFS+"/"+Data.get_DatabaseIn()+".db/"+Data.get_DataIn());
+        d.add("Optimization.size",Data.get_DataInSize());      
+/*	if (!SQL.equals("")){
+            if (Data.get_To().toLowerCase().equals("postgres")){
+                d.add("Optimization.page",Double.toString(size[1]));
+                d.add("Optimization.tuple",Double.toString(size[2]));           
+            }
+            if (Data.get_To().toLowerCase().equals("hive")&&
+                Data.get_From().toLowerCase().equals("postgres")){
+                d.add("Optimization.page",Double.toString(size[1]));
+                d.add("Optimization.tuple",Double.toString(size[2]));           
+            }
+        }
+        if ((!Data.get_To().toLowerCase().equals("hive")||
+                !Data.get_From().toLowerCase().equals("hive"))&&SQL.equals("")){
+            d.add("Optimization.page",Double.toString(size[1]));
+            d.add("Optimization.tuple",Double.toString(size[2]));
+        }
+*/        d.add("Optimization.random",Double.toString(TimeOfDay));
+        d.writeToPropertiesFile(directory_datasets + d.datasetName);
     }
     public void createDatasetMove_Hive_Postgres(Move_Data Data, double [] size, String SQL, double TimeOfDay) throws Exception {
         String node_pc = new App().getComputerName();
@@ -196,7 +225,7 @@ public class runWorkFlowIRES {
         d1.add("Optimization.random",Double.toString(TimeOfDay));
 	d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
         
-        Dataset d2 = new Dataset(datasetout(Data));
+/*        Dataset d2 = new Dataset(datasetout(Data));
         d2.add("Constraints.Engine.SQL",Data.get_To()+Data.get_Operator());
 	d2.add("Constraints.Engine.location",node_pc);
         d2.add("Constraints.type","SQL");
@@ -204,7 +233,7 @@ public class runWorkFlowIRES {
         d2.add("Execution.schema", Data.get_Schema());
 	d2.add("Optimization.size",Data.get_DataInSize());      
 	d2.writeToPropertiesFile(directory_datasets + d2.datasetName);
-    }
+*/    }
     public void createDatasetJoin(Move_Data Data, double [] size, String SQL, double TimeOfDay) throws Exception {
         String node_pc = new App().getComputerName();
         Dataset d1 = new Dataset(datasetin(Data));
@@ -450,7 +479,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         String node_pc = new App().getComputerName();
         String NameOp = Nameop(Data);
         String AbstractOp = "Abstract_"+NameOp;
-        String AlgorithmsName = "join";   
+        String AlgorithmsName = "join";
         String numberArgument = "3";
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
         OperatorClient cli = new OperatorClient();		
