@@ -694,7 +694,7 @@ List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<
                 System.out.println(materializedWorkflow);
                 //cli.executeWorkflow(materializedWorkflow);
     } 
-    public static void workflowMove(Move_Data Data, String KindOfRunning, String Size_tpch) throws Exception   
+    public static void workflowMove(Move_Data Data, String KindOfRunning, String Size_tpch, String SQL, YarnValue yarnValue) throws Exception   
         {
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
         OperatorClient ocli = new OperatorClient();             
@@ -702,6 +702,8 @@ List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<
                 
         WorkflowClient wcli = new WorkflowClient();
         wcli.setConfiguration(conf);
+        
+        runWorkFlowIRES IRES = new runWorkFlowIRES();
 
         String NameOfAbstractWorkflow = "Workflow_"+KindOfRunning+"_"+Data.get_From()+"_"+Data.get_To();
         List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<gr.ntua.cslab.asap.operators.Dataset>();        
@@ -709,6 +711,7 @@ List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<
         AbstractWorkflow1 abstractWorkflow = new AbstractWorkflow1(NameOfAbstractWorkflow);
 	String NameOp = Nameop(Data);
         String OP1 = "Move_TPCH_"+Data.get_From()+"_"+Data.get_To();//+NameOp;
+        IRES.createDataMove2(Data, SQL, yarnValue);
         Operator mop1 = new Operator("Operator1","");
         String Dest = directory_operator + mop1.opName;
         String Source = directory_operator + OP1; 
@@ -796,7 +799,7 @@ List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<
         System.out.println("\nShowing of optimize workflow is here----------------------------------------------------------------:");
         System.out.println(workflow1);
         System.out.println("\nShowing of optimize workflow is ended--------------------------------------------------------------:");
-	runWorkFlowIRES IRES = new runWorkFlowIRES();
+	
 //	String Size_tpch = Size;
 //        String database = DB;
 //        String SQL_folder = new App().readhome("SQL");
