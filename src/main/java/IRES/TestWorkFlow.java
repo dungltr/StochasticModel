@@ -453,6 +453,7 @@ public class TestWorkFlow {
 //        d33.writeToPropertiesFile(directory_datasets + d33.datasetName);
         materializedDatasets.add(d3);
         d3.outputFor(mop1, 0);
+        d3.inputFor(mop2, 0);
         
         Dataset d4 = new Dataset("d4");
         materializedDatasets.add(d4);
