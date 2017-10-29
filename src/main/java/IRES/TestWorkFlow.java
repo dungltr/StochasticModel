@@ -446,12 +446,20 @@ public class TestWorkFlow {
         WorkflowNode op2 = new WorkflowNode(true,true,abstractOp2.opName);
         op2.setAbstractOperator(abstractOp2);
  	
-	String DataOut = Data.get_DataOut();
-        Dataset d3 = new Dataset("d3");
+        String DataIn3 = Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataIn()+"_"+Data.get_DataOut();	
+	Dataset d3 = new Dataset(DataIn3);
+        d3.readPropertiesFromFile(directory_datasets+DataIn2);
+        System.out.println(d2.toString());
+        if (Data.get_To().toLowerCase().equals("postgres")){
+                d3.add("Optimization.page","10");
+                d3.add("Optimization.tuple","10");           
+            }
+        d3.add("Optimization.random","1");
+        d3.writeToPropertiesFile(directory_datasets + d2.datasetName);
+        materializedDatasets.add(d3);
 //        d33.readPropertiesFromFile(directory_datasets+);
 //        System.out.println(d33.toString());
 //        d33.writeToPropertiesFile(directory_datasets + d33.datasetName);
-        materializedDatasets.add(d3);
         d3.outputFor(mop1, 0);
         d3.inputFor(mop2, 0);
         
