@@ -152,10 +152,10 @@ public class runWorkFlowIRES {
         return Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataOut();
     }
     public static String datasetin2 (Move_Data Data){
-        return "Move_TPCH_Hive_Postgres_"+Data.get_DataIn().toUpperCase();
+        return Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataOut();
     }
     public static String datasetout2 (Move_Data Data){
-        return "Move_TPCH_Postgres_Postgres_"+Data.get_DataOut().toUpperCase();
+        return Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataIn()+"_"+Data.get_DataOut();
     }
     public static String datasetout3 (Move_Data Data){
         return "Join_TPCH_Postgres_Postgres_"+Data.get_DataIn().toUpperCase()+Data.get_DataOut().toUpperCase();
@@ -264,7 +264,7 @@ public class runWorkFlowIRES {
         }
 	d2.writeToPropertiesFile(directory_datasets + d2.datasetName);  
         
-        Dataset d3 = new Dataset(Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To()+"_"+Data.get_DataIn().toUpperCase()+Data.get_DataOut().toUpperCase());
+        Dataset d3 = new Dataset(datasetout2 (Data));
         d3.add("Constraints.Engine.SQL",Data.get_To()+Data.get_Operator());
 	d3.add("Constraints.Engine.location",node_pc);
         d3.add("Constraints.type","SQL");
@@ -273,6 +273,7 @@ public class runWorkFlowIRES {
 	d3.add("Optimization.size",Data.get_DataInSize());      
 	d3.writeToPropertiesFile(directory_datasets + d3.datasetName);
     }
+/*    
 public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, double TimeOfDay) throws Exception {
         String node_pc = new App().getComputerName();
         Dataset d1 = new Dataset(datasetin2(Data));
@@ -312,7 +313,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         d3.add("Optimization.size",Data.get_DataInSize());      
         d3.writeToPropertiesFile(directory_datasets + d3.datasetName);
 	}
-    public void createAbstractOperatorMove(Move_Data Data, String SQL) throws IOException, Exception {
+*/    public void createAbstractOperatorMove(Move_Data Data, String SQL) throws IOException, Exception {
         String node_pc = new App().getComputerName();
         String NameOp = Nameop(Data);
         String AbstractOp = "Abstract_"+NameOp;
