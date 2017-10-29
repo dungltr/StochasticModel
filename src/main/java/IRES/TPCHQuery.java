@@ -241,7 +241,7 @@ public class TPCHQuery {
         }
         Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
     }
-    public static void Workflow(double TimeOfDay, String DB, String Size, String from, String to, String KindOfRunning) throws Exception {
+    public static void WorkflowMove(double TimeOfDay, String DB, String Size, String from, String to, String KindOfRunning) throws Exception {
     String Size_tpch = Size;
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
@@ -303,6 +303,67 @@ public class TPCHQuery {
         yarnValue.set_Core(Yarn[1]);
         if (KindOfRunning.toLowerCase().contains("move"))
 	TestWorkFlow.workflowMove(Data, KindOfRunning, Size_tpch, SQL, yarnValue);
+    }
+    public static void WorkflowJoin(double TimeOfDay, String DB, String Size, String from, String to, String KindOfRunning) throws Exception {
+        String Size_tpch = Size;
+        String database = DB;
+        String SQL_folder = new App().readhome("SQL");
+        runWorkFlowIRES IRES = new runWorkFlowIRES();
+        String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);
+        String From = from;
+        String To   = to;
+
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfRunning);
+        if (KindOfRunning.equals("testing")&&(From.equals("hive"))&&(To.equals("hive"))) size[1] = Double.parseDouble(randomQuery[0]); 
+        double[] Yarn = testQueryPlan.createRandomYarn();
+        ////////////////////////////////////////////
+        size[size.length-1]=TimeOfDay;
+        ///////////////////////////////////////////
+
+        String Operator = "Join_TPCH";// +"_"+ randomQuery[2];           
+        //String DataIn = Table;      
+        String DataIn = randomQuery[1];
+        String DataInSize = Double.toString(size[0]);
+
+        String DatabaseIn = database + Size_tpch;
+        String Schema = Schema(DataIn);
+        //String DataOut = Table.toUpperCase(); 
+        String DataOut = randomQuery[3]; 
+        String DataOutSize = Double.toString(size[0]);
+        String DatabaseOut = database + Size_tpch;       
+
+        String SQL_fileName = ""; 
+        if (KindOfRunning.equals("training"))
+        SQL_fileName = SQL_folder + randomQuery[2];
+        else {
+	               if (To.toLowerCase().equals("postgres")) SQL_fileName = SQL_folder + randomQuery[2];
+                else SQL_fileName = SQL_folder+randomQuery[2]; 
+        }
+        String SQL = "DROP TABLE IF EXISTS "+ randomQuery[2]+"_"+From+"_"+To+"; "
+                + "CREATE TABLE "+ randomQuery[2]+"_"+From+"_"+To+" "
+                + "AS " 
+                + readSQL(SQL_fileName);
+        SQL = SQL.toUpperCase();
+ //               + "drop table " + Table + ";";//SQL_Postgres;
+        
+        System.out.println("\n"+SQL_fileName + "----SQL:---" + SQL);
+        System.out.println("\nThe dataset is " + randomQuery[1] + " and the query is " + randomQuery[2]);
+        System.out.println("\nThe Schema is " + Schema);
+               
+        Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, From, To, DataOut, DataOutSize, DatabaseOut);
+        Data.set_Operator(Operator);
+        Data.set_DataIn(DataIn);
+        Data.set_DataInSize(DataInSize);
+        Data.set_DataOut(DataOut);
+        Data.set_DatabaseIn(DatabaseIn);
+        Data.set_DatabaseOut(DatabaseOut);
+        Data.set_From(From);
+        Data.set_To(To);
+        Data.set_Schema(Schema);
+
+        YarnValue yarnValue = new YarnValue(Yarn[0], Yarn[1]);
+        yarnValue.set_Ram(Yarn[0]);
+        yarnValue.set_Core(Yarn[1]);
         if (KindOfRunning.toLowerCase().contains("join"))
             TestWorkFlow.workflowJoin(Data, KindOfRunning, Size_tpch, SQL, yarnValue);
     }
