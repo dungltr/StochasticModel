@@ -257,7 +257,7 @@ public class TPCHQuery {
         size[size.length-1]=TimeOfDay;
         ///////////////////////////////////////////
 
-        String Operator = "TPCH_"+ Size_tpch;// +"_"+ randomQuery[2];           
+        String Operator = "Move_TPCH_";// +"_"+ randomQuery[2];           
         //String DataIn = Table;      
         String DataIn = randomQuery[1];
         String DataInSize = Double.toString(size[0]);
