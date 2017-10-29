@@ -393,22 +393,27 @@ public class TestWorkFlow {
         List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<gr.ntua.cslab.asap.operators.Dataset>();        
 
         AbstractWorkflow1 abstractWorkflow = new AbstractWorkflow1(NameOfAbstractWorkflow);
+        
+        
         String temp = Data.get_To();
         Data.set_To(Data.get_From());
         IRES.createDataMove2(Data, SQL, yarnValue);
-        String Operator = "Move_TPCH";
-        Data.set_To(temp);
-        Data.set_Operator(Operator);
-        IRES.createDataMove2(Data, SQL, yarnValue);
-//////////////////////////  
         String new_OP1 = "Operator_"+"Join";
         String new_Abstract_OP1 = "Abstract_"+new_OP1;
         String old_OP1 = "Join_TPCH_"+Data.get_From()+"_"+Data.get_To();
         Operator mop1 = setupOperator(new_OP1, old_OP1);
+        
+        String Operator = "Move_TPCH";
+        Data.set_To(temp);
+        Data.set_Operator(Operator);
+        IRES.createDataMove2(Data, SQL, yarnValue);
         String new_OP2 = "Operator_"+"Move";
         String new_Abstract_OP2 = "Abstract_"+new_OP2;
         String old_OP2 = "Move_TPCH_"+Data.get_From()+"_"+Data.get_To();
         Operator mop2 = setupOperator(new_OP2, old_OP2);
+//////////////////////////  
+        
+        
 	        
         String DataIn1 = Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataIn();	
 	Dataset d1 = new Dataset(DataIn1);
