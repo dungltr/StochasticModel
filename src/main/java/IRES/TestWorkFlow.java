@@ -377,9 +377,9 @@ public class TestWorkFlow {
         
     }
     public static void main(String args[]) throws Exception {
-	createWorkflowJoin();
+//	createWorkflowJoin();
 //	smallworkflow();
-	workflow();
+//	workflow();
 	}
    
    public static void workflow() throws Exception   
