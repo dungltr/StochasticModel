@@ -717,8 +717,11 @@ List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<
         mop1.readPropertiesFromStream(targetStream);
         mop1.add("Execution.LuaScript",mop1.opName+".lua");  
         mop1.writeToPropertiesFile(directory_operator+mop1.opName);
+        FileUtils.copyDirectory(FileUtils.getFile(directory_operator+OP1), 
+                            FileUtils.getFile(directory_operator+mop1.opName));
         FileUtils.copyFile(FileUtils.getFile(directory_operator+OP1+"/"+OP1+".lua"), 
                             FileUtils.getFile(directory_operator+mop1.opName+"/"+mop1.opName+".lua"));
+        
         ocli.addOperator(mop1);
         System.out.println(mop1.toString());
  	String DataIn = Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataIn();
