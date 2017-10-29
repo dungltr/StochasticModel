@@ -301,7 +301,7 @@ public class TPCHQuery {
         YarnValue yarnValue = new YarnValue(Yarn[0], Yarn[1]);
         yarnValue.set_Ram(Yarn[0]);
         yarnValue.set_Core(Yarn[1]);
-	TestWorkFlow.workflowMove(Data);
+	TestWorkFlow.workflowMove(Data, KindOfRunning, Size_tpch);
     }
     public static void TPCH(double TimeOfDay, String DB, String Size, String from, String to, String KindOfRunning) throws Exception {
         String Size_tpch = Size;
