@@ -694,7 +694,7 @@ List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<
                 System.out.println(materializedWorkflow);
                 //cli.executeWorkflow(materializedWorkflow);
     } 
-    public static void workflowMove(Move_Data Data) throws Exception   
+    public static void workflowMove(Move_Data Data, String KindOfRunning, String Size_tpch) throws Exception   
         {
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
         OperatorClient ocli = new OperatorClient();             
@@ -795,17 +795,16 @@ List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<
         System.out.println(workflow1);
         System.out.println("\nShowing of optimize workflow is ended--------------------------------------------------------------:");
 	runWorkFlowIRES IRES = new runWorkFlowIRES();
-	String Size_tpch = Size;
-        String database = DB;
-        String SQL_folder = new App().readhome("SQL");
-        runWorkFlowIRES IRES = new runWorkFlowIRES();
+//	String Size_tpch = Size;
+//        String database = DB;
+//        String SQL_folder = new App().readhome("SQL");
+//        runWorkFlowIRES IRES = new runWorkFlowIRES();
         String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);
-        String From = from;
-        String To   = to;
-        
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfRunning);
 
-	double Time_Cost = IRES.runWorkflow(Data, size, NameOfWorkflow, policy);
+        
+        double[] size = calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch, KindOfRunning);
+
+	double Time_Cost = IRES.runWorkflow(Data, size, NameOfAbstractWorkflow, policy);
         //wcli.executeWorkflow(materializedWorkflow);
     }
 }
