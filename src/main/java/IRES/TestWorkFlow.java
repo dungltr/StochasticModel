@@ -242,6 +242,7 @@ public class TestWorkFlow {
 	String NameOp = Nameop(Data);
         String OP1 = "Join_TPCH_"+Data.get_From()+"_"+Data.get_To();//+NameOp;
         IRES.createDataMove2(Data, SQL, yarnValue);
+        
         Operator mop1 = new Operator("Operator_"+KindOfRunning,"");
         String Dest = directory_operator + mop1.opName;
         String Source = directory_operator + OP1; 
@@ -388,12 +389,16 @@ public class TestWorkFlow {
         
         runWorkFlowIRES IRES = new runWorkFlowIRES();
 
-        String NameOfAbstractWorkflow = "Workflow_"+KindOfRunning+"_"+Data.get_From()+"_"+Data.get_To();
+        String NameOfAbstractWorkflow = "Workflow_"+"Join_Move"+"_"+Data.get_From()+"_"+Data.get_To();
         List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<gr.ntua.cslab.asap.operators.Dataset>();        
 
         AbstractWorkflow1 abstractWorkflow = new AbstractWorkflow1(NameOfAbstractWorkflow);
-	String NameOp = Nameop(Data);
-//        String OP1 = "Join_TPCH_"+Data.get_From()+"_"+Data.get_To();//+NameOp;
+        String temp = Data.get_To();
+        Data.set_To(Data.get_From());
+        IRES.createDataMove2(Data, SQL, yarnValue);
+        String Operator = "Move_TPCH";
+        Data.set_To(temp);
+        Data.set_Operator(Operator);
         IRES.createDataMove2(Data, SQL, yarnValue);
 //////////////////////////  
         String new_OP1 = "Operator_"+"Join";
