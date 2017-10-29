@@ -794,7 +794,18 @@ List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<
         System.out.println("\nShowing of optimize workflow is here----------------------------------------------------------------:");
         System.out.println(workflow1);
         System.out.println("\nShowing of optimize workflow is ended--------------------------------------------------------------:");
+	runWorkFlowIRES IRES = new runWorkFlowIRES();
+	String Size_tpch = Size;
+        String database = DB;
+        String SQL_folder = new App().readhome("SQL");
+        runWorkFlowIRES IRES = new runWorkFlowIRES();
+        String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);
+        String From = from;
+        String To   = to;
+        
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfRunning);
 
-        wcli.executeWorkflow(materializedWorkflow);
+	double Time_Cost = IRES.runWorkflow(Data, size, NameOfWorkflow, policy);
+        //wcli.executeWorkflow(materializedWorkflow);
     }
 }
