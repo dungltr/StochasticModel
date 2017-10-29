@@ -448,14 +448,14 @@ public class TestWorkFlow {
  	
         String DataIn3 = Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataIn()+"_"+Data.get_DataOut();	
 	Dataset d3 = new Dataset(DataIn3);
-        d3.readPropertiesFromFile(directory_datasets+DataIn2);
-        System.out.println(d2.toString());
+        d3.readPropertiesFromFile(directory_datasets+DataIn3);
+        System.out.println(d3.toString());
         if (Data.get_To().toLowerCase().equals("postgres")){
                 d3.add("Optimization.page","10");
                 d3.add("Optimization.tuple","10");           
             }
         d3.add("Optimization.random","1");
-        d3.writeToPropertiesFile(directory_datasets + d2.datasetName);
+        d3.writeToPropertiesFile(directory_datasets + d3.datasetName);
         materializedDatasets.add(d3);
 //        d33.readPropertiesFromFile(directory_datasets+);
 //        System.out.println(d33.toString());
