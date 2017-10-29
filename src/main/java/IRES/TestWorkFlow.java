@@ -111,6 +111,241 @@ public class TestWorkFlow {
             }
         }
     }
+    public static void workflowMove(Move_Data Data, String KindOfRunning, String Size_tpch, String SQL, YarnValue yarnValue) throws Exception   
+        {
+        ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
+        OperatorClient ocli = new OperatorClient();             
+        ocli.setConfiguration(conf);
+                
+        WorkflowClient wcli = new WorkflowClient();
+        wcli.setConfiguration(conf);
+        
+        runWorkFlowIRES IRES = new runWorkFlowIRES();
+
+        String NameOfAbstractWorkflow = "Workflow_"+KindOfRunning+"_"+Data.get_From()+"_"+Data.get_To();
+        List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<gr.ntua.cslab.asap.operators.Dataset>();        
+
+        AbstractWorkflow1 abstractWorkflow = new AbstractWorkflow1(NameOfAbstractWorkflow);
+	String NameOp = Nameop(Data);
+        String OP1 = "Move_TPCH_"+Data.get_From()+"_"+Data.get_To();//+NameOp;
+        IRES.createDataMove2(Data, SQL, yarnValue);
+        Operator mop1 = new Operator("Operator1","");
+        String Dest = directory_operator + mop1.opName;
+        String Source = directory_operator + OP1; 
+        File initialFile = new File(directory_operator + OP1 + "/description");
+        InputStream targetStream = new FileInputStream(initialFile);
+        mop1.readPropertiesFromStream(targetStream);
+        mop1.add("Execution.LuaScript",mop1.opName+".lua");  
+        FileUtils.copyDirectory(FileUtils.getFile(directory_operator+OP1), 
+                            FileUtils.getFile(directory_operator+mop1.opName));
+        FileUtils.copyFile(FileUtils.getFile(directory_operator+OP1+"/"+OP1+".lua"), 
+                            FileUtils.getFile(directory_operator+mop1.opName+"/"+mop1.opName+".lua"));
+        mop1.writeToPropertiesFile(directory_operator+mop1.opName);    
+        ocli.addOperator(mop1);
+        System.out.println(mop1.toString());
+ 	String DataIn = Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataIn();
+	
+	Dataset d11 = new Dataset(DataIn);
+        d11.readPropertiesFromFile(directory_datasets+DataIn);
+        System.out.println(d11.toString());
+        d11.writeToPropertiesFile(directory_datasets + d11.datasetName);
+
+        materializedDatasets.add(d11);
+
+        WorkflowNode t11 = new WorkflowNode(false,false,"Input11");
+        t11.setDataset(d11);
+        d11.inputFor(mop1, 0);
+
+        AbstractOperator abstractOp1 = new AbstractOperator("Abstract_Operator1");
+        File filename1 = new File(directory_library + "abstractOperators/Abstract_" + OP1);
+        abstractOp1.readPropertiesFromFile(filename1);
+        System.out.println(abstractOp1.toString());
+        ocli.addAbstractOperator(abstractOp1);
+        abstractOp1.writeToPropertiesFile(directory_library + "abstractOperators/" + abstractOp1.opName);
+	
+	WorkflowNode op1 = new WorkflowNode(true,true,abstractOp1.opName);
+        op1.setAbstractOperator(abstractOp1);
+ 	
+	String DataOut = Data.get_DataOut();
+        Dataset d33 = new Dataset("d3");
+//        d33.readPropertiesFromFile(directory_datasets+);
+//        System.out.println(d33.toString());
+//        d33.writeToPropertiesFile(directory_datasets + d33.datasetName);
+
+        materializedDatasets.add(d33);
+
+        WorkflowNode t33 = new WorkflowNode(false,true,"d3");
+	t33.setDataset(d33);
+        d33.outputFor(mop1, 0);
+
+        t11.addOutput(0,op1);
+//        t22.addOutput(0,op1);
+
+        op1.addInput(0,t11);
+//        op1.addInput(1,t22);
+        op1.addOutput(0,t33);
+
+        t33.addInput(0,op1);
+ 	abstractWorkflow.addTarget(t33);
+        wcli.addAbstractWorkflow(abstractWorkflow);
+        String policy ="metrics,cost,execTime\n"+
+                                        "groupInputs,execTime,max\n"+
+                                        "groupInputs,cost,sum\n"+
+                                        "function,2*execTime+3*cost,min";
+    // To show in Materialized Workflow
+        MaterializedOperators library =  new MaterializedOperators();
+        AbstractWorkflow abstractWorkflow1 = new AbstractWorkflow(library);
+        abstractWorkflow1.addMaterializedDatasets(materializedDatasets); 
+        abstractWorkflow1.addInputEdge(d11,abstractOp1,0);
+        abstractWorkflow1.addOutputEdge(abstractOp1,d33,0);
+        abstractWorkflow1.getWorkflow(d33);
+
+        String materializedWorkflow = wcli.materializeWorkflow(NameOfAbstractWorkflow, policy);
+        abstractWorkflow1.addMaterializedDatasets(materializedDatasets);
+        copydata(NameOfAbstractWorkflow, materializedWorkflow);
+        System.out.println(abstractWorkflow1);
+        System.out.println(materializedWorkflow);
+
+        Workflow workflow0 = abstractWorkflow1.getWorkflow(d33);
+        System.out.println("\nShowing of original workflow is here----------------------------------------------------------------:");
+        System.out.println(workflow0);
+        System.out.println("\nShowing of original workflow is ended--------------------------------------------------------------:");
+
+
+        Workflow workflow1 = abstractWorkflow1.optimizeWorkflow(d33);
+        System.out.println("\nShowing of optimize workflow is here----------------------------------------------------------------:");
+        System.out.println(workflow1);
+        System.out.println("\nShowing of optimize workflow is ended--------------------------------------------------------------:");
+	
+        String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);    
+        double[] size = calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch, KindOfRunning);
+
+	double Time_Cost = IRES.runWorkflow(Data, size, NameOfAbstractWorkflow, policy);
+        //wcli.executeWorkflow(materializedWorkflow);
+    }
+    public static void workflowJoin(Move_Data Data, String KindOfRunning, String Size_tpch, String SQL, YarnValue yarnValue) throws Exception   
+        {
+        ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
+        OperatorClient ocli = new OperatorClient();             
+        ocli.setConfiguration(conf);
+                
+        WorkflowClient wcli = new WorkflowClient();
+        wcli.setConfiguration(conf);
+        
+        runWorkFlowIRES IRES = new runWorkFlowIRES();
+
+        String NameOfAbstractWorkflow = "Workflow_"+KindOfRunning+"_"+Data.get_From()+"_"+Data.get_To();
+        List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<gr.ntua.cslab.asap.operators.Dataset>();        
+
+        AbstractWorkflow1 abstractWorkflow = new AbstractWorkflow1(NameOfAbstractWorkflow);
+	String NameOp = Nameop(Data);
+        String OP1 = "Join_TPCH_"+Data.get_From()+"_"+Data.get_To();//+NameOp;
+        IRES.createDataMove2(Data, SQL, yarnValue);
+        Operator mop1 = new Operator("Operator_"+KindOfRunning,"");
+        String Dest = directory_operator + mop1.opName;
+        String Source = directory_operator + OP1; 
+        File initialFile = new File(directory_operator + OP1 + "/description");
+        InputStream targetStream = new FileInputStream(initialFile);
+        mop1.readPropertiesFromStream(targetStream);
+        mop1.add("Execution.LuaScript",mop1.opName+".lua");  
+        FileUtils.copyDirectory(FileUtils.getFile(directory_operator+OP1), 
+                            FileUtils.getFile(directory_operator+mop1.opName));
+        FileUtils.copyFile(FileUtils.getFile(directory_operator+OP1+"/"+OP1+".lua"), 
+                            FileUtils.getFile(directory_operator+mop1.opName+"/"+mop1.opName+".lua"));
+        mop1.writeToPropertiesFile(directory_operator+mop1.opName);    
+        ocli.addOperator(mop1);
+        System.out.println(mop1.toString());
+ 	
+        String DataIn1 = Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataIn();	
+	Dataset d1 = new Dataset(DataIn1);
+        d1.readPropertiesFromFile(directory_datasets+DataIn1);
+        System.out.println(d1.toString());
+        d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
+        materializedDatasets.add(d1);
+
+        String DataIn2 = Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataOut();	
+	Dataset d2 = new Dataset(DataIn2);
+        d2.readPropertiesFromFile(directory_datasets+DataIn2);
+        System.out.println(d2.toString());
+        d2.writeToPropertiesFile(directory_datasets + d2.datasetName);
+        materializedDatasets.add(d2);
+        
+        WorkflowNode t1 = new WorkflowNode(false,false,"Input11");
+        t1.setDataset(d1);
+        d1.inputFor(mop1, 0);
+        
+        WorkflowNode t2 = new WorkflowNode(false,false,"Input22");
+        t2.setDataset(d2);
+        d2.inputFor(mop1, 1);
+
+        AbstractOperator abstractOp1 = new AbstractOperator("Abstract_Operator_"+KindOfRunning);
+        File filename1 = new File(directory_library + "abstractOperators/Abstract_" + OP1);
+        abstractOp1.readPropertiesFromFile(filename1);
+        System.out.println(abstractOp1.toString());
+        ocli.addAbstractOperator(abstractOp1);
+        abstractOp1.writeToPropertiesFile(directory_library + "abstractOperators/" + abstractOp1.opName);
+	
+	WorkflowNode op1 = new WorkflowNode(true,true,abstractOp1.opName);
+        op1.setAbstractOperator(abstractOp1);
+ 	
+	String DataOut = Data.get_DataOut();
+        Dataset d3 = new Dataset("d3");
+//        d33.readPropertiesFromFile(directory_datasets+);
+//        System.out.println(d33.toString());
+//        d33.writeToPropertiesFile(directory_datasets + d33.datasetName);
+
+        materializedDatasets.add(d3);
+
+        WorkflowNode t3 = new WorkflowNode(false,true,d3.datasetName);
+	t3.setDataset(d3);
+        d3.outputFor(mop1, 0);
+
+        t1.addOutput(0,op1);
+        t2.addOutput(0,op1);
+
+        op1.addInput(0,t1);
+        op1.addInput(1,t2);
+        op1.addOutput(0,t3);
+
+        t3.addInput(0,op1);
+ 	abstractWorkflow.addTarget(t3);
+        wcli.addAbstractWorkflow(abstractWorkflow);
+        String policy ="metrics,cost,execTime\n"+
+                                        "groupInputs,execTime,max\n"+
+                                        "groupInputs,cost,sum\n"+
+                                        "function,2*execTime+3*cost,min";
+    // To show in Materialized Workflow
+        MaterializedOperators library =  new MaterializedOperators();
+        AbstractWorkflow abstractWorkflow1 = new AbstractWorkflow(library);
+        abstractWorkflow1.addMaterializedDatasets(materializedDatasets); 
+        abstractWorkflow1.addInputEdge(d1,abstractOp1,0);
+        abstractWorkflow1.addInputEdge(d2,abstractOp1,1);
+        abstractWorkflow1.addOutputEdge(abstractOp1,d3,0);
+        abstractWorkflow1.getWorkflow(d3);
+
+        String materializedWorkflow = wcli.materializeWorkflow(NameOfAbstractWorkflow, policy);
+        abstractWorkflow1.addMaterializedDatasets(materializedDatasets);
+        copydata(NameOfAbstractWorkflow, materializedWorkflow);
+        System.out.println(abstractWorkflow1);
+        System.out.println(materializedWorkflow);
+
+        Workflow workflow0 = abstractWorkflow1.getWorkflow(d3);
+        System.out.println("\nShowing of original workflow is here----------------------------------------------------------------:");
+        System.out.println(workflow0);
+        System.out.println("\nShowing of original workflow is ended--------------------------------------------------------------:");
+
+
+        Workflow workflow1 = abstractWorkflow1.optimizeWorkflow(d3);
+        System.out.println("\nShowing of optimize workflow is here----------------------------------------------------------------:");
+        System.out.println(workflow1);
+        System.out.println("\nShowing of optimize workflow is ended--------------------------------------------------------------:");
+	
+        String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);    
+        double[] size = calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch, KindOfRunning);
+
+	double Time_Cost = IRES.runWorkflow(Data, size, NameOfAbstractWorkflow, policy);
+        //wcli.executeWorkflow(materializedWorkflow);
+    }
     public static void createWorkflowJoin() throws Exception{
 	operators = new ArrayList<Operator>();
 	String table1 = "orders";
@@ -694,122 +929,5 @@ List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<
                 System.out.println(materializedWorkflow);
                 //cli.executeWorkflow(materializedWorkflow);
     } 
-    public static void workflowMove(Move_Data Data, String KindOfRunning, String Size_tpch, String SQL, YarnValue yarnValue) throws Exception   
-        {
-        ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
-        OperatorClient ocli = new OperatorClient();             
-        ocli.setConfiguration(conf);
-                
-        WorkflowClient wcli = new WorkflowClient();
-        wcli.setConfiguration(conf);
-        
-        runWorkFlowIRES IRES = new runWorkFlowIRES();
-
-        String NameOfAbstractWorkflow = "Workflow_"+KindOfRunning+"_"+Data.get_From()+"_"+Data.get_To();
-        List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<gr.ntua.cslab.asap.operators.Dataset>();        
-
-        AbstractWorkflow1 abstractWorkflow = new AbstractWorkflow1(NameOfAbstractWorkflow);
-	String NameOp = Nameop(Data);
-        String OP1 = "Move_TPCH_"+Data.get_From()+"_"+Data.get_To();//+NameOp;
-        IRES.createDataMove2(Data, SQL, yarnValue);
-        Operator mop1 = new Operator("Operator1","");
-        String Dest = directory_operator + mop1.opName;
-        String Source = directory_operator + OP1; 
-        File initialFile = new File(directory_operator + OP1 + "/description");
-        InputStream targetStream = new FileInputStream(initialFile);
-        mop1.readPropertiesFromStream(targetStream);
-        mop1.add("Execution.LuaScript",mop1.opName+".lua");  
-        FileUtils.copyDirectory(FileUtils.getFile(directory_operator+OP1), 
-                            FileUtils.getFile(directory_operator+mop1.opName));
-        FileUtils.copyFile(FileUtils.getFile(directory_operator+OP1+"/"+OP1+".lua"), 
-                            FileUtils.getFile(directory_operator+mop1.opName+"/"+mop1.opName+".lua"));
-        mop1.writeToPropertiesFile(directory_operator+mop1.opName);    
-        ocli.addOperator(mop1);
-        System.out.println(mop1.toString());
- 	String DataIn = Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataIn();
-	
-	Dataset d11 = new Dataset(DataIn);
-        d11.readPropertiesFromFile(directory_datasets+DataIn);
-        System.out.println(d11.toString());
-        d11.writeToPropertiesFile(directory_datasets + d11.datasetName);
-
-        materializedDatasets.add(d11);
-
-        WorkflowNode t11 = new WorkflowNode(false,false,"Input11");
-        t11.setDataset(d11);
-        d11.inputFor(mop1, 0);
-
-        AbstractOperator abstractOp1 = new AbstractOperator("Abstract_Operator1");
-        File filename1 = new File(directory_library + "abstractOperators/Abstract_" + OP1);
-        abstractOp1.readPropertiesFromFile(filename1);
-        System.out.println(abstractOp1.toString());
-        ocli.addAbstractOperator(abstractOp1);
-        abstractOp1.writeToPropertiesFile(directory_library + "abstractOperators/" + abstractOp1.opName);
-	
-	WorkflowNode op1 = new WorkflowNode(true,true,abstractOp1.opName);
-        op1.setAbstractOperator(abstractOp1);
- 	
-	String DataOut = Data.get_DataOut();
-        Dataset d33 = new Dataset("d3");
-//        d33.readPropertiesFromFile(directory_datasets+);
-//        System.out.println(d33.toString());
-//        d33.writeToPropertiesFile(directory_datasets + d33.datasetName);
-
-        materializedDatasets.add(d33);
-
-        WorkflowNode t33 = new WorkflowNode(false,true,"d3");
-	t33.setDataset(d33);
-        d33.outputFor(mop1, 0);
-
-        t11.addOutput(0,op1);
-//        t22.addOutput(0,op1);
-
-        op1.addInput(0,t11);
-//        op1.addInput(1,t22);
-        op1.addOutput(0,t33);
-
-        t33.addInput(0,op1);
- 	abstractWorkflow.addTarget(t33);
-        wcli.addAbstractWorkflow(abstractWorkflow);
-        String policy ="metrics,cost,execTime\n"+
-                                        "groupInputs,execTime,max\n"+
-                                        "groupInputs,cost,sum\n"+
-                                        "function,2*execTime+3*cost,min";
-    // To show in Materialized Workflow
-        MaterializedOperators library =  new MaterializedOperators();
-        AbstractWorkflow abstractWorkflow1 = new AbstractWorkflow(library);
-        abstractWorkflow1.addMaterializedDatasets(materializedDatasets); 
-        abstractWorkflow1.addInputEdge(d11,abstractOp1,0);
-        abstractWorkflow1.addOutputEdge(abstractOp1,d33,0);
-        abstractWorkflow1.getWorkflow(d33);
-
-        String materializedWorkflow = wcli.materializeWorkflow(NameOfAbstractWorkflow, policy);
-        abstractWorkflow1.addMaterializedDatasets(materializedDatasets);
-        copydata(NameOfAbstractWorkflow, materializedWorkflow);
-        System.out.println(abstractWorkflow1);
-        System.out.println(materializedWorkflow);
-
-        Workflow workflow0 = abstractWorkflow1.getWorkflow(d33);
-        System.out.println("\nShowing of original workflow is here----------------------------------------------------------------:");
-        System.out.println(workflow0);
-        System.out.println("\nShowing of original workflow is ended--------------------------------------------------------------:");
-
-
-        Workflow workflow1 = abstractWorkflow1.optimizeWorkflow(d33);
-        System.out.println("\nShowing of optimize workflow is here----------------------------------------------------------------:");
-        System.out.println(workflow1);
-        System.out.println("\nShowing of optimize workflow is ended--------------------------------------------------------------:");
-	
-//	String Size_tpch = Size;
-//        String database = DB;
-//        String SQL_folder = new App().readhome("SQL");
-//        runWorkFlowIRES IRES = new runWorkFlowIRES();
-        String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);
-
-        
-        double[] size = calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch, KindOfRunning);
-
-	double Time_Cost = IRES.runWorkflow(Data, size, NameOfAbstractWorkflow, policy);
-        //wcli.executeWorkflow(materializedWorkflow);
-    }
+    
 }
