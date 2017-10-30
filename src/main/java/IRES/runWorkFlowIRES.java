@@ -586,10 +586,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         String NameOp = Nameop(Data);
         String AbstractOp = "Abstract_"+NameOp;
         String NameOfAbstractWorkflow = NameOp+"_Workflow";
-        String AlgorithmsName = NameOp + "_query";
-//        createDataset(Data, SQL);
-//        createOperatorMove(Data, SQL);
-//        createAbstractOperatorMove(Data, SQL);       
+       
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
         OperatorClient cli = new OperatorClient();		
         cli.setConfiguration(conf);
@@ -608,6 +605,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
 	op1.setAbstractOperator(abstractOp);
 		
 	Dataset d2 = new Dataset(OutPutData);
+        d2.outputFor(mop1, 0);
 	WorkflowNode t2 = new WorkflowNode(false,true,OutPutData);
 	t2.setDataset(d2);
 
@@ -640,10 +638,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         String NameOp = Nameop(Data);
         String AbstractOp = "Abstract_"+NameOp;
         String NameOfAbstractWorkflow = NameOp+"_Workflow";
-        String AlgorithmsName = NameOp + "_query";
-//        createDataset(Data, SQL);
-//        createOperatorMove(Data, SQL);
-//        createAbstractOperatorMove(Data, SQL);       
+      
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
         OperatorClient cli = new OperatorClient();		
         cli.setConfiguration(conf);
