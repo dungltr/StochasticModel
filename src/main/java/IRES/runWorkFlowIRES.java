@@ -68,17 +68,15 @@ public class runWorkFlowIRES {
         File[] listOfOperators = folder.listFiles();
         
         File folderOperator = new File(folderWorkflow + "/operators");
-        File[] listOfOperatorsDest = folderOperator.listFiles();
-        
+        File[] listOfOperatorsDest = folderOperator.listFiles();       
 	for (int j = 0; j < listOfOperators.length; j++) {
-            //File srcDir = new File(listOfOperators[j].toString()+"/data");  
+ 
             for (int i = 0; i < listOfOperatorsDest.length; i++) {
                 if (listOfOperatorsDest[i].toString()
                         .replace(folderWorkflow+"/operators/", "")
                         .contains(listOfOperators[j].toString()
                                 .replace(folderName, ""))){                   
-                    //File destDir = new File(listOfOperatorsDest[i].toString()+"/data");
-                    //FileUtils.copyDirectory(srcDir, destDir);
+
                     FileUtils.copyDirectory(FileUtils.getFile(listOfOperators[j]
                             .toString()+"/data"), 
                             FileUtils.getFile(listOfOperatorsDest[i]
