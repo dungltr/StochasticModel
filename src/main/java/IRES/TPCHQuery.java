@@ -507,9 +507,9 @@ public class TPCHQuery {
         }
         Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
     }    
-    public static void Move(double TimeOfDay, String DB, String Size, String from, String to, String Move) throws Exception {
+    public static void Move(double TimeOfDay, String DB, String Size, String from, String to, String Move, String KindOfRunning) throws Exception {
         String Size_tpch = Size;
-        String KindOfRunning = "training";
+        //String KindOfRunning = "training";
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
         runWorkFlowIRES IRES = new runWorkFlowIRES();
@@ -576,10 +576,10 @@ public class TPCHQuery {
         realValue = directory + "/data/"+delay_ys+KindOfRunning+"_realValue.csv";
         Path filePathRealValue = Paths.get(realValue); 
         if (!Files.exists(filePathRealValue))
-        {   Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,Move);
+        {   Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,KindOfRunning);
             IRES.createOperatorMove(Data, SQL, 0);                       
         }
-        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, Move);
+        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
     } 
     public static void Join(double TimeOfDay, String DB, String Size, String from, String to, String Join) throws Exception {
         String Size_tpch = Size;

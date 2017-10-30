@@ -165,7 +165,7 @@ public class AppTest{
         { 
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move");
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move");
-          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Hive","Move");
+          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Hive","Move","training");
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Postgres","Move");
 //          TPCHQuery.Join(Math.random(),"tpch","100m","Postgres","Postgres","Join");
 //          TPCHQuery.Join(Math.random(),"tpch","100m","Hive","Hive","Join");
