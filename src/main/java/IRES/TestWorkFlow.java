@@ -450,7 +450,7 @@ public class TestWorkFlow {
 	Dataset d3 = new Dataset(DataIn3);
         d3.readPropertiesFromFile(directory_datasets+DataIn3);
         System.out.println(d3.toString());
-        d3.add("Constraints.Engine.SQL", "HiveJoin_TPCH");
+        d3.add("Constraints.Engine.SQL", "HiveMove_TPCH");
         if (Data.get_To().toLowerCase().equals("postgres")){
                 d3.add("Optimization.page","10");
                 d3.add("Optimization.tuple","10");           
