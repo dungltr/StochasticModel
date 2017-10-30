@@ -163,7 +163,7 @@ public class runWorkFlowIRES {
     public void createDataset(Move_Data Data, double size, double page, double tuple, String SQL, double TimeOfDay) throws Exception{
 	String node_pc = new App().getComputerName();
 	Dataset d = new Dataset(Data.get_DataIn()+"_"+Data.get_DatabaseIn()+"_"+Data.get_From());
-        d.add("Constraints.Engine.SQL",Data.get_From()+Data.get_Operator());
+        d.add("Constraints.Engine.SQL",Data.get_From());
         d.add("Constraints.Engine.location",node_pc);
         d.add("Constraints.type","SQL");
         d.add("Execution.name",Data.get_DataIn());
@@ -192,7 +192,7 @@ public class runWorkFlowIRES {
     public void createDatasetMove_Hive_Postgres(Move_Data Data, double [] size, String SQL, double TimeOfDay) throws Exception {
         String node_pc = new App().getComputerName();
         Dataset d1 = new Dataset(datasetin(Data));
-        d1.add("Constraints.Engine.SQL",Data.get_From()+Data.get_Operator());
+        d1.add("Constraints.Engine.SQL",Data.get_From());
 	d1.add("Constraints.Engine.location",node_pc);
         d1.add("Constraints.type","SQL");
 	d1.add("Execution.name",Data.get_DataIn());
@@ -237,7 +237,7 @@ public class runWorkFlowIRES {
     public void createDatasetJoin(Move_Data Data, double [] size, String SQL, double TimeOfDay) throws Exception {
         String node_pc = new App().getComputerName();
         Dataset d1 = new Dataset(datasetin(Data));
-        d1.add("Constraints.Engine.SQL",Data.get_From()+Data.get_Operator());
+        d1.add("Constraints.Engine.SQL",Data.get_From());
 	d1.add("Constraints.Engine.location",node_pc);
         d1.add("Constraints.type","SQL");
 	d1.add("Execution.name",Data.get_DataIn());
@@ -252,7 +252,7 @@ public class runWorkFlowIRES {
 	d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
         
         Dataset d2 = new Dataset(datasetout(Data));
-        d2.add("Constraints.Engine.SQL",Data.get_From()+Data.get_Operator());
+        d2.add("Constraints.Engine.SQL",Data.get_From());
 	d2.add("Constraints.Engine.location",node_pc);
         d2.add("Constraints.type","SQL");
 	d2.add("Execution.name",Data.get_DataOut());
@@ -265,7 +265,7 @@ public class runWorkFlowIRES {
 	d2.writeToPropertiesFile(directory_datasets + d2.datasetName);  
         
         Dataset d3 = new Dataset(datasetout2 (Data));
-        d3.add("Constraints.Engine.SQL",Data.get_To()+Data.get_Operator());
+        d3.add("Constraints.Engine.SQL",Data.get_To());
 	d3.add("Constraints.Engine.location",node_pc);
         d3.add("Constraints.type","SQL");
 	d3.add("Execution.name",Data.get_DataIn()+"_"+Data.get_DataOut());
@@ -386,12 +386,12 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         }
         
         mop1.add("Constraints.Input.number","1");
-        mop1.add("Constraints.Input0.Engine.SQL", Data.get_From()+Data.get_Operator());
+        mop1.add("Constraints.Input0.Engine.SQL", Data.get_From());
         mop1.add("Constraints.Input0.Engine.location", node_pc);
         mop1.add("Constraints.Input0.type", "SQL");
         mop1.add("Constraints.OpSpecification.Algorithm.name", AlgorithmsName);        
         mop1.add("Constraints.Output.number","1");
-        mop1.add("Constraints.Output0.Engine.SQL", Data.get_To()+Data.get_Operator());
+        mop1.add("Constraints.Output0.Engine.SQL", Data.get_To());
         mop1.add("Constraints.Output0.Engine.location", node_pc);
         mop1.add("Constraints.Output0.type", "SQL");
 
@@ -512,17 +512,17 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
                 break;
         }      
         mop1.add("Constraints.Input.number","2");
-        mop1.add("Constraints.Input0.Engine.SQL", Data.get_From()+Data.get_Operator());
+        mop1.add("Constraints.Input0.Engine.SQL", Data.get_From());
         mop1.add("Constraints.Input0.Engine.location", node_pc);
         mop1.add("Constraints.Input0.type", "SQL");
         
-        mop1.add("Constraints.Input1.Engine.SQL", Data.get_From()+Data.get_Operator());
+        mop1.add("Constraints.Input1.Engine.SQL", Data.get_From());
         mop1.add("Constraints.Input1.Engine.location", node_pc);
         mop1.add("Constraints.Input1.type", "SQL");
         
         mop1.add("Constraints.OpSpecification.Algorithm.name", AlgorithmsName);        
         mop1.add("Constraints.Output.number","1");
-        mop1.add("Constraints.Output0.Engine.SQL", Data.get_To()+Data.get_Operator());
+        mop1.add("Constraints.Output0.Engine.SQL", Data.get_To());
         mop1.add("Constraints.Output0.Engine.location", node_pc);
         mop1.add("Constraints.Output0.type", "SQL");
 
