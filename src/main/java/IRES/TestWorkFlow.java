@@ -482,9 +482,9 @@ public class TestWorkFlow {
         t3.addOutput(0,op2);
         
         op2.addInput(0,t3);
-//        op2.addOutput(0,t4);
+        op2.addOutput(0,t4);
         
-//        t4.addInput(0,op2);
+        t4.addInput(0,op2);
         
  	abstractWorkflow.addTarget(t3);
         
