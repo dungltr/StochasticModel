@@ -486,7 +486,7 @@ public class TestWorkFlow {
         
         t4.addInput(0,op2);
         
- 	abstractWorkflow.addTarget(t3);
+ 	abstractWorkflow.addTarget(t4);
         
         
         wcli.addAbstractWorkflow(abstractWorkflow);
