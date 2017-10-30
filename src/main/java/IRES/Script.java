@@ -40,7 +40,7 @@ public class Script {
         String Database_Out = Data.get_DatabaseOut();
         String Schema = "\""+Data.get_Schema()+"\"";//"(CUSTKEY int, NAME varchar(25), ADDRESS varchar(40), NATIONKEY int, PHONE varchar(25), ACCTBAL float, MKTSEGMENT varchar(15), COMMENT varchar(120), LAST varchar(10))";
         String Table_In = Data.get_DataIn();
-        String Table_Out = Data.get_DataOut();
+        String Table_Out = Data.get_DataIn();
         String OperatorDirectory = directory_operator+NameOp;
         String top_sh = "#!/bin/bash\n" +
 "START=$(date +%s)\n" +
@@ -92,7 +92,7 @@ public class Script {
         String Database_Out = Data.get_DatabaseOut();
         String Schema = "\""+Data.get_Schema()+"\"";//"(CUSTKEY int, NAME varchar(25), ADDRESS varchar(40), NATIONKEY int, PHONE varchar(25), ACCTBAL float, MKTSEGMENT varchar(15), COMMENT varchar(120), LAST varchar(10))";
         String Table_In = Data.get_DataIn();
-        String Table_Out = Data.get_DataOut();
+        String Table_Out = Data.get_DataIn();
         String OperatorDirectory = directory_operator+NameOp;
         String top_sh = "#!/bin/bash\n" +
 "START=$(date +%s)\n" +
