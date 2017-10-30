@@ -711,7 +711,9 @@ public class Algorithms {
         int numberParameter = size.length + 1;
         String[] randomQuery = testQueryPlan.createRandomQuery("",Size_tpch);
         
-        double[] size_random = TPCHQuery.calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch, KindOfRunning);
+        String KindOfMoving = "";
+        if (Data.get_Operator().toLowerCase().contains("move")) KindOfMoving = "move";
+        double[] size_random = TPCHQuery.calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch, KindOfMoving);
         double[] yarn_random = testQueryPlan.createRandomYarn();
         String directory = testWriteMatrix2CSV.getDirectory(Data) ;
         directory = preapreFile(directory);
@@ -735,7 +737,7 @@ public class Algorithms {
             System.out.println("\nTest Time:"+i+"--------------------------------------------------------");
             TimeOfDay = 24*Math.random();
             randomQuery = testQueryPlan.createRandomQuery("",Size_tpch);
-            size_random = TPCHQuery.calculateSize(randomQuery,Data.get_From(), Data.get_To(),Size_tpch,KindOfRunning);
+            size_random = TPCHQuery.calculateSize(randomQuery,Data.get_From(), Data.get_To(),Size_tpch,KindOfMoving);
             TimeRepsonse =  Math.random()*500;//IRES.runWorkflow(NameOfWorkflow, policy);
             double delay = SimulateStochastic.waiting(Numberuser,TimeOfDay);
             TimeRepsonse = TimeRepsonse + delay;                   
