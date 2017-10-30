@@ -479,7 +479,7 @@ public class TestWorkFlow {
         op1.addOutput(0,t3);
 
         t3.addInput(0,op1);
-//        t3.addOutput(0,op2);
+        t3.addOutput(0,op2);
         
 //        op2.addInput(0,t3);
 //        op2.addOutput(0,t4);
