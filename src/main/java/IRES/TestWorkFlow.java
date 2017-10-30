@@ -510,14 +510,14 @@ public class TestWorkFlow {
         copydata(NameOfAbstractWorkflow, materializedWorkflow);
         System.out.println(abstractWorkflow1);
         System.out.println(materializedWorkflow);
-/*
-        Workflow workflow0 = abstractWorkflow1.getWorkflow(d3);
+
+        Workflow workflow0 = abstractWorkflow1.getWorkflow(d4);
         System.out.println("\nShowing of original workflow is here----------------------------------------------------------------:");
         System.out.println(workflow0);
         System.out.println("\nShowing of original workflow is ended--------------------------------------------------------------:");
 
 
-        Workflow workflow1 = abstractWorkflow1.optimizeWorkflow(d3);
+        Workflow workflow1 = abstractWorkflow1.optimizeWorkflow(d4);
         System.out.println("\nShowing of optimize workflow is here----------------------------------------------------------------:");
         System.out.println(workflow1);
         System.out.println("\nShowing of optimize workflow is ended--------------------------------------------------------------:");
@@ -527,7 +527,7 @@ public class TestWorkFlow {
 
 	double Time_Cost = IRES.runWorkflow(Data, size, NameOfAbstractWorkflow, policy);
         //wcli.executeWorkflow(materializedWorkflow);
-*/    }
+    }
     public static void createWorkflowJoin() throws Exception{
 	operators = new ArrayList<Operator>();
 	String table1 = "orders";
