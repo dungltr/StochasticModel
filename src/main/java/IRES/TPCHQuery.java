@@ -576,10 +576,10 @@ public class TPCHQuery {
         realValue = directory + "/data/"+delay_ys+KindOfRunning+"_realValue.csv";
         Path filePathRealValue = Paths.get(realValue); 
         if (!Files.exists(filePathRealValue))
-        {   Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,KindOfRunning);
+        {   Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,Move);
             IRES.createOperatorMove(Data, SQL, 0);                       
         }
-        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
+        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, Move);
     } 
     public static void Join(double TimeOfDay, String DB, String Size, String from, String to, String Join) throws Exception {
         String Size_tpch = Size;
