@@ -411,10 +411,7 @@ public class TestWorkFlow {
         String new_Abstract_OP2 = "Abstract_"+new_OP2;
         String old_OP2 = "Move_TPCH_"+Data.get_From()+"_"+Data.get_To();
         Operator mop2 = setupOperator(new_OP2, old_OP2);
-//////////////////////////  
-        
-        
-	        
+//////////////////////////  	        
         String DataIn1 = Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataIn();	
 	Dataset d1 = new Dataset(DataIn1);
         d1.readPropertiesFromFile(directory_datasets+DataIn1);
@@ -484,11 +481,13 @@ public class TestWorkFlow {
         t3.addOutput(0,op2);
         
         op2.addInput(0,t3);
-        op2.addOutput(0,t4);
+//        op2.addOutput(0,t4);
         
-        t4.addInput(0,op2);
+//        t4.addInput(0,op2);
         
- 	abstractWorkflow.addTarget(t4);
+ 	abstractWorkflow.addTarget(t3);
+        
+        
         wcli.addAbstractWorkflow(abstractWorkflow);
         String policy ="metrics,cost,execTime\n"+
                                         "groupInputs,execTime,max\n"+
@@ -501,16 +500,16 @@ public class TestWorkFlow {
         abstractWorkflow1.addInputEdge(d1,abstractOp1,0);
         abstractWorkflow1.addInputEdge(d2,abstractOp1,1);
         abstractWorkflow1.addOutputEdge(abstractOp1,d3,0);
-        abstractWorkflow1.addInputEdge(d3,abstractOp2,1);
-        abstractWorkflow1.addOutputEdge(abstractOp2,d4,0);
-        abstractWorkflow1.getWorkflow(d4);
+//        abstractWorkflow1.addInputEdge(d3,abstractOp2,1);
+//        abstractWorkflow1.addOutputEdge(abstractOp2,d4,0);
+        abstractWorkflow1.getWorkflow(d3);
 
         String materializedWorkflow = wcli.materializeWorkflow(NameOfAbstractWorkflow, policy);
         abstractWorkflow1.addMaterializedDatasets(materializedDatasets);
         copydata(NameOfAbstractWorkflow, materializedWorkflow);
         System.out.println(abstractWorkflow1);
         System.out.println(materializedWorkflow);
-
+/*
         Workflow workflow0 = abstractWorkflow1.getWorkflow(d3);
         System.out.println("\nShowing of original workflow is here----------------------------------------------------------------:");
         System.out.println(workflow0);
@@ -527,7 +526,7 @@ public class TestWorkFlow {
 
 	double Time_Cost = IRES.runWorkflow(Data, size, NameOfAbstractWorkflow, policy);
         //wcli.executeWorkflow(materializedWorkflow);
-    }
+*/    }
     public static void createWorkflowJoin() throws Exception{
 	operators = new ArrayList<Operator>();
 	String table1 = "orders";
