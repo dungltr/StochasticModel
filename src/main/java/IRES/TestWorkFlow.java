@@ -503,7 +503,7 @@ public class TestWorkFlow {
         abstractWorkflow1.addOutputEdge(abstractOp1,d3,0);
 //        abstractWorkflow1.addInputEdge(d3,abstractOp2,1);
 //        abstractWorkflow1.addOutputEdge(abstractOp2,d4,0);
-        abstractWorkflow1.getWorkflow(d3);
+        abstractWorkflow1.getWorkflow(d4);
 
         String materializedWorkflow = wcli.materializeWorkflow(NameOfAbstractWorkflow, policy);
         abstractWorkflow1.addMaterializedDatasets(materializedDatasets);
