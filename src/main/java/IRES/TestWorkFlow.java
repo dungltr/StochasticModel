@@ -501,7 +501,7 @@ public class TestWorkFlow {
         abstractWorkflow1.addInputEdge(d1,abstractOp1,0);
         abstractWorkflow1.addInputEdge(d2,abstractOp1,1);
         abstractWorkflow1.addOutputEdge(abstractOp1,d3,0);
-        abstractWorkflow1.addInputEdge(d3,abstractOp2,1);
+//        abstractWorkflow1.addInputEdge(d3,abstractOp2,1);
 //        abstractWorkflow1.addOutputEdge(abstractOp2,d4,0);
         abstractWorkflow1.getWorkflow(d3);
 
