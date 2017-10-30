@@ -446,13 +446,14 @@ public class TestWorkFlow {
         String DataIn3 = Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataIn()+"_"+Data.get_DataOut();	
 	Dataset d3 = new Dataset(DataIn3);
         d3.readPropertiesFromFile(directory_datasets+DataIn3);
-        System.out.println(d3.toString());
+        
 //        d3.add("Constraints.Engine.SQL", "HiveMove_TPCH");
         if (Data.get_To().toLowerCase().equals("postgres")){
                 d3.add("Optimization.page","10");
                 d3.add("Optimization.tuple","10");           
             }
         d3.add("Optimization.random","1");
+        System.out.println(d3.toString());
         d3.writeToPropertiesFile(directory_datasets + d3.datasetName);
         materializedDatasets.add(d3);
 //        d33.readPropertiesFromFile(directory_datasets+);
@@ -485,7 +486,7 @@ public class TestWorkFlow {
         
         t4.addInput(0,op2);
         
- 	abstractWorkflow.addTarget(t4);
+ 	abstractWorkflow.addTarget(t3);
         
         
         wcli.addAbstractWorkflow(abstractWorkflow);
@@ -502,7 +503,7 @@ public class TestWorkFlow {
         abstractWorkflow1.addOutputEdge(abstractOp1,d3,0);
         abstractWorkflow1.addInputEdge(d3,abstractOp2,1);
         abstractWorkflow1.addOutputEdge(abstractOp2,d4,0);
-        abstractWorkflow1.getWorkflow(d4);
+        abstractWorkflow1.getWorkflow(d3);
 
         String materializedWorkflow = wcli.materializeWorkflow(NameOfAbstractWorkflow, policy);
         abstractWorkflow1.addMaterializedDatasets(materializedDatasets);
