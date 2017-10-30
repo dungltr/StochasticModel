@@ -517,7 +517,7 @@ public class TPCHQuery {
         String From = from;
         String To   = to;
         
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfRunning);
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch, Move);
         if (KindOfRunning.equals("testing")&&(From.equals("hive"))&&(To.equals("hive"))) size[1] = Double.parseDouble(randomQuery[0]); 
 	double[] Yarn = testQueryPlan.createRandomYarn();
         ////////////////////////////////////////////
