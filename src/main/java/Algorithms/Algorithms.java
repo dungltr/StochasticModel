@@ -669,7 +669,7 @@ public class Algorithms {
         long delay = SimulateStochastic.TimeWaiting(Numberuser,TimeOfDay)/1000;
         Time_Cost = Time_Cost + delay;        
         testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), NameOfRealValue);
-        testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), "execTime");
+//        testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), "execTime");
         System.out.println("\n Estimate Value is: " + costEstimateValue);
         System.out.println("\n Real Value with Delay is: " + Double.toString(Time_Cost));
         System.out.println("\n Real Value without Delay is: " + Double.toString(Time_Cost-delay));
