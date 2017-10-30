@@ -479,12 +479,12 @@ public class TestWorkFlow {
         op1.addOutput(0,t3);
 
         t3.addInput(0,op1);
-        t3.addOutput(0,op2);
+//        t3.addOutput(0,op2);
         
-        op2.addInput(0,t3);
-        op2.addOutput(0,t4);
+//        op2.addInput(0,t3);
+//        op2.addOutput(0,t4);
         
-        t4.addInput(0,op2);
+//        t4.addInput(0,op2);
         
  	abstractWorkflow.addTarget(t3);
         
@@ -502,7 +502,7 @@ public class TestWorkFlow {
         abstractWorkflow1.addInputEdge(d2,abstractOp1,1);
         abstractWorkflow1.addOutputEdge(abstractOp1,d3,0);
         abstractWorkflow1.addInputEdge(d3,abstractOp2,1);
-        abstractWorkflow1.addOutputEdge(abstractOp2,d4,0);
+//        abstractWorkflow1.addOutputEdge(abstractOp2,d4,0);
         abstractWorkflow1.getWorkflow(d3);
 
         String materializedWorkflow = wcli.materializeWorkflow(NameOfAbstractWorkflow, policy);
