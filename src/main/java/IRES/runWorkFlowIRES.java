@@ -132,7 +132,7 @@ public class runWorkFlowIRES {
             if(count>=1)// old value is 1000
 	    break;
         }       
-        //wcli.removeMaterializedWorkflow(materializedWorkflow);
+        wcli.removeMaterializedWorkflow(materializedWorkflow);
 
         return actualTime;
     }
