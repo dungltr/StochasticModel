@@ -157,7 +157,7 @@ public class testQueryPlan {
     public static double[] createRandomYarn() {
         Random rand = new Random();
         double [] ram = {1024,1024,1024,1024,1024};
-        double [] core = {1.0,1.0,1.0,1.0,1.0};
+        double [] core = {2.0,2.0,2.0,2.0,2.0};
 
         double Ram = ram[rand.nextInt(ram.length)];
         double Core = core[rand.nextInt(core.length)];
