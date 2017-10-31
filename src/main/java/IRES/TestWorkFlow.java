@@ -211,12 +211,11 @@ public class TestWorkFlow {
         
         runWorkFlowIRES IRES = new runWorkFlowIRES();
 
-        String NameOfAbstractWorkflow = "Workflow_"+KindOfRunning+"_"+Data.get_From()+"_"+Data.get_To();
+        String NameOfAbstractWorkflow = newName+"_Workflow";
         List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<gr.ntua.cslab.asap.operators.Dataset>();        
 
         AbstractWorkflow1 abstractWorkflow = new AbstractWorkflow1(NameOfAbstractWorkflow);
-	String NameOp = Nameop(Data);
-        String OP1 = "Join_TPCH_"+Data.get_From()+"_"+Data.get_To();//+NameOp;
+        
         IRES.createDataMove2(Data, SQL, yarnValue);
         
 /*        Operator mop1 = new Operator("Operator_"+KindOfRunning,"");
