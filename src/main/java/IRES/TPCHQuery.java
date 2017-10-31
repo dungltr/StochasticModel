@@ -850,7 +850,7 @@ public class TPCHQuery {
         
         if ((From.toLowerCase().contains("postgres"))&&(To.toLowerCase().contains("postgres"))) {
             if (!KindOfMoving.toLowerCase().equals("move")){ 
-                
+                if (KindOfMoving.toLowerCase().equals("join")){
                 double[] size = new double[numberOfSize_Postgres_Postgres];
                 size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
                 size[1] = testQueryPlan.pageDataset(randomQuery[1],Size_tpch);
@@ -860,7 +860,19 @@ public class TPCHQuery {
                 size[5] = testQueryPlan.tupleDataset(randomQuery[3],Size_tpch);
                 size[6] = 0;
                 return size;
-
+                }
+                else 
+                    {
+                    double[] size = new double[numberOfSize_Postgres_Postgres];
+                    size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
+                    size[1] = testQueryPlan.pageDataset(randomQuery[1],Size_tpch);
+                    size[2] = testQueryPlan.tupleDataset(randomQuery[1],Size_tpch);
+                    size[3] = testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);
+                    size[4] = testQueryPlan.pageDataset(randomQuery[3],Size_tpch);
+                    size[5] = testQueryPlan.tupleDataset(randomQuery[3],Size_tpch);
+                    size[6] = 0;
+                    return size;
+                    }
             }
             else {
                 double[] size = new double[numberOfSize_Move_Postgres_Postgres];
