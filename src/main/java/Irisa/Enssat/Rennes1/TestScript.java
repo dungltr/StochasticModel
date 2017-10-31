@@ -130,7 +130,7 @@ public class TestScript {
             else {  if (call[0]=="Move")
                         TPCHQuery.Move(TimeOfDay, call[1], call[2], call[3], call[4], "Move", KindOfRunning);
                     else {  if (call[0]=="Join")
-                            TPCHQuery.Join(TimeOfDay, call[1], call[2], call[3], call[4], "Join");
+                            TPCHQuery.Join(TimeOfDay, call[1], call[2], call[3], call[4], "Join", KindOfRunning);
                         else    TPCHStandalone.TPCH_Standalone(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
                     }
             }           

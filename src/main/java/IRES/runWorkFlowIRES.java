@@ -326,7 +326,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
 	op.add("Constraints.Output.number", "1");
 	reset(directory_library + "abstractOperators/" + op.opName);
         op.writeToPropertiesFile(directory_library + "abstractOperators/" + op.opName);                      
-        cli.addAbstractOperator(op);
+//        cli.addAbstractOperator(op);
         //op.writeToPropertiesFile(op.opName);
     }
     public void createAbstractOperatorJoin(Move_Data Data, String SQL) throws IOException, Exception {
@@ -344,7 +344,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
 	op.add("Constraints.Output.number", "1");
 	reset(directory_library + "abstractOperators/" + op.opName);
         op.writeToPropertiesFile(directory_library + "abstractOperators/" + op.opName);                      
-        cli.addAbstractOperator(op);
+//        cli.addAbstractOperator(op);
         //op.writeToPropertiesFile(op.opName);
     }
     public void createOperatorMove(Move_Data Data, String SQL, double costEstimateValue) throws IOException, Exception {
@@ -534,14 +534,14 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         if (Data.get_To().toLowerCase().equals("postgres")){
             mop1.add("Optimization.inputSpace.In0.page", "Double,1E8,1E10,l");
             mop1.add("Optimization.inputSpace.In0.tuple", "Double,1E8,1E10,l");
-            mop1.add("Optimization.inputSpace.In1.page", "Double,1E8,1E10,l");
-            mop1.add("Optimization.inputSpace.In1.tuple", "Double,1E8,1E10,l");
+//            mop1.add("Optimization.inputSpace.In1.page", "Double,1E8,1E10,l");
+//            mop1.add("Optimization.inputSpace.In1.tuple", "Double,1E8,1E10,l");
         }
         mop1.add("Optimization.inputSpace.In0.random", "Double,1E8,1E10,l");
 
 	mop1.add("Optimization.model.Out0.size", "gr.ntua.ece.cslab.panic.core.models.UserFunction");
         mop1.add("Optimization.model.cost",      "gr.ntua.ece.cslab.panic.core.models.UserFunction");//AbstractWekaModel");//UserFunction");//UserFunction");       
-        mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.UserFunction");//AbstractWekaModel");//LinearRegression");//UserFunction");//UserFunction");
+        mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.AbstractWekaModel");//LinearRegression");//UserFunction");//UserFunction");
         
         mop1.add("Optimization.outputSpace.Out0.size", "Double");
         mop1.add("Optimization.outputSpace.cost", "Double");        

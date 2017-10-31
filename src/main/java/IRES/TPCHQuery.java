@@ -30,7 +30,7 @@ public class TPCHQuery {
     
     private static int numberOfSize_Hive_Postgres = 6;
     private static int numberOfSize_Postgres_Hive = 5;
-    private static int numberOfSize_Postgres_Postgres = 6;
+    private static int numberOfSize_Postgres_Postgres = 5;
     private static int numberOfSize_Hive_Hive = 3;
     
     private static int numberOfSize_Move_Hive_Hive = 2;   
@@ -241,8 +241,8 @@ public class TPCHQuery {
         }
         Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
     }
-    public static void WorkflowMove(double TimeOfDay, String DB, String Size, String from, String to, String KindOfRunning) throws Exception {
-    String Size_tpch = Size;
+    public static void WorkflowMove(double TimeOfDay, String DB, String Size, String from, String to, String KindOfMoving, String KindOfRunning) throws Exception {
+        String Size_tpch = Size;
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
         runWorkFlowIRES IRES = new runWorkFlowIRES();
@@ -250,14 +250,14 @@ public class TPCHQuery {
         String From = from;
         String To   = to;
 
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfRunning);
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfMoving);
         if (KindOfRunning.equals("testing")&&(From.equals("hive"))&&(To.equals("hive"))) size[1] = Double.parseDouble(randomQuery[0]); 
         double[] Yarn = testQueryPlan.createRandomYarn();
         ////////////////////////////////////////////
         size[size.length-1]=TimeOfDay;
         ///////////////////////////////////////////
 
-        String Operator = "Move_TPCH";// +"_"+ randomQuery[2];           
+        String Operator = KindOfMoving+"_TPCH";// +"_"+ randomQuery[2];           
         //String DataIn = Table;      
         String DataIn = randomQuery[1];
         String DataInSize = Double.toString(size[0]);
@@ -265,7 +265,7 @@ public class TPCHQuery {
         String DatabaseIn = database + Size_tpch;
         String Schema = Schema(DataIn);
         //String DataOut = Table.toUpperCase(); 
-        String DataOut = randomQuery[1].toUpperCase();
+        String DataOut = randomQuery[3];
         String DataOutSize = Double.toString(size[0]);
         String DatabaseOut = database + Size_tpch;       
 
@@ -301,10 +301,12 @@ public class TPCHQuery {
         YarnValue yarnValue = new YarnValue(Yarn[0], Yarn[1]);
         yarnValue.set_Ram(Yarn[0]);
         yarnValue.set_Core(Yarn[1]);
-        if (KindOfRunning.toLowerCase().contains("move"))
-	TestWorkFlow.workflowMove(Data, KindOfRunning, Size_tpch, SQL, yarnValue);
+        if (KindOfMoving.toLowerCase().contains("move"))
+	TestWorkFlow.workflowMove(Data, Size_tpch, SQL, yarnValue, KindOfMoving, KindOfRunning);
+        if (KindOfMoving.toLowerCase().contains("join"))
+        TestWorkFlow.workflowJoin(Data, Size_tpch, SQL, yarnValue, KindOfMoving, KindOfRunning);
     }
-    public static void WorkflowJoin(double TimeOfDay, String DB, String Size, String from, String to, String KindOfRunning) throws Exception {
+    public static void WorkflowJoin(double TimeOfDay, String DB, String Size, String from, String to, String KindOfMoving, String KindOfRunning) throws Exception {
         String Size_tpch = Size;
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
@@ -313,7 +315,7 @@ public class TPCHQuery {
         String From = from;
         String To   = to;
 
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfRunning);
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfMoving);
         if (KindOfRunning.equals("testing")&&(From.equals("hive"))&&(To.equals("hive"))) size[1] = Double.parseDouble(randomQuery[0]); 
         double[] Yarn = testQueryPlan.createRandomYarn();
         ////////////////////////////////////////////
@@ -365,9 +367,9 @@ public class TPCHQuery {
         yarnValue.set_Ram(Yarn[0]);
         yarnValue.set_Core(Yarn[1]);
         if (KindOfRunning.toLowerCase().contains("join"))
-            TestWorkFlow.workflowJoin(Data, KindOfRunning, Size_tpch, SQL, yarnValue);
+            TestWorkFlow.workflowJoin(Data, Size_tpch, SQL, yarnValue, KindOfRunning, KindOfMoving);
     }
-    public static void WorkflowJoinMove(double TimeOfDay, String DB, String Size, String from, String to, String KindOfRunning) throws Exception {
+    public static void WorkflowJoinMove(double TimeOfDay, String DB, String Size, String from, String to, String KindOfMoving, String KindOfRunning) throws Exception {
         String Size_tpch = Size;
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
@@ -376,7 +378,7 @@ public class TPCHQuery {
         String From = from;
         String To   = to;
 
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfRunning);
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfMoving);
         if (KindOfRunning.equals("testing")&&(From.equals("hive"))&&(To.equals("hive"))) size[1] = Double.parseDouble(randomQuery[0]); 
         double[] Yarn = testQueryPlan.createRandomYarn();
         ////////////////////////////////////////////
@@ -427,8 +429,8 @@ public class TPCHQuery {
         YarnValue yarnValue = new YarnValue(Yarn[0], Yarn[1]);
         yarnValue.set_Ram(Yarn[0]);
         yarnValue.set_Core(Yarn[1]);
-        if (KindOfRunning.toLowerCase().contains("join"))
-            TestWorkFlow.workflowJoinMove(Data, KindOfRunning, Size_tpch, SQL, yarnValue);
+        if (KindOfMoving.toLowerCase().contains("join"))
+            TestWorkFlow.workflowJoinMove(Data, Size_tpch, SQL, yarnValue, KindOfMoving, KindOfRunning);
     }
     public static void TPCH(double TimeOfDay, String DB, String Size, String from, String to, String KindOfRunning) throws Exception {
         String Size_tpch = Size;
@@ -581,17 +583,16 @@ public class TPCHQuery {
         }
         Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
     } 
-    public static void Join(double TimeOfDay, String DB, String Size, String from, String to, String Join) throws Exception {
+    public static void Join(double TimeOfDay, String DB, String Size, String from, String to, String Join, String KindOfRunning) throws Exception {
         String Size_tpch = Size;
         String database = DB;
-        String KindOfRunning = "training";
         String SQL_folder = new App().readhome("SQL");
         runWorkFlowIRES IRES = new runWorkFlowIRES();
         String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);
         String From = from;
         String To   = to;
         
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfRunning);
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch, Join);
 	double[] Yarn = testQueryPlan.createRandomYarn();
         ////////////////////////////////////////////
         size[size.length-1]=TimeOfDay;
@@ -610,7 +611,7 @@ public class TPCHQuery {
         String DatabaseOut = database + Size_tpch;       
        
         String SQL_fileName = ""; 
-        if (KindOfRunning.equals("training"))
+        if (KindOfRunning.toLowerCase().equals("training"))
 	SQL_fileName = SQL_folder + randomQuery[2];
         else {
 		if (To.toLowerCase().equals("postgres")) SQL_fileName = SQL_folder + randomQuery[2];
@@ -788,10 +789,10 @@ public class TPCHQuery {
        SQL = SQL.replace(";", "");	
        return SQL;
     }
-    public static double[] calculateSize(String[] randomQuery, String From, String To, String Size_tpch, String KindOfRuning) {
+    public static double[] calculateSize(String[] randomQuery, String From, String To, String Size_tpch, String KindOfMoving) {
         double R1,R2;
         if ((From.toLowerCase().contains("hive"))&&(To.toLowerCase().contains("postgres"))) {
-            if (!KindOfRuning.toLowerCase().equals("move")){   
+            if (!KindOfMoving.toLowerCase().equals("move")){   
                 double[] size = new double[numberOfSize_Hive_Postgres];
                 size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
                 size[1] = testQueryPlan.pageDataset(randomQuery[1],Size_tpch);
@@ -813,7 +814,7 @@ public class TPCHQuery {
         }
         
         if ((From.toLowerCase().contains("postgres"))&&(To.toLowerCase().contains("hive"))) {
-            if (!KindOfRuning.toLowerCase().equals("move")){   
+            if (!KindOfMoving.toLowerCase().equals("move")){   
                 double[] size = new double[numberOfSize_Postgres_Hive];
                 size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
                 size[1] = testQueryPlan.pageDataset(randomQuery[1],Size_tpch);
@@ -834,7 +835,7 @@ public class TPCHQuery {
         }
 
         if ((From.toLowerCase().contains("hive"))&&(To.toLowerCase().contains("hive"))) {
-            if (!KindOfRuning.toLowerCase().equals("move")){
+            if (!KindOfMoving.toLowerCase().equals("move")){
                 double[] size = new double[numberOfSize_Hive_Hive];
                 size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
                 size[1] = testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);
@@ -850,15 +851,30 @@ public class TPCHQuery {
         } 
         
         if ((From.toLowerCase().contains("postgres"))&&(To.toLowerCase().contains("postgres"))) {
-            if (!KindOfRuning.toLowerCase().equals("move")){ 
+            if (!KindOfMoving.toLowerCase().equals("move")){ 
+                if (KindOfMoving.toLowerCase().equals("join")){
                 double[] size = new double[numberOfSize_Postgres_Postgres];
                 size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
                 size[1] = testQueryPlan.pageDataset(randomQuery[1],Size_tpch);
                 size[2] = testQueryPlan.tupleDataset(randomQuery[1],Size_tpch);
-                size[3] = testQueryPlan.pageDataset(randomQuery[3],Size_tpch);
-                size[4] = testQueryPlan.tupleDataset(randomQuery[3],Size_tpch);
-                size[5] = 0;
+                size[3] = testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);
+                //size[4] = testQueryPlan.pageDataset(randomQuery[3],Size_tpch);
+                //size[5] = testQueryPlan.tupleDataset(randomQuery[3],Size_tpch);
+                size[numberOfSize_Postgres_Postgres-1] = 0;
                 return size;
+                }
+                else 
+                    {
+                    double[] size = new double[numberOfSize_Postgres_Postgres];
+                    size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
+                    size[1] = testQueryPlan.pageDataset(randomQuery[1],Size_tpch);
+                    size[2] = testQueryPlan.tupleDataset(randomQuery[1],Size_tpch);
+                    size[3] = testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);
+                    size[4] = testQueryPlan.pageDataset(randomQuery[3],Size_tpch);
+                    size[5] = testQueryPlan.tupleDataset(randomQuery[3],Size_tpch);
+                    size[6] = 0;
+                    return size;
+                    }
             }
             else {
                 double[] size = new double[numberOfSize_Move_Postgres_Postgres];
@@ -877,8 +893,6 @@ public class TPCHQuery {
         size[1] = R1*R2;
         size[2] = R2;
         return size;
-        }
-         
-    }
-    
+        }    
+    }   
 }
