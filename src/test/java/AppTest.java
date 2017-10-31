@@ -175,7 +175,7 @@ public class AppTest{
           TPCHQuery.WorkflowMove(Math.random(),"tpch","100m","Hive","Hive","Join", "training");
           TPCHQuery.WorkflowMove(Math.random(),"tpch","100m","Postgres","Postgres","Join", "training");
 //        TPCHQuery.WorkflowJoin(Math.random(),"tpch","100m","Hive","Hive","Join");
-//        TPCHQuery.WorkflowJoinMove(Math.random(),"tpch","100m","Hive","Postgres","Join","training");
+        TPCHQuery.WorkflowJoinMove(Math.random(),"tpch","100m","Hive","Postgres","Join","training");
 //        IRES.TestWorkFlow.createWorkflowJoin();
 //	IRES.TestWorkFlow.smallworkflow();
 //        IRES.TestWorkFlow.workflow();
