@@ -359,7 +359,7 @@ public class TestWorkFlow {
         abstractOp.writeToPropertiesFile(directory_library + "abstractOperators/" + abstractOp.opName);
         return abstractOp;
     }
-    public static void workflowJoinMove(Move_Data Data, String KindOfRunning, String Size_tpch, String SQL, YarnValue yarnValue) throws Exception   
+    public static void workflowJoinMove(Move_Data Data, String Size_tpch, String SQL, YarnValue yarnValue, String KindOfMoving, String KindOfRunning) throws Exception   
         {
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
         OperatorClient ocli = new OperatorClient();             
@@ -504,7 +504,7 @@ public class TestWorkFlow {
         System.out.println("\nShowing of optimize workflow is ended--------------------------------------------------------------:");
 	
         String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);    
-        double[] size = calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch, KindOfRunning);
+        double[] size = calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch, KindOfMoving);
 	double Time_Cost = IRES.runWorkflow(Data, size, NameOfAbstractWorkflow, policy);
     } 
     public static void main(String args[]) throws Exception {
