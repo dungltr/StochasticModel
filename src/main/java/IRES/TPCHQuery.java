@@ -581,10 +581,9 @@ public class TPCHQuery {
         }
         Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
     } 
-    public static void Join(double TimeOfDay, String DB, String Size, String from, String to, String Join) throws Exception {
+    public static void Join(double TimeOfDay, String DB, String Size, String from, String to, String Join, String KindOfRunning) throws Exception {
         String Size_tpch = Size;
         String database = DB;
-        String KindOfRunning = "training";
         String SQL_folder = new App().readhome("SQL");
         runWorkFlowIRES IRES = new runWorkFlowIRES();
         String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);
@@ -610,7 +609,7 @@ public class TPCHQuery {
         String DatabaseOut = database + Size_tpch;       
        
         String SQL_fileName = ""; 
-        if (KindOfRunning.equals("training"))
+        if (KindOfRunning.toLowerCase().equals("training"))
 	SQL_fileName = SQL_folder + randomQuery[2];
         else {
 		if (To.toLowerCase().equals("postgres")) SQL_fileName = SQL_folder + randomQuery[2];
