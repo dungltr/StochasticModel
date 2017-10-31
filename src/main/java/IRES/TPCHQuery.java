@@ -880,6 +880,7 @@ public class TPCHQuery {
         size[2] = R2;
         return size;
         }
-         
+        double[] size = new double [numberOfSize];
+    return size;     
     }   
 }
