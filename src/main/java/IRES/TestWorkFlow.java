@@ -370,7 +370,7 @@ public class TestWorkFlow {
         
         runWorkFlowIRES IRES = new runWorkFlowIRES();
 
-        String NameOfAbstractWorkflow = "Workflow_"+"Join_Move"+"_"+Data.get_From()+"_"+Data.get_To();
+        String NameOfAbstractWorkflow = "Join_Move"+"_"+Data.get_From()+"_"+Data.get_To()+"_Workflow";
         List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<gr.ntua.cslab.asap.operators.Dataset>();        
 
         AbstractWorkflow1 abstractWorkflow = new AbstractWorkflow1(NameOfAbstractWorkflow);
