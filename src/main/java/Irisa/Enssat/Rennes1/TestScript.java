@@ -126,7 +126,7 @@ public class TestScript {
     public static void TPCH(double TimeOfDay, String[] call, String KindOfRunning) throws Exception{
         if ((KindOfRunning=="training")||(KindOfRunning=="testing")){
             if (call[0]=="IRES")
-                TPCHQuery.TPCH(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
+                TPCHQuery.TPCH(TimeOfDay, call[1], call[2], call[3], call[4], "TPCH", KindOfRunning);
             else {  if (call[0]=="Move")
                         TPCHQuery.Move(TimeOfDay, call[1], call[2], call[3], call[4], "Move", KindOfRunning);
                     else {  if (call[0]=="Join")

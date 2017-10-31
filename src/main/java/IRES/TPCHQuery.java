@@ -432,7 +432,7 @@ public class TPCHQuery {
         if (KindOfMoving.toLowerCase().contains("join"))
             TestWorkFlow.workflowJoinMove(Data, Size_tpch, SQL, yarnValue, KindOfMoving, KindOfRunning);
     }
-    public static void TPCH(double TimeOfDay, String DB, String Size, String from, String to, String KindOfRunning) throws Exception {
+    public static void TPCH(double TimeOfDay, String DB, String Size, String from, String to, String TPCH, String KindOfRunning) throws Exception {
         String Size_tpch = Size;
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
@@ -448,7 +448,7 @@ public class TPCHQuery {
         size[size.length-1]=TimeOfDay;
         ///////////////////////////////////////////
         
-        String Operator = "TPCH_"+ Size_tpch;// +"_"+ randomQuery[2];           
+        String Operator = TPCH;// +"_"+ randomQuery[2];           
         //String DataIn = Table;      
         String DataIn = randomQuery[1];
         String DataInSize = Double.toString(size[0]);
