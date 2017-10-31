@@ -165,10 +165,10 @@ public class AppTest{
         { 
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Hive","Move","training");
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training");
-          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
-          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Postgres","Move","training");
-//          TPCHQuery.Join(Math.random(),"tpch","100m","Postgres","Postgres","Join");
-//          TPCHQuery.Join(Math.random(),"tpch","100m","Hive","Hive","Join");
+//          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
+//          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Postgres","Move","training");
+          TPCHQuery.Join(Math.random(),"tpch","100m","Postgres","Postgres","Join","training");
+          TPCHQuery.Join(Math.random(),"tpch","100m","Hive","Hive","Join","training");
 //          TPCHQuery.WorkflowMove(Math.random(),"tpch","100m","Hive","Postgres","Move");
 //        TPCHQuery.WorkflowJoin(Math.random(),"tpch","100m","Hive","Hive","Join");
 //        TPCHQuery.WorkflowJoinMove(Math.random(),"tpch","100m","Hive","Postgres","Join");
