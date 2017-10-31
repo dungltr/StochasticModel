@@ -306,7 +306,7 @@ public class TPCHQuery {
         if (KindOfMoving.toLowerCase().contains("join"))
         TestWorkFlow.workflowJoin(Data, Size_tpch, SQL, yarnValue, KindOfMoving, KindOfRunning);
     }
-    public static void WorkflowJoin(double TimeOfDay, String DB, String Size, String from, String to, String KindOfRunning) throws Exception {
+    public static void WorkflowJoin(double TimeOfDay, String DB, String Size, String from, String to, String KindOfMoving, String KindOfRunning) throws Exception {
         String Size_tpch = Size;
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
@@ -315,7 +315,7 @@ public class TPCHQuery {
         String From = from;
         String To   = to;
 
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfRunning);
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfMoving);
         if (KindOfRunning.equals("testing")&&(From.equals("hive"))&&(To.equals("hive"))) size[1] = Double.parseDouble(randomQuery[0]); 
         double[] Yarn = testQueryPlan.createRandomYarn();
         ////////////////////////////////////////////
@@ -367,7 +367,7 @@ public class TPCHQuery {
         yarnValue.set_Ram(Yarn[0]);
         yarnValue.set_Core(Yarn[1]);
         if (KindOfRunning.toLowerCase().contains("join"))
-            TestWorkFlow.workflowJoin(Data, KindOfRunning, Size_tpch, SQL, yarnValue);
+            TestWorkFlow.workflowJoin(Data, Size_tpch, SQL, yarnValue, KindOfRunning, KindOfMoving);
     }
     public static void WorkflowJoinMove(double TimeOfDay, String DB, String Size, String from, String to, String KindOfRunning) throws Exception {
         String Size_tpch = Size;
