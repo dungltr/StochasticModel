@@ -326,7 +326,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
 	op.add("Constraints.Output.number", "1");
 	reset(directory_library + "abstractOperators/" + op.opName);
         op.writeToPropertiesFile(directory_library + "abstractOperators/" + op.opName);                      
-        cli.addAbstractOperator(op);
+//        cli.addAbstractOperator(op);
         //op.writeToPropertiesFile(op.opName);
     }
     public void createAbstractOperatorJoin(Move_Data Data, String SQL) throws IOException, Exception {
@@ -344,7 +344,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
 	op.add("Constraints.Output.number", "1");
 	reset(directory_library + "abstractOperators/" + op.opName);
         op.writeToPropertiesFile(directory_library + "abstractOperators/" + op.opName);                      
-        cli.addAbstractOperator(op);
+//        cli.addAbstractOperator(op);
         //op.writeToPropertiesFile(op.opName);
     }
     public void createOperatorMove(Move_Data Data, String SQL, double costEstimateValue) throws IOException, Exception {
