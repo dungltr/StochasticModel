@@ -119,31 +119,13 @@ public class TestWorkFlow {
         List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<gr.ntua.cslab.asap.operators.Dataset>();        
 
         AbstractWorkflow1 abstractWorkflow = new AbstractWorkflow1(NameOfAbstractWorkflow);
-        
-//        String temp = Data.get_To();
-//        Data.set_To(Data.get_From());
+
         IRES.createDataMove2(Data, SQL, yarnValue);
         String new_OP1 = newName;
         String new_Abstract_OP1 = Abstract+"_"+new_OP1;
         String old_OP1 = oldName;
         Operator mop1 = setupOperator(new_OP1, old_OP1);
-        
-/*        String OP1 = "Move_TPCH_"+Data.get_From()+"_"+Data.get_To();//+NameOp;
-        IRES.createDataMove2(Data, SQL, yarnValue);
-        Operator mop1 = new Operator("Operator1","");
-        String Dest = directory_operator + mop1.opName;
-        String Source = directory_operator + OP1; 
-        File initialFile = new File(directory_operator + OP1 + "/description");
-        InputStream targetStream = new FileInputStream(initialFile);
-        mop1.readPropertiesFromStream(targetStream);
-        mop1.add("Execution.LuaScript",mop1.opName+".lua");  
-        FileUtils.copyDirectory(FileUtils.getFile(directory_operator+OP1), 
-                            FileUtils.getFile(directory_operator+mop1.opName));
-        FileUtils.copyFile(FileUtils.getFile(directory_operator+OP1+"/"+OP1+".lua"), 
-                            FileUtils.getFile(directory_operator+mop1.opName+"/"+mop1.opName+".lua"));
-        mop1.writeToPropertiesFile(directory_operator+mop1.opName);    
-        ocli.addOperator(mop1);
-*/               
+                       
         System.out.println(mop1.toString());
  	String DataIn = Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataIn();	
 	Dataset d11 = new Dataset(DataIn);
@@ -157,22 +139,12 @@ public class TestWorkFlow {
         t11.setDataset(d11);
         d11.inputFor(mop1, 0);
         AbstractOperator abstractOp1 = setupAbstractOperator(new_Abstract_OP1, old_OP1);
-/*
-        AbstractOperator abstractOp1 = new AbstractOperator("Abstract_Operator1");
-        File filename1 = new File(directory_library + "abstractOperators/Abstract_" + OP1);
-        abstractOp1.readPropertiesFromFile(filename1);
-        System.out.println(abstractOp1.toString());
-        ocli.addAbstractOperator(abstractOp1);
-        abstractOp1.writeToPropertiesFile(directory_library + "abstractOperators/" + abstractOp1.opName);
-*/	
+	
 	WorkflowNode op1 = new WorkflowNode(true,true,abstractOp1.opName);
         op1.setAbstractOperator(abstractOp1);
  	
-//	String DataOut = Data.get_DataOut();
+
         Dataset d33 = new Dataset("Output"+new_OP1);
-//        d33.readPropertiesFromFile(directory_datasets+);
-//        System.out.println(d33.toString());
-//        d33.writeToPropertiesFile(directory_datasets + d33.datasetName);
 
         materializedDatasets.add(d33);
 
@@ -225,8 +197,11 @@ public class TestWorkFlow {
 	double Time_Cost = IRES.runWorkflow(Data, size, NameOfAbstractWorkflow, policy);
         //wcli.executeWorkflow(materializedWorkflow);
     }
-    public static void workflowJoin(Move_Data Data, String KindOfRunning, String Size_tpch, String SQL, YarnValue yarnValue) throws Exception   
+    public static void workflowJoin(Move_Data Data, String Size_tpch, String SQL, YarnValue yarnValue, String KindOfMoving, String KindOfRunning) throws Exception   
         {
+        String oldName = KindOfMoving+"_TPCH_"+Data.get_From()+"_"+Data.get_To();    
+        String newName = "Operator_"+KindOfMoving+"_"+Data.get_From()+"_"+Data.get_To();
+        String Abstract ="Abstract"; 
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
         OperatorClient ocli = new OperatorClient();             
         ocli.setConfiguration(conf);
@@ -244,7 +219,7 @@ public class TestWorkFlow {
         String OP1 = "Join_TPCH_"+Data.get_From()+"_"+Data.get_To();//+NameOp;
         IRES.createDataMove2(Data, SQL, yarnValue);
         
-        Operator mop1 = new Operator("Operator_"+KindOfRunning,"");
+/*        Operator mop1 = new Operator("Operator_"+KindOfRunning,"");
         String Dest = directory_operator + mop1.opName;
         String Source = directory_operator + OP1; 
         File initialFile = new File(directory_operator + OP1 + "/description");
@@ -257,6 +232,11 @@ public class TestWorkFlow {
                             FileUtils.getFile(directory_operator+mop1.opName+"/"+mop1.opName+".lua"));
         mop1.writeToPropertiesFile(directory_operator+mop1.opName);    
         ocli.addOperator(mop1);
+*/        
+        String new_OP1 = newName;
+        String new_Abstract_OP1 = Abstract+"_"+new_OP1;
+        String old_OP1 = oldName;
+        Operator mop1 = setupOperator(new_OP1, old_OP1);
         System.out.println(mop1.toString());
  	
         String DataIn1 = Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataIn();	
@@ -273,26 +253,26 @@ public class TestWorkFlow {
         d2.writeToPropertiesFile(directory_datasets + d2.datasetName);
         materializedDatasets.add(d2);
         
-        WorkflowNode t1 = new WorkflowNode(false,false,"Input11");
+        WorkflowNode t1 = new WorkflowNode(false,false,"Input1"+new_OP1);
         t1.setDataset(d1);
         d1.inputFor(mop1, 0);
         
-        WorkflowNode t2 = new WorkflowNode(false,false,"Input22");
+        WorkflowNode t2 = new WorkflowNode(false,false,"Input2"+new_OP1);
         t2.setDataset(d2);
         d2.inputFor(mop1, 1);
-
-        AbstractOperator abstractOp1 = new AbstractOperator("Abstract_Operator_"+KindOfRunning);
+        AbstractOperator abstractOp1 = setupAbstractOperator(new_Abstract_OP1, old_OP1);
+/*        AbstractOperator abstractOp1 = new AbstractOperator("Abstract_Operator_"+KindOfRunning);
         File filename1 = new File(directory_library + "abstractOperators/Abstract_" + OP1);
         abstractOp1.readPropertiesFromFile(filename1);
         System.out.println(abstractOp1.toString());
         ocli.addAbstractOperator(abstractOp1);
         abstractOp1.writeToPropertiesFile(directory_library + "abstractOperators/" + abstractOp1.opName);
-	
+*/	
 	WorkflowNode op1 = new WorkflowNode(true,true,abstractOp1.opName);
         op1.setAbstractOperator(abstractOp1);
  	
-	String DataOut = Data.get_DataOut();
-        Dataset d3 = new Dataset("d3");
+//        Dataset d3 = new Dataset("d3");
+        Dataset d3 = new Dataset("Output"+new_OP1);
 //        d33.readPropertiesFromFile(directory_datasets+);
 //        System.out.println(d33.toString());
 //        d33.writeToPropertiesFile(directory_datasets + d33.datasetName);
