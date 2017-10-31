@@ -30,7 +30,7 @@ public class TPCHQuery {
     
     private static int numberOfSize_Hive_Postgres = 6;
     private static int numberOfSize_Postgres_Hive = 5;
-    private static int numberOfSize_Postgres_Postgres = 5;
+    private static int numberOfSize_Postgres_Postgres = 6;
     private static int numberOfSize_Hive_Hive = 3;
     
     private static int numberOfSize_Move_Hive_Hive = 2;   
@@ -858,9 +858,9 @@ public class TPCHQuery {
                 size[1] = testQueryPlan.pageDataset(randomQuery[1],Size_tpch);
                 size[2] = testQueryPlan.tupleDataset(randomQuery[1],Size_tpch);
                 size[3] = testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);
-                //size[4] = testQueryPlan.pageDataset(randomQuery[3],Size_tpch);
+                size[4] = testQueryPlan.pageDataset(randomQuery[3],Size_tpch);
                 //size[5] = testQueryPlan.tupleDataset(randomQuery[3],Size_tpch);
-                size[4] = 0;
+                size[numberOfSize_Postgres_Postgres-1] = 0;
                 return size;
                 }
                 else 
