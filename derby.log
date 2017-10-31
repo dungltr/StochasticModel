@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Sun Oct 08 20:13:38 GMT+01:00 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-015e-fd68-35b5-00000493f948 
+Mon Oct 30 16:37:16 GMT+01:00 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-015f-6dee-0526-000004b06ac0 
 on database directory /usr/local/share/hive/metastore_db with class loader sun.misc.Launcher$AppClassLoader@5e6276e5 
 Loaded from file:/usr/local/share/hive/lib/derby-10.10.2.0.jar
 java.vendor=Oracle Corporation
@@ -8,6 +8,6 @@ java.runtime.version=1.7.0_95-b00
 user.dir=/home/ubuntu/StochasticModel
 os.name=Linux
 os.arch=amd64
-os.version=4.4.0-96-generic
+os.version=4.4.0-97-generic
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
