@@ -241,8 +241,8 @@ public class TPCHQuery {
         }
         Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
     }
-    public static void WorkflowMove(double TimeOfDay, String DB, String Size, String from, String to, String KindOfRunning) throws Exception {
-    String Size_tpch = Size;
+    public static void WorkflowMove(double TimeOfDay, String DB, String Size, String from, String to, String KindOfMoving, String KindOfRunning) throws Exception {
+        String Size_tpch = Size;
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
         runWorkFlowIRES IRES = new runWorkFlowIRES();
@@ -250,7 +250,7 @@ public class TPCHQuery {
         String From = from;
         String To   = to;
 
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfRunning);
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfMoving);
         if (KindOfRunning.equals("testing")&&(From.equals("hive"))&&(To.equals("hive"))) size[1] = Double.parseDouble(randomQuery[0]); 
         double[] Yarn = testQueryPlan.createRandomYarn();
         ////////////////////////////////////////////
@@ -301,8 +301,8 @@ public class TPCHQuery {
         YarnValue yarnValue = new YarnValue(Yarn[0], Yarn[1]);
         yarnValue.set_Ram(Yarn[0]);
         yarnValue.set_Core(Yarn[1]);
-        if (KindOfRunning.toLowerCase().contains("move"))
-	TestWorkFlow.workflowMove(Data, KindOfRunning, Size_tpch, SQL, yarnValue);
+        if (KindOfMoving.toLowerCase().contains("move"))
+	TestWorkFlow.workflowMove(Data, Size_tpch, SQL, yarnValue, KindOfMoving, KindOfRunning);
     }
     public static void WorkflowJoin(double TimeOfDay, String DB, String Size, String from, String to, String KindOfRunning) throws Exception {
         String Size_tpch = Size;
