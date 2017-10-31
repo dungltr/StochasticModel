@@ -880,7 +880,7 @@ public class TPCHQuery {
         size[2] = R2;
         return size;
         }
-        double[] size = new double [numberOfSize];
+    double[] size = new double [numberOfSize_Postgres_Postgres];
     return size;     
     }   
 }
