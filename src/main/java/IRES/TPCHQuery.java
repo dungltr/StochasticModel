@@ -590,7 +590,7 @@ public class TPCHQuery {
         String From = from;
         String To   = to;
         
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfRunning);
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch, Join);
 	double[] Yarn = testQueryPlan.createRandomYarn();
         ////////////////////////////////////////////
         size[size.length-1]=TimeOfDay;
