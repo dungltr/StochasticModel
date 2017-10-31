@@ -348,14 +348,14 @@ public class TestWorkFlow {
         return mop1;
     }
     public static AbstractOperator setupAbstractOperator(String new_AbstractOp, String OP_Source) throws IOException, Exception{
-        ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
-        OperatorClient ocli = new OperatorClient();             
-        ocli.setConfiguration(conf);
+//        ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
+//        OperatorClient ocli = new OperatorClient();             
+//        ocli.setConfiguration(conf);
         AbstractOperator abstractOp = new AbstractOperator(new_AbstractOp);
         File filename1 = new File(directory_library + "abstractOperators/Abstract_" + OP_Source);
         abstractOp.readPropertiesFromFile(filename1);
         System.out.println(abstractOp.toString());
-        ocli.addAbstractOperator(abstractOp);
+//        ocli.addAbstractOperator(abstractOp);
         abstractOp.writeToPropertiesFile(directory_library + "abstractOperators/" + abstractOp.opName);
         return abstractOp;
     }
