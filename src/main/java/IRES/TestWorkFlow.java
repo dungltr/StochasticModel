@@ -323,7 +323,7 @@ public class TestWorkFlow {
         System.out.println("\nShowing of optimize workflow is ended--------------------------------------------------------------:");
 	
         String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);    
-        double[] size = calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch, KindOfRunning);
+        double[] size = calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch, KindOfMoving);
 
 	double Time_Cost = IRES.runWorkflow(Data, size, NameOfAbstractWorkflow, policy);
         //wcli.executeWorkflow(materializedWorkflow);
