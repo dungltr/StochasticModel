@@ -45,7 +45,7 @@ public class StandaloneAlgorithms {
     private static int numberOfTmp = 5;
 //    private static int YarnParamter = 2;
     private static int numberOfSize_Hive_Postgres = 6;
-    private static int numberOfSize_Postgres_Postgres = 6;
+    private static int numberOfSize_Postgres_Postgres = 5;
     private static int numberOfSize_Hive_Hive = 2;
     int int_localhost = 1323;
     String name_host = "localhost";
