@@ -304,7 +304,7 @@ public class TPCHQuery {
         if (KindOfMoving.toLowerCase().contains("move"))
 	TestWorkFlow.workflowMove(Data, Size_tpch, SQL, yarnValue, KindOfMoving, KindOfRunning);
         if (KindOfMoving.toLowerCase().contains("join"))
-        TestWorkFlow.workflowMove(Data, Size_tpch, SQL, yarnValue, KindOfMoving, KindOfRunning);
+        TestWorkFlow.workflowJoin(Data, Size_tpch, SQL, yarnValue, KindOfMoving, KindOfRunning);
     }
     public static void WorkflowJoin(double TimeOfDay, String DB, String Size, String from, String to, String KindOfRunning) throws Exception {
         String Size_tpch = Size;
