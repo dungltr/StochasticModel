@@ -103,8 +103,8 @@ public class TestWorkFlow {
     }
     public static void workflowMove(Move_Data Data, String Size_tpch, String SQL, YarnValue yarnValue, String KindOfMoving, String KindOfRunning) throws Exception   
         {    
-        String oldName = "Move_TPCH";    
-        String newName = "Operator";
+        String oldName = KindOfMoving+"_TPCH"+Data.get_From()+"_"+Data.get_To();    
+        String newName = "Operator"+KindOfMoving+"_"+Data.get_From()+"_"+Data.get_To();
         String Abstract ="Abstract"; 
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
         OperatorClient ocli = new OperatorClient();             
@@ -115,7 +115,7 @@ public class TestWorkFlow {
         
         runWorkFlowIRES IRES = new runWorkFlowIRES();
 
-        String NameOfAbstractWorkflow = newName+"_"+KindOfMoving+"_"+Data.get_From()+"_"+Data.get_To()+"_Workflow";
+        String NameOfAbstractWorkflow = newName+"_Workflow";
         List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<gr.ntua.cslab.asap.operators.Dataset>();        
 
         AbstractWorkflow1 abstractWorkflow = new AbstractWorkflow1(NameOfAbstractWorkflow);
@@ -123,9 +123,9 @@ public class TestWorkFlow {
 //        String temp = Data.get_To();
 //        Data.set_To(Data.get_From());
         IRES.createDataMove2(Data, SQL, yarnValue);
-        String new_OP1 = newName +"_"+KindOfMoving;
+        String new_OP1 = newName;
         String new_Abstract_OP1 = Abstract+"_"+new_OP1;
-        String old_OP1 = oldName+"_"+Data.get_From()+"_"+Data.get_To();
+        String old_OP1 = oldName;
         Operator mop1 = setupOperator(new_OP1, old_OP1);
         
 /*        String OP1 = "Move_TPCH_"+Data.get_From()+"_"+Data.get_To();//+NameOp;
@@ -143,8 +143,7 @@ public class TestWorkFlow {
                             FileUtils.getFile(directory_operator+mop1.opName+"/"+mop1.opName+".lua"));
         mop1.writeToPropertiesFile(directory_operator+mop1.opName);    
         ocli.addOperator(mop1);
-*/        
-        
+*/               
         System.out.println(mop1.toString());
  	String DataIn = Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataIn();	
 	Dataset d11 = new Dataset(DataIn);
