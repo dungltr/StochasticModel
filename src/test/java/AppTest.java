@@ -163,15 +163,15 @@ public class AppTest{
 //        Irisa.Enssat.Rennes1.TestScript.testall();
 	for (int i =0; i<1; i++)
         { 
-          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Hive","Move","training");
-          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training");
-          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
-          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Postgres","Move","training");
+//          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Hive","Move","training");
+//          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training");
+//          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
+//          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Postgres","Move","training");
 
-          TPCHQuery.Join(Math.random(),"tpch","100m","Postgres","Postgres","Join","training");
-          TPCHQuery.Join(Math.random(),"tpch","100m","Hive","Hive","Join","training");
-          TPCHQuery.WorkflowMove(Math.random(),"tpch","100m","Hive","Postgres","Move", "training");
-          TPCHQuery.WorkflowMove(Math.random(),"tpch","100m","Postgres","Hive","Move", "training");
+//          TPCHQuery.Join(Math.random(),"tpch","100m","Postgres","Postgres","Join","training");
+//          TPCHQuery.Join(Math.random(),"tpch","100m","Hive","Hive","Join","training");
+//          TPCHQuery.WorkflowMove(Math.random(),"tpch","100m","Hive","Postgres","Move", "training");
+//          TPCHQuery.WorkflowMove(Math.random(),"tpch","100m","Postgres","Hive","Move", "training");
           TPCHQuery.WorkflowMove(Math.random(),"tpch","100m","Hive","Hive","Join", "training");
           TPCHQuery.WorkflowMove(Math.random(),"tpch","100m","Postgres","Postgres","Join", "training");
 //        TPCHQuery.WorkflowJoin(Math.random(),"tpch","100m","Hive","Hive","Join");
