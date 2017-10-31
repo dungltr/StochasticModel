@@ -587,6 +587,10 @@ public class Algorithms {
         directory = testWriteMatrix2CSV.getDirectory(Data) ;
         directory = preapreFile(directory);
         
+        String KindOfMoving = "";
+        if (Data.get_Operator().toLowerCase().contains("move")) KindOfMoving = "move";
+        if (Data.get_Operator().toLowerCase().contains("join")) KindOfMoving = "join";
+        
         runWorkFlowIRES IRES = new runWorkFlowIRES();
         int numberParameter = size.length + 1;
         int numerOfVariable = numberParameter-1;
