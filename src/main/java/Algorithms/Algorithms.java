@@ -590,6 +590,7 @@ public class Algorithms {
         String KindOfMoving = "";
         if (Data.get_Operator().toLowerCase().contains("move")) KindOfMoving = "move";
         if (Data.get_Operator().toLowerCase().contains("join")) KindOfMoving = "join";
+        if (Data.get_Operator().toLowerCase().equals("tpch")) KindOfMoving = "join";
         
         runWorkFlowIRES IRES = new runWorkFlowIRES();
         int numberParameter = size.length + 1;
@@ -718,6 +719,7 @@ public class Algorithms {
         String KindOfMoving = "";
         if (Data.get_Operator().toLowerCase().contains("move")) KindOfMoving = "move";
         if (Data.get_Operator().toLowerCase().contains("join")) KindOfMoving = "join";
+        if (Data.get_Operator().toLowerCase().equals("tpch")) KindOfMoving = "join";
         double[] size_random = TPCHQuery.calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch, KindOfMoving);
         double[] yarn_random = testQueryPlan.createRandomYarn();
         String directory = testWriteMatrix2CSV.getDirectory(Data) ;
