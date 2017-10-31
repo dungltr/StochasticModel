@@ -31,6 +31,7 @@ public class TPCHQuery {
     private static int numberOfSize_Hive_Postgres = 6;
     private static int numberOfSize_Postgres_Hive = 5;
     private static int numberOfSize_Postgres_Postgres = 5;
+    private static int numberOfSize_TPCH_Postgres_Postgres = 7;
     private static int numberOfSize_Hive_Hive = 3;
     
     private static int numberOfSize_Move_Hive_Hive = 2;   
@@ -456,7 +457,7 @@ public class TPCHQuery {
         String DatabaseIn = database + Size_tpch;
         String Schema = Schema(DataIn);
         //String DataOut = Table.toUpperCase(); 
-        String DataOut = randomQuery[1].toUpperCase()+"_OUT";
+        String DataOut = randomQuery[3];
         String DataOutSize = Double.toString(size[0]);
         String DatabaseOut = database + Size_tpch;       
        
@@ -865,7 +866,7 @@ public class TPCHQuery {
                 }
                 else 
                     {
-                    double[] size = new double[numberOfSize_Postgres_Postgres];
+                    double[] size = new double[numberOfSize_TPCH_Postgres_Postgres];
                     size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
                     size[1] = testQueryPlan.pageDataset(randomQuery[1],Size_tpch);
                     size[2] = testQueryPlan.tupleDataset(randomQuery[1],Size_tpch);
