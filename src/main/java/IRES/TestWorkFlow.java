@@ -101,8 +101,11 @@ public class TestWorkFlow {
             }
         }
     }
-    public static void workflowMove(Move_Data Data, String KindOfRunning, String Size_tpch, String SQL, YarnValue yarnValue) throws Exception   
-        {
+    public static void workflowMove(Move_Data Data, String Size_tpch, String SQL, YarnValue yarnValue, String KindOfMoving, String KindOfRunning) throws Exception   
+        {    
+        String oldName = "Move_TPCH";    
+        String newName = "Operator";
+        String Abstract ="Abstract"; 
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
         OperatorClient ocli = new OperatorClient();             
         ocli.setConfiguration(conf);
@@ -112,12 +115,20 @@ public class TestWorkFlow {
         
         runWorkFlowIRES IRES = new runWorkFlowIRES();
 
-        String NameOfAbstractWorkflow = "Workflow_"+KindOfRunning+"_"+Data.get_From()+"_"+Data.get_To();
+        String NameOfAbstractWorkflow = newName+"_"+KindOfMoving+"_"+Data.get_From()+"_"+Data.get_To()+"_Workflow";
         List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<gr.ntua.cslab.asap.operators.Dataset>();        
 
         AbstractWorkflow1 abstractWorkflow = new AbstractWorkflow1(NameOfAbstractWorkflow);
-	String NameOp = Nameop(Data);
-        String OP1 = "Move_TPCH_"+Data.get_From()+"_"+Data.get_To();//+NameOp;
+        
+//        String temp = Data.get_To();
+//        Data.set_To(Data.get_From());
+        IRES.createDataMove2(Data, SQL, yarnValue);
+        String new_OP1 = newName +"_"+KindOfMoving;
+        String new_Abstract_OP1 = Abstract+"_"+new_OP1;
+        String old_OP1 = oldName+"_"+Data.get_From()+"_"+Data.get_To();
+        Operator mop1 = setupOperator(new_OP1, old_OP1);
+        
+/*        String OP1 = "Move_TPCH_"+Data.get_From()+"_"+Data.get_To();//+NameOp;
         IRES.createDataMove2(Data, SQL, yarnValue);
         Operator mop1 = new Operator("Operator1","");
         String Dest = directory_operator + mop1.opName;
@@ -132,39 +143,41 @@ public class TestWorkFlow {
                             FileUtils.getFile(directory_operator+mop1.opName+"/"+mop1.opName+".lua"));
         mop1.writeToPropertiesFile(directory_operator+mop1.opName);    
         ocli.addOperator(mop1);
+*/        
+        
         System.out.println(mop1.toString());
- 	String DataIn = Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataIn();
-	
+ 	String DataIn = Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataIn();	
 	Dataset d11 = new Dataset(DataIn);
         d11.readPropertiesFromFile(directory_datasets+DataIn);
         System.out.println(d11.toString());
-        d11.writeToPropertiesFile(directory_datasets + d11.datasetName);
+//        d11.writeToPropertiesFile(directory_datasets + d11.datasetName);
 
         materializedDatasets.add(d11);
 
-        WorkflowNode t11 = new WorkflowNode(false,false,"Input11");
+        WorkflowNode t11 = new WorkflowNode(false,false,"Input"+new_OP1);
         t11.setDataset(d11);
         d11.inputFor(mop1, 0);
-
+        AbstractOperator abstractOp1 = setupAbstractOperator(new_Abstract_OP1, old_OP1);
+/*
         AbstractOperator abstractOp1 = new AbstractOperator("Abstract_Operator1");
         File filename1 = new File(directory_library + "abstractOperators/Abstract_" + OP1);
         abstractOp1.readPropertiesFromFile(filename1);
         System.out.println(abstractOp1.toString());
         ocli.addAbstractOperator(abstractOp1);
         abstractOp1.writeToPropertiesFile(directory_library + "abstractOperators/" + abstractOp1.opName);
-	
+*/	
 	WorkflowNode op1 = new WorkflowNode(true,true,abstractOp1.opName);
         op1.setAbstractOperator(abstractOp1);
  	
-	String DataOut = Data.get_DataOut();
-        Dataset d33 = new Dataset("d3");
+//	String DataOut = Data.get_DataOut();
+        Dataset d33 = new Dataset("Output"+new_OP1);
 //        d33.readPropertiesFromFile(directory_datasets+);
 //        System.out.println(d33.toString());
 //        d33.writeToPropertiesFile(directory_datasets + d33.datasetName);
 
         materializedDatasets.add(d33);
 
-        WorkflowNode t33 = new WorkflowNode(false,true,"d3");
+        WorkflowNode t33 = new WorkflowNode(false,true,d33.datasetName);
 	t33.setDataset(d33);
         d33.outputFor(mop1, 0);
 
@@ -208,7 +221,7 @@ public class TestWorkFlow {
         System.out.println("\nShowing of optimize workflow is ended--------------------------------------------------------------:");
 	
         String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);    
-        double[] size = calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch, KindOfRunning);
+        double[] size = calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch, KindOfMoving);
 
 	double Time_Cost = IRES.runWorkflow(Data, size, NameOfAbstractWorkflow, policy);
         //wcli.executeWorkflow(materializedWorkflow);
@@ -345,7 +358,8 @@ public class TestWorkFlow {
         File initialFile = new File(directory_operator + OP_Source + "/description");
         InputStream targetStream = new FileInputStream(initialFile);
         mop1.readPropertiesFromStream(targetStream);
-        mop1.add("Execution.LuaScript",mop1.opName+".lua");  
+        mop1.add("Execution.LuaScript",mop1.opName+".lua"); 
+        mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.UserFunction");
         FileUtils.copyDirectory(FileUtils.getFile(directory_operator+OP_Source), 
                             FileUtils.getFile(directory_operator+mop1.opName));
         FileUtils.copyFile(FileUtils.getFile(directory_operator+OP_Source+"/"+OP_Source+".lua"), 
@@ -395,7 +409,7 @@ public class TestWorkFlow {
         String Operator = "Move_TPCH";
         Data.set_To(temp);
         Data.set_Operator(Operator);
-        IRES.createDataMove2(Data, SQL, yarnValue);
+        IRES.createDataMove2(Data, SQL, yarnValue);        
         String new_OP2 = "Operator_"+"Move";
         String new_Abstract_OP2 = "Abstract_"+new_OP2;
         String old_OP2 = "Move_TPCH_"+Data.get_From()+"_"+Data.get_To();
