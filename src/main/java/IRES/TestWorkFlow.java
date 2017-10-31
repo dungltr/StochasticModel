@@ -103,7 +103,7 @@ public class TestWorkFlow {
     }
     public static void workflowMove(Move_Data Data, String Size_tpch, String SQL, YarnValue yarnValue, String KindOfMoving, String KindOfRunning) throws Exception   
         {    
-        String oldName = KindOfMoving+"_TPCH"+Data.get_From()+"_"+Data.get_To();    
+        String oldName = KindOfMoving+"_TPCH_"+Data.get_From()+"_"+Data.get_To();    
         String newName = "Operator_"+KindOfMoving+"_"+Data.get_From()+"_"+Data.get_To();
         String Abstract ="Abstract"; 
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
