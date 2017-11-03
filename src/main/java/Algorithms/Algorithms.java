@@ -737,6 +737,21 @@ public class Algorithms {
         String NameOfRealValue = NameOfFileName(delay_ys,"realValue",KindOfRunning);
 	String NameOfParameter = NameOfFileName(delay_ys,"parameter",KindOfRunning);
         String NameOfEstimateValue = NameOfFileName(delay_ys,"estimate",KindOfRunning);
+        
+        String execTime = directory + "/data/execTime.csv";
+        String execTime_estimate = directory + "/data/execTime_estimate.csv";
+        String RealValue = directory + "/data/"+NameOfRealValue;
+        String EstimateValue = directory + "/data/"+NameOfEstimateValue;
+        String ParameterValue = directory + "/data/"+NameOfParameter;
+        
+        Path filePathExecTime = Paths.get(execTime); 
+        Path filePathExecTime_Estimate = Paths.get(execTime_estimate);
+        Path filePathRealValue = Paths.get(RealValue); 
+        Path filePathEstimateValue = Paths.get(EstimateValue); 
+        Path filePathParameterValue = Paths.get(ParameterValue); 
+
+        
+            
 
         double[] Parameter = initParamter(numberParameter);
 
@@ -748,11 +763,21 @@ public class Algorithms {
             TimeRepsonse =  Math.random()*500;//IRES.runWorkflow(NameOfWorkflow, policy);
             double delay = SimulateStochastic.waiting(Numberuser,TimeOfDay);
             TimeRepsonse = TimeRepsonse + delay;                   
-            size_random[size_random.length-1] = TimeOfDay;    
+            size_random[size_random.length-1] = TimeOfDay;  
+            
+            if (!Files.exists(filePathRealValue))
             testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfRealValue);
+            
+            if (!Files.exists(filePathExecTime))
             testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random, TimeRepsonse)), "execTime");
+            
+            if (!Files.exists(filePathEstimateValue))
             testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfEstimateValue);
+            
+            if (!Files.exists(filePathExecTime_Estimate))
             testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), "execTime_estimate");
+            
+            if (!Files.exists(filePathParameterValue))
             testWriteMatrix2CSV.storeParameter(Data, Parameter, NameOfParameter);
 
         }
