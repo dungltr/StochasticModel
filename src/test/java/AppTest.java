@@ -183,6 +183,10 @@ public class AppTest{
 //      IRES.TestWorkFlow.createWorkflowJoin();
 	}
 //    @Test
+    public static void main(String args[]) throws Exception{
+        TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
+        TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training");
+    }
     public void testall() throws Exception{
         double TimeOfDay = 24.00*Math.random();
         int times = 1;
