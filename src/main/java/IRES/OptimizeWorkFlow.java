@@ -43,6 +43,7 @@ public class OptimizeWorkFlow {
         Dataset d2 = new Dataset(Data.get_DataOut());
         materializedDatasets.add(d1);
 //        materializedDatasets.add(d2);
+        
         MaterializedOperators library =  new MaterializedOperators();
         AbstractWorkflow abstractWorkflow = new AbstractWorkflow(library);
         AbstractOperator abstractOp = new AbstractOperator(runWorkFlowIRES.AbstractOp(Data));
@@ -50,17 +51,18 @@ public class OptimizeWorkFlow {
         abstractWorkflow.addInputEdge(d1,abstractOp,0);
         abstractWorkflow.addOutputEdge(abstractOp,d2,0);
         abstractWorkflow.getWorkflow(d2);
-
-        abstractWorkflow.addMaterializedDatasets(materializedDatasets);               
+        
         System.out.println("\nShowing of abstractWorkflow is here----------------------------------------------------------------:");
+        abstractWorkflow.addMaterializedDatasets(materializedDatasets);               
+        System.out.println("\n----------------------------------------------------------------:");
         System.out.println(abstractWorkflow.getWorkflow(d1));
         System.out.println("\nShowing of abstractWorkflow is finished------------------------------------------------------------:");
 		
         materializedDatasets.add(d2);                
-
-        Workflow workflow0 = abstractWorkflow.getWorkflow(d2);
-
+        
         System.out.println("\nShowing of original workflow is here----------------------------------------------------------------:");
+        Workflow workflow0 = abstractWorkflow.getWorkflow(d2);
+        System.out.println("\n----------------------------------------------------------------:");        
         System.out.print(workflow0);
         System.out.println("\nShowing of original workflow is ended--------------------------------------------------------------:");
 

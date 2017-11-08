@@ -164,8 +164,8 @@ public class AppTest{
 	for (int i =0; i<1; i++)
         { 
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Hive","Move","training");
-//          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training");
-//          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
+          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training");
+          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Postgres","Move","training");
 
 //          TPCHQuery.Join(Math.random(),"tpch","100m","Postgres","Postgres","Join","training");
@@ -175,7 +175,7 @@ public class AppTest{
 //          TPCHQuery.WorkflowMove(Math.random(),"tpch","100m","Hive","Hive","Join", "training");
 //          TPCHQuery.WorkflowMove(Math.random(),"tpch","100m","Postgres","Postgres","Join", "training");
 //        TPCHQuery.WorkflowJoin(Math.random(),"tpch","100m","Hive","Hive","Join");
-        TPCHQuery.WorkflowJoinMove(Math.random(),"tpch","100m","Hive","Postgres","Join","training");
+//        TPCHQuery.WorkflowJoinMove(Math.random(),"tpch","100m","Hive","Postgres","Join","training");
 //        IRES.TestWorkFlow.createWorkflowJoin();
 //	IRES.TestWorkFlow.smallworkflow();
 //        IRES.TestWorkFlow.workflow();
@@ -183,6 +183,10 @@ public class AppTest{
 //      IRES.TestWorkFlow.createWorkflowJoin();
 	}
 //    @Test
+    public static void main(String args[]) throws Exception{
+        TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
+        TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training");
+    }
     public void testall() throws Exception{
         double TimeOfDay = 24.00*Math.random();
         int times = 1;

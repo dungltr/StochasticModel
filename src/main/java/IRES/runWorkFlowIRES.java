@@ -23,8 +23,11 @@ import gr.ntua.cslab.asap.operators.Dataset;
 import gr.ntua.cslab.asap.operators.MaterializedOperators;
 import gr.ntua.cslab.asap.operators.Operator;
 import gr.ntua.cslab.asap.rest.beans.OperatorDictionary;
+import gr.ntua.cslab.asap.staticLibraries.MaterializedWorkflowLibrary;
+//import gr.ntua.cslab.asap.daemon.RunningWorkflowLibrary;
 import gr.ntua.cslab.asap.workflow.AbstractWorkflow;
 import gr.ntua.cslab.asap.workflow.AbstractWorkflow1;
+import gr.ntua.cslab.asap.workflow.Workflow;
 import gr.ntua.cslab.asap.workflow.WorkflowNode;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -35,6 +38,8 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import org.apache.commons.io.FileUtils;
 /**
@@ -131,7 +136,8 @@ public class runWorkFlowIRES {
             Thread.sleep(1000);
             if(count>=1)// old value is 1000
 	    break;
-        }       
+        } 
+        //RunningWorkflowLibrary.executeWorkflow(MaterializedWorkflowLibrary.get(workflow));
         wcli.removeMaterializedWorkflow(materializedWorkflow);
 
         return actualTime;
@@ -163,7 +169,7 @@ public class runWorkFlowIRES {
 	Dataset d = new Dataset(Data.get_DataIn()+"_"+Data.get_DatabaseIn()+"_"+Data.get_From());
         d.add("Constraints.Engine.SQL",Data.get_From());
         d.add("Constraints.Engine.location",node_pc);
-        d.add("Constraints.type","SQL");
+        d.add("Constraints.type",Data.get_From());
         d.add("Execution.name",Data.get_DataIn());
         d.add("Execution.schema", Data.get_Schema());
         d.add("Execution.path", "hdfs://"+HDFS+"/"+Data.get_DatabaseIn()+".db/"+Data.get_DataIn());
@@ -191,6 +197,8 @@ public class runWorkFlowIRES {
         String node_pc = new App().getComputerName();
         Dataset d1 = new Dataset(datasetin(Data));
         d1.add("Constraints.Engine.SQL",Data.get_From());
+        d1.add("Constraints.DataInfo.Attributes.number","1");
+	d1.add("Constraints.DataInfo.Attributes.Atr1.type","SQL");
 	d1.add("Constraints.Engine.location",node_pc);
         d1.add("Constraints.type","SQL");
 	d1.add("Execution.name",Data.get_DataIn());
@@ -236,6 +244,8 @@ public class runWorkFlowIRES {
         String node_pc = new App().getComputerName();
         Dataset d1 = new Dataset(datasetin(Data));
         d1.add("Constraints.Engine.SQL",Data.get_From());
+        d1.add("Constraints.DataInfo.Attributes.number","1");
+	d1.add("Constraints.DataInfo.Attributes.Atr1.type",Data.get_From());
 	d1.add("Constraints.Engine.location",node_pc);
         d1.add("Constraints.type","SQL");
 	d1.add("Execution.name",Data.get_DataIn());
@@ -251,6 +261,8 @@ public class runWorkFlowIRES {
         
         Dataset d2 = new Dataset(datasetout(Data));
         d2.add("Constraints.Engine.SQL",Data.get_From());
+        d2.add("Constraints.DataInfo.Attributes.number","1");
+	d2.add("Constraints.DataInfo.Attributes.Atr1.type",Data.get_From());
 	d2.add("Constraints.Engine.location",node_pc);
         d2.add("Constraints.type","SQL");
 	d2.add("Execution.name",Data.get_DataOut());
@@ -321,6 +333,8 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         cli.setConfiguration(conf);        
         AbstractOperator op = new AbstractOperator(AbstractOp);//AopAbstractOperator);//AopAbstractOperator);
         op.add("Constraints.Engine", Data.get_To());
+        op.add("Constraints.Input0.DataInfo.Attributes.number","1");
+	op.add("Constraints.Output0.DataInfo.Attributes.number","1");
         op.add("Constraints.Input.number","1");
 	op.add("Constraints.OpSpecification.Algorithm.name",AlgorithmsName);
 	op.add("Constraints.Output.number", "1");
@@ -581,6 +595,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         mop1.writeToPropertiesFile(directory_operator+mop1.opName);
     }
     public void createWorkflowMove(Move_Data Data, String SQL) throws Exception{
+        List<gr.ntua.cslab.asap.operators.Dataset> materializedDatasets = new ArrayList<gr.ntua.cslab.asap.operators.Dataset>();
         String InPutData = datasetin(Data);//"asapServerLog";//Data.get_DataIn();
         String OutPutData = datasetout(Data);
         String NameOp = Nameop(Data);
@@ -629,6 +644,28 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
 	abstractWorkflow.addOutputEdge(abstractOp,d2,0);
         abstractWorkflow.getWorkflow(d2);
 //	wcli.removeAbstractWorkflow(NameOfAbstractWorkflow);
+    /*-------------------------------------------------------*/
+     System.out.println("\nShowing of abstractWorkflow is here----------------------------------------------------------------:");
+        abstractWorkflow.addMaterializedDatasets(materializedDatasets);               
+        System.out.println("\n----------------------------------------------------------------:");
+        System.out.println(abstractWorkflow.getWorkflow(d1));
+        System.out.println("\nShowing of abstractWorkflow is finished------------------------------------------------------------:");
+		
+        materializedDatasets.add(d2);                
+        
+        System.out.println("\nShowing of original workflow is here----------------------------------------------------------------:");
+        Workflow workflow0 = abstractWorkflow.getWorkflow(d2);
+        System.out.println("\n----------------------------------------------------------------:");        
+        System.out.print(workflow0);
+        System.out.println("\nShowing of original workflow is ended--------------------------------------------------------------:");
+/*
+        Workflow workflow1 = abstractWorkflow.optimizeWorkflow(d2);
+        System.out.println("\nHere is optimization workflow is here-----------------------------------------------------------------------:");
+        System.out.println(workflow1);
+//	System.out.println(workflow1.toString());
+        System.out.println("\nEnd of optimization workflow------------------------------------------------------------------------:");
+        System.out.println(); 
+*/        /*------------------------------------------------------------------------*/
         
     }
     public void createWorkflowJoin(Move_Data Data, String SQL) throws Exception{
