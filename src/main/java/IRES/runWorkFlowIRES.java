@@ -647,14 +647,14 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         System.out.println("\n----------------------------------------------------------------:");        
         System.out.print(workflow0);
         System.out.println("\nShowing of original workflow is ended--------------------------------------------------------------:");
-
+/*
         Workflow workflow1 = abstractWorkflow.optimizeWorkflow(d2);
         System.out.println("\nHere is optimization workflow is here-----------------------------------------------------------------------:");
         System.out.println(workflow1);
 //	System.out.println(workflow1.toString());
         System.out.println("\nEnd of optimization workflow------------------------------------------------------------------------:");
         System.out.println(); 
-        /*------------------------------------------------------------------------*/
+*/        /*------------------------------------------------------------------------*/
         
     }
     public void createWorkflowJoin(Move_Data Data, String SQL) throws Exception{
