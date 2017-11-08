@@ -195,7 +195,7 @@ public class runWorkFlowIRES {
         Dataset d1 = new Dataset(datasetin(Data));
         d1.add("Constraints.Engine.SQL",Data.get_From());
         d1.add("Constraints.DataInfo.Attributes.number","1");
-	d1.add("Constraints.DataInfo.Attributes.Atr1.type","SQL");
+	d1.add("Constraints.DataInfo.Attributes.Atr1.type",Data.get_From());
 	d1.add("Constraints.Engine.location",node_pc);
         d1.add("Constraints.type","SQL");
 	d1.add("Execution.name",Data.get_DataIn());
