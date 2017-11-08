@@ -397,12 +397,12 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         mop1.add("Constraints.Input.number","1");
         mop1.add("Constraints.Input0.Engine.SQL", Data.get_From());
         mop1.add("Constraints.Input0.Engine.location", node_pc);
-        mop1.add("Constraints.Input0.type", "SQL");
+        mop1.add("Constraints.Input0.type", Data.get_From());
         mop1.add("Constraints.OpSpecification.Algorithm.name", AlgorithmsName);        
         mop1.add("Constraints.Output.number","1");
         mop1.add("Constraints.Output0.Engine.SQL", Data.get_To());
         mop1.add("Constraints.Output0.Engine.location", node_pc);
-        mop1.add("Constraints.Output0.type", "SQL");
+        mop1.add("Constraints.Output0.type", Data.get_To());
 
         mop1.add("Optimization.Out0.size", "In0.size");// different in Hive-Spark or Postgres-Spark //Optimization.Out0.size=20
         mop1.add("Optimization.cost", Double.toString(costEstimateValue/10)); 
