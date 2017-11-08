@@ -23,6 +23,8 @@ import gr.ntua.cslab.asap.operators.Dataset;
 import gr.ntua.cslab.asap.operators.MaterializedOperators;
 import gr.ntua.cslab.asap.operators.Operator;
 import gr.ntua.cslab.asap.rest.beans.OperatorDictionary;
+import gr.ntua.cslab.asap.staticLibraries.MaterializedWorkflowLibrary;
+import gr.ntua.cslab.asap.daemon.RunningWorkflowLibrary;
 import gr.ntua.cslab.asap.workflow.AbstractWorkflow;
 import gr.ntua.cslab.asap.workflow.AbstractWorkflow1;
 import gr.ntua.cslab.asap.workflow.Workflow;
@@ -134,7 +136,8 @@ public class runWorkFlowIRES {
             Thread.sleep(1000);
             if(count>=1)// old value is 1000
 	    break;
-        }       
+        } 
+        RunningWorkflowLibrary.executeWorkflow(MaterializedWorkflowLibrary.get(workflow));
         wcli.removeMaterializedWorkflow(materializedWorkflow);
 
         return actualTime;
