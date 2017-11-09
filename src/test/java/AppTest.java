@@ -161,9 +161,10 @@ public class AppTest{
 //        LinearRegressionManual.test_minDataset(training_file,testing_file,0.8);
 //        LinearRegressionManual.TPCH(0.0, "", "100m", "Hive", "Hive", "predict");
 //        Irisa.Enssat.Rennes1.TestScript.testall();
-	Irisa.Enssat.Rennes1.TestMOEA.main(new String[] {"arg"});
+	
         for (int i =0; i<1; i++)
         { 
+            Irisa.Enssat.Rennes1.TestMOEA.main(new String[] {"arg"});
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Hive","Move","training");
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training");
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
