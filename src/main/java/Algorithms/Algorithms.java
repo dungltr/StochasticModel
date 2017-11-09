@@ -632,7 +632,9 @@ public class Algorithms {
         String policy ="metrics,cost,execTime\n"+
                 "groupInputs,execTime,max\n"+
                 "groupInputs,cost,sum\n"+
-                "function,execTime,min"; 
+                "function,execTime,min\n"+
+                "function0,execTime,min\n"+
+                "function1,cost,min"; 
     
         String NameOp = runWorkFlowIRES.Nameop(Data);
         String NameOfWorkflow = NameOp+"_Workflow";     
