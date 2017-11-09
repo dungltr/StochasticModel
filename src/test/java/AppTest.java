@@ -161,11 +161,12 @@ public class AppTest{
 //        LinearRegressionManual.test_minDataset(training_file,testing_file,0.8);
 //        LinearRegressionManual.TPCH(0.0, "", "100m", "Hive", "Hive", "predict");
 //        Irisa.Enssat.Rennes1.TestScript.testall();
-	for (int i =0; i<1; i++)
+	Irisa.Enssat.Rennes1.TestMOEA.main(new String[] {"arg"});
+        for (int i =0; i<1; i++)
         { 
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Hive","Move","training");
-          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training");
-          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
+//          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training");
+//          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Postgres","Move","training");
 
 //          TPCHQuery.Join(Math.random(),"tpch","100m","Postgres","Postgres","Join","training");
@@ -183,10 +184,6 @@ public class AppTest{
 //      IRES.TestWorkFlow.createWorkflowJoin();
 	}
 //    @Test
-    public static void main(String args[]) throws Exception{
-        TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
-        TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training");
-    }
     public void testall() throws Exception{
         double TimeOfDay = 24.00*Math.random();
         int times = 1;
