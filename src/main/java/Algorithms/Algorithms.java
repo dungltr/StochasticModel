@@ -633,7 +633,8 @@ public class Algorithms {
                 "groupInputs,execTime,max\n"+
                 "groupInputs,cost,sum\n"+
                 "function,execTime,min\n"+
-                "function,cost,min"; 
+                "function0,execTime,min\n"+
+                "function1,cost,min"; 
     
         String NameOp = runWorkFlowIRES.Nameop(Data);
         String NameOfWorkflow = NameOp+"_Workflow";     
