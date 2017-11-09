@@ -28,7 +28,7 @@ public class TestMOEA {
     static String MOEA_HOME = new App().readhome("MOEA_HOME");
     public static void main(String[] args) throws IOException {
 		//configure and run this experiment
-		NondominatedPopulation result = new Executor()
+	/*	NondominatedPopulation result = new Executor()
 				.withAlgorithm("NSGAII")
 				.withProblemClass(MyProblem.class)
 				.withMaxEvaluations(10000)
@@ -41,7 +41,7 @@ public class TestMOEA {
 						solution.getObjective(1));
 			}
 		}
-                load();
+        */        load();
 	}
     public static void test(){
         
@@ -84,11 +84,18 @@ public class TestMOEA {
                 .withAlgorithm("NSGAII")
                 .withMaxEvaluations(10000)
                 .run();
-        new Plot()
+        for (Solution solution : nsgaResults) {
+			if (!solution.violatesConstraints()) {
+				System.out.format("%10.4f      %10.4f%n",
+						solution.getObjective(0),
+						solution.getObjective(1));
+			}
+		}
+    /*    new Plot()
                 .add("External", manualSolutions)
                 .add("NSGA-II", nsgaResults)
                 .show();
-    /*    
+        
         ReferenceSetMerger merger = new ReferenceSetMerger();
         merger.add("Manual", manualSolutions);
         merger.add("NSGA-II", nsgaResults);
