@@ -164,7 +164,7 @@ public class AppTest{
 	
         for (int i =0; i<1; i++)
         { 
-            Irisa.Enssat.Rennes1.TestMOEA.main(new String[] {"arg"});
+            Irisa.Enssat.Rennes1.TestMO.main(new String[] {"arg"});
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Hive","Move","training");
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training");
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
