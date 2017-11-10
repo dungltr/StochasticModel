@@ -8,6 +8,7 @@ import static Algorithms.ReadMatrixCSV.readMatrix;
 import Algorithms.testScilab;
 import static Irisa.Enssat.Rennes1.TestMOEA.MOEA_HOME;
 import WriteReadData.CsvFileReader;
+import com.sparkexample.App;
 import java.io.BufferedReader;
 import java.io.File;
 import static java.lang.Math.pow;
@@ -41,7 +42,8 @@ public class TestMO {
     private int numberOfVariables;
     private int numberOfObjectives;
     private int numberOfConstraints;
-    String maxtrixFile = "/Users/letrung/maxtrix.csv";
+    static String MOEA_HOME = new App().readhome("MOEA_HOME");
+    String maxtrixFile = MOEA_HOME+"/matrix.csv";
     int Max = CsvFileReader.count(maxtrixFile);
     double[][] matrixMetrics = readMatrix(maxtrixFile, Max);
 
@@ -146,13 +148,13 @@ public class TestMO {
                 //2.2.5 Print results
 
                 
-                System.out.println("    Solution " + (m + 1) + ":");
+                System.out.println("\n    Solution " + (m + 1) + ":");
                 for (int i=0; i < objectives.length; i++)
                 System.out.print("      Obj "+i+": " + -objectives[i]);
                 System.out.println("    Con 1: " + solution.getConstraint(0));
 
                 for(int j=0;j<x.length;j++){
-                    System.out.print("      Var " + (j+1) + ":" + x[j]);
+                    System.out.print("      Var " + (j+1) + ":" + x[j]+"\n");
                 }
                 
                     //2.2.6 Export results to Excel sheets by different iterations
