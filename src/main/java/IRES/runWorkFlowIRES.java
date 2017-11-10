@@ -269,8 +269,8 @@ public class runWorkFlowIRES {
         d2.add("Execution.schema", Data.get_Schema());
 	d2.add("Optimization.size",Data.get_DataOutSize());  
         if (Data.get_To().toLowerCase().equals("postgres")){          
-            d2.add("Optimization.page",Double.toString(size[3]));
-            d2.add("Optimization.tuple",Double.toString(size[4]));
+            d2.add("Optimization.page",Double.toString(size[4]));
+            d2.add("Optimization.tuple",Double.toString(size[5]));
         }
 	d2.writeToPropertiesFile(directory_datasets + d2.datasetName);  
         
