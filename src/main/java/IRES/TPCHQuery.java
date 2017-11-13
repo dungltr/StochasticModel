@@ -367,7 +367,7 @@ public class TPCHQuery {
         YarnValue yarnValue = new YarnValue(Yarn[0], Yarn[1]);
         yarnValue.set_Ram(Yarn[0]);
         yarnValue.set_Core(Yarn[1]);
-        if (KindOfRunning.toLowerCase().contains("join"))
+        if (KindOfMoving.toLowerCase().contains("join"))
             TestWorkFlow.workflowJoin(Data, Size_tpch, SQL, yarnValue, KindOfRunning, KindOfMoving);
     }
     public static void WorkflowJoinMove(double TimeOfDay, String DB, String Size, String from, String to, String KindOfMoving, String KindOfRunning) throws Exception {
