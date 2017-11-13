@@ -327,7 +327,7 @@ public class TestWorkFlow {
         double[] size = calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch, KindOfMoving);
 
 	double Time_Cost = IRES.runWorkflow(Data, size, NameOfAbstractWorkflow, policy);
-        //wcli.executeWorkflow(materializedWorkflow);
+        wcli.executeWorkflow(materializedWorkflow);
     }
     public static Operator setupOperator(String newOP, String OP_Source) throws FileNotFoundException, IOException, Exception{
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
