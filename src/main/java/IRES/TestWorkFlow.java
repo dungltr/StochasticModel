@@ -196,7 +196,7 @@ public class TestWorkFlow {
         double[] size = calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch, KindOfMoving);
 
 	double Time_Cost = IRES.runWorkflow(Data, size, NameOfAbstractWorkflow, policy);
-        //wcli.executeWorkflow(materializedWorkflow);
+        wcli.executeWorkflow(materializedWorkflow);
     }
     public static void workflowJoin(Move_Data Data, String Size_tpch, String SQL, YarnValue yarnValue, String KindOfMoving, String KindOfRunning) throws Exception   
         {
