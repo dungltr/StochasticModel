@@ -124,7 +124,7 @@ public class runWorkFlowIRES {
         testWriteMatrix2CSV.storeValueServer(Data, "", setupStochasticValue(setupValue(size, estimatedTime)), "execTime_estimate");    
         int count=0;
 	copydata(materializedWorkflow);
-
+        
         while(true){
             String w = wcli.executeWorkflow(materializedWorkflow);
             long start = System.currentTimeMillis();
