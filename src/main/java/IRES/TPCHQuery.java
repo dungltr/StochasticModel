@@ -30,7 +30,7 @@ public class TPCHQuery {
     
     private static int numberOfSize_Hive_Postgres = 6;
     private static int numberOfSize_Postgres_Hive = 5;
-    private static int numberOfSize_Postgres_Postgres = 5;
+    private static int numberOfSize_Postgres_Postgres = 7;
     private static int numberOfSize_TPCH_Postgres_Postgres = 7;
     private static int numberOfSize_Hive_Hive = 3;
     
