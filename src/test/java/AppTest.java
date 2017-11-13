@@ -164,11 +164,11 @@ public class AppTest{
 	
         for (int i =0; i<1; i++)
         { 
-            Irisa.Enssat.Rennes1.TestMO.main(new String[] {"arg"});
-//          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Hive","Move","training");
-//          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training");
-//          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
-//          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Postgres","Move","training");
+//            Irisa.Enssat.Rennes1.TestMO.main(new String[] {"arg"});
+          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Hive","Move","training");
+          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training");
+          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
+          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Postgres","Move","training");
 
 //          TPCHQuery.Join(Math.random(),"tpch","100m","Postgres","Postgres","Join","training");
 //          TPCHQuery.Join(Math.random(),"tpch","100m","Hive","Hive","Join","training");
