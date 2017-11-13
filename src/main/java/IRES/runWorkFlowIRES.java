@@ -170,7 +170,7 @@ public class runWorkFlowIRES {
 	Dataset d = new Dataset(Data.get_DataIn()+"_"+Data.get_DatabaseIn()+"_"+Data.get_From());
         d.add("Constraints.Engine.SQL",Data.get_From());
         d.add("Constraints.Engine.location",node_pc);
-        d.add("Constraints.type",Data.get_From());
+        d.add("Constraints.type","SQL");
         d.add("Execution.name",Data.get_DataIn());
         d.add("Execution.schema", Data.get_Schema());
         d.add("Execution.path", "hdfs://"+HDFS+"/"+Data.get_DatabaseIn()+".db/"+Data.get_DataIn());
@@ -198,8 +198,8 @@ public class runWorkFlowIRES {
         String node_pc = new App().getComputerName();
         Dataset d1 = new Dataset(datasetin(Data));
         d1.add("Constraints.Engine.SQL",Data.get_From());
-        d1.add("Constraints.DataInfo.Attributes.number","1");
-	d1.add("Constraints.DataInfo.Attributes.Atr1.type","SQL");
+        //d1.add("Constraints.DataInfo.Attributes.number","1");
+	//d1.add("Constraints.DataInfo.Attributes.Atr1.type","SQL");
 	d1.add("Constraints.Engine.location",node_pc);
         d1.add("Constraints.type","SQL");
 	d1.add("Execution.name",Data.get_DataIn());
@@ -245,8 +245,8 @@ public class runWorkFlowIRES {
         String node_pc = new App().getComputerName();
         Dataset d1 = new Dataset(datasetin(Data));
         d1.add("Constraints.Engine.SQL",Data.get_From());
-        d1.add("Constraints.DataInfo.Attributes.number","1");
-	d1.add("Constraints.DataInfo.Attributes.Atr1.type",Data.get_From());
+        //d1.add("Constraints.DataInfo.Attributes.number","1");
+	//d1.add("Constraints.DataInfo.Attributes.Atr1.type",Data.get_From());
 	d1.add("Constraints.Engine.location",node_pc);
         d1.add("Constraints.type","SQL");
 	d1.add("Execution.name",Data.get_DataIn());
@@ -262,8 +262,8 @@ public class runWorkFlowIRES {
         
         Dataset d2 = new Dataset(datasetout(Data));
         d2.add("Constraints.Engine.SQL",Data.get_From());
-        d2.add("Constraints.DataInfo.Attributes.number","1");
-	d2.add("Constraints.DataInfo.Attributes.Atr1.type",Data.get_From());
+        //d2.add("Constraints.DataInfo.Attributes.number","1");
+	//d2.add("Constraints.DataInfo.Attributes.Atr1.type",Data.get_From());
 	d2.add("Constraints.Engine.location",node_pc);
         d2.add("Constraints.type","SQL");
 	d2.add("Execution.name",Data.get_DataOut());
@@ -334,8 +334,8 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         cli.setConfiguration(conf);        
         AbstractOperator op = new AbstractOperator(AbstractOp);//AopAbstractOperator);//AopAbstractOperator);
         op.add("Constraints.Engine", Data.get_To());
-        op.add("Constraints.Input0.DataInfo.Attributes.number","1");
-	op.add("Constraints.Output0.DataInfo.Attributes.number","1");
+        //op.add("Constraints.Input0.DataInfo.Attributes.number","1");
+	//op.add("Constraints.Output0.DataInfo.Attributes.number","1");
         op.add("Constraints.Input.number","1");
 	op.add("Constraints.OpSpecification.Algorithm.name",AlgorithmsName);
 	op.add("Constraints.Output.number", "1");
