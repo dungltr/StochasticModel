@@ -859,8 +859,8 @@ public class TPCHQuery {
                 size[1] = testQueryPlan.pageDataset(randomQuery[1],Size_tpch);
                 size[2] = testQueryPlan.tupleDataset(randomQuery[1],Size_tpch);
                 size[3] = testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);
-                //size[4] = testQueryPlan.pageDataset(randomQuery[3],Size_tpch);
-                //size[5] = testQueryPlan.tupleDataset(randomQuery[3],Size_tpch);
+                size[4] = testQueryPlan.pageDataset(randomQuery[3],Size_tpch);
+                size[5] = testQueryPlan.tupleDataset(randomQuery[3],Size_tpch);
                 size[numberOfSize_Postgres_Postgres-1] = 0;
                 return size;
                 }
