@@ -590,6 +590,7 @@ public class Algorithms {
         String KindOfMoving = "";
         if (Data.get_Operator().toLowerCase().contains("move")) KindOfMoving = "move";
         if (Data.get_Operator().toLowerCase().contains("join")) KindOfMoving = "join";
+        if (Data.get_Operator().toLowerCase().contains("sql")) KindOfMoving = "sql";
         if (Data.get_Operator().toLowerCase().equals("tpch")) KindOfMoving = "join";
         
         runWorkFlowIRES IRES = new runWorkFlowIRES();
@@ -599,11 +600,14 @@ public class Algorithms {
             IRES.createAbstractOperatorMove(Data, SQL);      
             IRES.createWorkflowMove(Data, SQL);
         }
-        else{
+        if (Data.get_Operator().toLowerCase().contains("join")){
             IRES.createAbstractOperatorJoin(Data, SQL);
             IRES.createWorkflowJoin(Data, SQL);
         }
-            
+        if (Data.get_Operator().toLowerCase().contains("sql")){
+            IRES.createAbstractOperatorSQL(Data, SQL);
+            IRES.createWorkflowSQL(Data, SQL);
+        }    
        
         
         String delay_ys = "";
@@ -661,11 +665,17 @@ public class Algorithms {
             IRES.createOperatorMove(Data, SQL, costEstimateValue);
             IRES.createDataMove2(Data, SQL, yarnValue);
         }
-        else {
+        if (Data.get_Operator().toLowerCase().contains("join")) {
             IRES.createDatasetJoin(Data, size, SQL, TimeOfDay);//createDatasetMove(Data, SQL);
             IRES.createOperatorJoin(Data, SQL, costEstimateValue);
             IRES.createDataMove2(Data, SQL, yarnValue);
-        }      
+        }  
+        if (Data.get_Operator().toLowerCase().contains("sql")) {
+            IRES.createDatasetSQL(Data, size, SQL, TimeOfDay);//createDatasetMove(Data, SQL);
+            IRES.createOperatorSQL(Data, SQL, costEstimateValue);
+            IRES.createDataMove2(Data, SQL, yarnValue);
+        }
+        
 	Path filePathEstimateValue = Paths.get(estimate); 
         if (!Files.exists(filePathEstimateValue))
             Files.createFile(filePathEstimateValue); 
@@ -721,8 +731,9 @@ public class Algorithms {
         String KindOfMoving = "";
         if (Data.get_Operator().toLowerCase().contains("move")) KindOfMoving = "move";
         if (Data.get_Operator().toLowerCase().contains("join")) KindOfMoving = "join";
+        if (Data.get_Operator().toLowerCase().contains("sql")) KindOfMoving = "join";
         if (Data.get_Operator().toLowerCase().equals("tpch")) KindOfMoving = "join";
-        double[] size_random = TPCHQuery.calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch, KindOfMoving);
+        double[] size_random = TPCHQuery.calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch, "join");
         double[] yarn_random = testQueryPlan.createRandomYarn();
         String directory = testWriteMatrix2CSV.getDirectory(Data) ;
         directory = preapreFile(directory);
@@ -787,8 +798,12 @@ public class Algorithms {
             IRES.createDatasetMove_Hive_Postgres(Data, size, SQL, TimeOfDay);//createDatasetMove(Data, SQL);
             IRES.createDataMove2(Data, SQL, yarnValue);   
             }
-        else{
+        if(Data.get_Operator().toLowerCase().contains("join")){
             IRES.createDatasetJoin(Data, size, SQL, TimeOfDay);//createDatasetMove(Data, SQL);
+            IRES.createDataMove2(Data, SQL, yarnValue); 
+        }
+        if(Data.get_Operator().toLowerCase().contains("sql")){
+            IRES.createDatasetSQL(Data, size, SQL, TimeOfDay);//createDatasetMove(Data, SQL);
             IRES.createDataMove2(Data, SQL, yarnValue); 
         }
 //        }
