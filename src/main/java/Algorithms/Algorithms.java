@@ -580,7 +580,7 @@ public class Algorithms {
         String IRES_HOME = new App().readhome("IRES_HOME");
         String IRES_library = IRES_HOME+"/asap-platform/asap-server";
         String NameOp = Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To();
-        String directory_operator = IRES_library+"defaultAsapLibrary/operators/"+ NameOp;
+        String directory_operator = IRES_library+"/defaultAsapLibrary/operators/"+ NameOp;
         return directory_operator;
     }
     public static String operatorFolder (){
