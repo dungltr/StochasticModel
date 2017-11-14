@@ -688,7 +688,7 @@ public class TPCHQuery {
        
         String SQL_fileName = SQL_folder + "tpch_"+randomQuery[2];; 
         if (KindOfRunning.toLowerCase().equals("training"))
-	SQL_fileName = SQL_folder + randomQuery[2];
+	SQL_fileName = SQL_folder + "tpch_" +randomQuery[2];
         else {
 		if (To.toLowerCase().equals("postgres")) SQL_fileName = SQL_folder + randomQuery[2];
 		else SQL_fileName = SQL_folder+randomQuery[2]; 
