@@ -1053,6 +1053,65 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
                 break;
         }       
     }
+    public void createDataSQL(Move_Data Data, String SQL, YarnValue yarn) throws Exception {
+        String NameOp = Nameop(Data);
+        LuaScript script = new LuaScript();
+        String lua = script.LuaScript2(Data, yarn);
+        createfile(OperatorFolder + "/" + NameOp, NameOp + ".lua", lua);
+       switch (Data.get_From().toLowerCase()) {
+            case "hive":
+                {
+                if (Data.get_To().toLowerCase().contains("postgres"))
+                {
+                    create_Data_Hive_Postgres_remote(Data, SQL);
+                    create_Remote_Hive_CSV(Data, SQL);
+                    create_SQL_Postgres(Data, SQL);
+                }//In, DatabaseIn, Schema, From, To, DataOut, DatabaseOut);
+                else if (Data.get_To().toLowerCase().contains("spark"))
+                    {
+                        create_Data_Hive_Spark(Data);
+                    }
+                else if (Data.get_To().toLowerCase().contains("hive"))
+                    {   
+                        //create_Data_SQL_Hive(Data,SQL); 
+                        //create_Data_SQL_Hive_remote(Data,SQL);
+			create_Data_Hive_Hive_remote(Data, SQL);
+			create_Remote_Hive_CSV(Data,SQL);
+			create_SQL_Hive(Data, SQL);
+                    }                    
+                }
+                break;
+            case "postgres":
+                {
+                if (Data.get_To().toLowerCase().contains("hive")){
+                    create_Data_Postgres_Postgres_remote(Data, SQL);
+                    create_Remote_Postgres_CSV(Data, SQL);
+                    create_SQL_Hive(Data, SQL);
+                    //create_Data_Postgres_Hive(Data);//In, DatabaseIn, Schema, From, To, DataOut, DatabaseOut);
+                }
+                else if (Data.get_To().toLowerCase().contains("spark"))
+                    create_Data_Postgres_Spark(Data);
+                else if (Data.get_To().toLowerCase().contains("postgres"))
+                    //create_Data_SQL_Postgres(Data,SQL);
+                    {
+                    create_Data_Postgres_Postgres_remote(Data, SQL);
+                    create_Remote_Postgres_CSV(Data, SQL);
+                    create_SQL_Postgres(Data, SQL);
+                    }
+                }
+                break;
+            case "spark":
+                {
+                if ((Data.get_To() == "POSTGRES")|| (Data.get_To() == "Postgres")|| (Data.get_To() == "postgres"))
+                    create_Data_Spark_Postgres(Data);//In, DatabaseIn, Schema, From, To, DataOut, DatabaseOut);
+                else if ((Data.get_To() == "HIVE")|| (Data.get_To() == "Hive")|| (Data.get_To() == "hive"))
+                    create_Data_Spark_Hive(Data);
+                }
+                break;
+            default:                
+                break;
+        }       
+    }
     public void create_Data_Hive_Postgres(Move_Data Data, String SQL) {//In, String DatabaseIn, String SchemaIn, String From, String To, String DataOut, String DatabaseOut) {
         String NameOp = Nameop(Data);
         Script script = new Script();       
