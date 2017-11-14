@@ -818,9 +818,13 @@ public class Algorithms {
             //testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), "execTime_estimate");
             }
             if (!Files.exists(filePathParameterValue)){
-            double[] matrix = resetValue(Data, NameOfParameter, size_random, random); 
-            testWriteMatrix2CSV.storeParameter(Data, matrix, NameOfParameter);
-            //testWriteMatrix2CSV.storeParameter(Data, Parameter, NameOfParameter);
+                String fileLink = DefaultDirectory(Data)+"/data/"+NameOfParameter+".csv";
+            Path filePath = Paths.get(fileLink);
+            if (Files.exists(filePath)){
+                double[] matrix = resetValue(Data, NameOfParameter, size_random, random); 
+                testWriteMatrix2CSV.storeParameter(Data, matrix, NameOfParameter);
+                }
+            else testWriteMatrix2CSV.storeParameter(Data, Parameter, NameOfParameter);
             }
         }
         //FileUtils.copyDirectory(FileUtils.getFile(DefaultDirectory(Data)+"/data"), 
