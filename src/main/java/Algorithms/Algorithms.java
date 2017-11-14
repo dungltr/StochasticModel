@@ -785,32 +785,38 @@ public class Algorithms {
             double delay = SimulateStochastic.waiting(Numberuser,TimeOfDay);
             TimeRepsonse = TimeRepsonse + delay;                   
             size_random[size_random.length-1] = TimeOfDay;  
-        
+            int Max = 0;
+            int random = 0;
             if (!Files.exists(filePathRealValue)){
-            double[] matrix = resetValue(Data, NameOfRealValue);     
-            testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(matrix,TimeRepsonse)), NameOfRealValue);
+            String fileLink = DefaultDirectory(Data)+"/data/"+NameOfRealValue+".csv";
+            Max = CsvFileReader.count(fileLink)-1;
+            double[][] matrix = readMatrix(fileLink, Max);
+            Random rn = new Random();
+            random = rn.nextInt(matrix.length);
+            double[] array = resetValue(Data, NameOfRealValue, size_random, random);     
+            testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(array,TimeRepsonse)), NameOfRealValue);
            
             //testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfRealValue);
             }
             if (!Files.exists(filePathExecTime)){
-            double[] matrix = resetValue(Data, "execTime"); 
+            double[] matrix = resetValue(Data, "execTime", size_random, random); 
             testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(matrix, TimeRepsonse)), "execTime");
             //testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random, TimeRepsonse)), "execTime");
             
             }
             if (!Files.exists(filePathEstimateValue)){
-            double[] matrix = resetValue(Data, NameOfEstimateValue);     
+            double[] matrix = resetValue(Data, NameOfEstimateValue, size_random, random);     
             testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(matrix, TimeRepsonse)), NameOfEstimateValue);
             //testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfEstimateValue);
             
             }
             if (!Files.exists(filePathExecTime_Estimate)){
-            double[] matrix = resetValue(Data, "execTime_estimate"); 
+            double[] matrix = resetValue(Data, "execTime_estimate", size_random, random); 
             testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(matrix,TimeRepsonse)), "execTime_estimate");
             //testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), "execTime_estimate");
             }
             if (!Files.exists(filePathParameterValue)){
-            double[] matrix = resetValue(Data, NameOfParameter); 
+            double[] matrix = resetValue(Data, NameOfParameter, size_random, random); 
             testWriteMatrix2CSV.storeParameter(Data, matrix, NameOfParameter);
             //testWriteMatrix2CSV.storeParameter(Data, Parameter, NameOfParameter);
             }
@@ -833,13 +839,15 @@ public class Algorithms {
 //        }
         
     }
-    public static double[] resetValue(Move_Data Data, String NameOfRealValue) throws IOException{
+    public static double[] resetValue(Move_Data Data, String NameOfRealValue, double[] array, int random) throws IOException{
         String fileLink = DefaultDirectory(Data)+"/data/"+NameOfRealValue+".csv";
-        int Max = Max = CsvFileReader.count(fileLink)-1;
-        double[][] matrix = readMatrix(fileLink, Max);
-        Random rn = new Random();
-        int random = rn.nextInt(matrix.length);
+        Path filePath = Paths.get(fileLink);
+        if (Files.exists(filePath)){
+        int Max = CsvFileReader.count(fileLink)-1;
+        double[][] matrix = readMatrix(fileLink, Max);       
         return matrix[random];
+        }
+        else return array;
     }
     public static double[] roundMaxtrix(double [] tmp){
         double [] matrix = new double[tmp.length];
