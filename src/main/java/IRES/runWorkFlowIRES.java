@@ -1084,7 +1084,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
             case "postgres":
                 {
                 if (Data.get_To().toLowerCase().contains("hive")){
-                    create_Data_Postgres_Postgres_remote(Data, SQL);
+                    create_Data_Postgres_Hive_remote(Data, SQL);
                     create_Remote_Postgres_CSV(Data, SQL);
                     create_SQL_Hive(Data, SQL);
                     //create_Data_Postgres_Hive(Data);//In, DatabaseIn, Schema, From, To, DataOut, DatabaseOut);
@@ -1149,6 +1149,16 @@ public void create_Data_Hive_Hive_remote(Move_Data Data, String SQL) {//In, Stri
         String sh = "";
         if (Data.get_Operator().contains("TPCH"))
             sh = script.top_sh(Data) + script.POSTGRES2CSV_remote() + script.CSV2Posgres() + script.TPCH_Postgres_SQL(Data,SQL) + script.bottom_sh();
+        else 
+            sh = script.top_sh(Data) + script.POSTGRES2CSV_remote() + script.CSV2Posgres() + script.Postgres_SQL(SQL) + script.bottom_sh();
+        createfile(OperatorFolder + "/" + NameOp, NameOp + ".sh", sh);
+    }
+    public void create_Data_Postgres_Hive_remote(Move_Data Data, String SQL) {//In, String DatabaseIn, String SchemaIn, String From, String To, String DataOut, String DatabaseOut) {
+        String NameOp = Nameop(Data);
+        Script script = new Script();       
+        String sh = "";
+        if (Data.get_Operator().contains("TPCH"))
+            sh = script.top_sh(Data) + script.HIVE2CSV_remote() + script.CSV2HDFS() + script.HDFS2Hive() + script.TPCH_Hive_SQL(Data,SQL) + script.bottom_sh();
         else 
             sh = script.top_sh(Data) + script.POSTGRES2CSV_remote() + script.CSV2Posgres() + script.Postgres_SQL(SQL) + script.bottom_sh();
         createfile(OperatorFolder + "/" + NameOp, NameOp + ".sh", sh);
