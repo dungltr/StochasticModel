@@ -296,7 +296,7 @@ public class runWorkFlowIRES {
         d1.add("Execution.schema", Data.get_Schema());
         d1.add("Execution.path", "hdfs://"+HDFS+"/"+Data.get_DatabaseIn()+".db/"+Data.get_DataIn());
 	d1.add("Optimization.size",Data.get_DataInSize());      
-        if (Data.get_From().toLowerCase().equals("postgres")){
+        if (Data.get_To().toLowerCase().equals("postgres")){
                 d1.add("Optimization.page",Double.toString(size[1]));
                 d1.add("Optimization.tuple",Double.toString(size[2]));           
             }
