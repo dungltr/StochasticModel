@@ -686,7 +686,7 @@ public class TPCHQuery {
         if (to.toLowerCase().equals("postgres")) DataOutSize = Double.toString(testQueryPlan.tupleDataset(randomQuery[3],Size_tpch));
         String DatabaseOut = database + Size_tpch;       
        
-        String SQL_fileName = SQL_folder + randomQuery[2];; 
+        String SQL_fileName = SQL_folder + "tpch_"+randomQuery[2];; 
         if (KindOfRunning.toLowerCase().equals("training"))
 	SQL_fileName = SQL_folder + randomQuery[2];
         else {
