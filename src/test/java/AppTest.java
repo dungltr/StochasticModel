@@ -10,7 +10,6 @@ import Algorithms.testScilab;
 import Algorithms.testWriteMatrix2CSV;
 import IRES.TPCHQuery;
 import IRES.runWorkFlowIRES;
-import IRES.testCreateDatabase;
 import IRES.testQueryPlan;
 import LibraryIres.Move;
 import LibraryIres.Move_Data;
