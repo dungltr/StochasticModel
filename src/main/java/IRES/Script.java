@@ -229,7 +229,7 @@ public class Script {
 //"#rm /mnt/Data/tmp/$TABLE_OUT.csv\n" +
 //"#rm /mnt/Data/tmp/$TABLE.csv\n" +                
                 
-"rm -r $BASE_IN/$TABLE/*\n"+ "\n";
+"#rm -r $BASE_IN/$TABLE/*\n"+ "\n";
         return CSV2Postgres;
     }
     public String Postgres2CSV() {
@@ -254,7 +254,7 @@ public class Script {
 "$HADOOP_HOME/bin/hdfs dfs -rm -r $HDFS/$TABLE\n" +                
 "#rm /mnt/Data/tmp/$TABLE_OUT.csv\n" +
 "#rm /mnt/Data/tmp/$TABLE.csv\n" +                
-"rm -r $BASE_IN/$TABLE\n" + "\n";
+"#rm -r $BASE_IN/$TABLE\n" + "\n";
         return HDFS2Hive;
     }
     public String Parquet2CSV(Move_Data Data) {
