@@ -731,9 +731,9 @@ public class Algorithms {
         String KindOfMoving = "";
         if (Data.get_Operator().toLowerCase().contains("move")) KindOfMoving = "move";
         if (Data.get_Operator().toLowerCase().contains("join")) KindOfMoving = "join";
-        if (Data.get_Operator().toLowerCase().contains("sql")) KindOfMoving = "join";
+        if (Data.get_Operator().toLowerCase().contains("sql")) KindOfMoving = "sql";
         if (Data.get_Operator().toLowerCase().equals("tpch")) KindOfMoving = "join";
-        double[] size_random = TPCHQuery.calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch, "join");
+        double[] size_random = TPCHQuery.calculateSize(randomQuery, Data.get_From(), Data.get_To(), Size_tpch, KindOfMoving);
         double[] yarn_random = testQueryPlan.createRandomYarn();
         String directory = testWriteMatrix2CSV.getDirectory(Data) ;
         directory = preapreFile(directory);
