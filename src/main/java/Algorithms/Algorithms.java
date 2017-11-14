@@ -673,7 +673,7 @@ public class Algorithms {
         if (Data.get_Operator().toLowerCase().contains("sql")) {
             IRES.createDatasetSQL(Data, size, SQL, TimeOfDay);//createDatasetMove(Data, SQL);
             IRES.createOperatorSQL(Data, SQL, costEstimateValue);
-            IRES.createDataMove2(Data, SQL, yarnValue);
+            IRES.createDataSQL(Data, SQL, yarnValue);
         }
         
 	Path filePathEstimateValue = Paths.get(estimate); 
