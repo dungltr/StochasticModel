@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import org.apache.commons.io.FileUtils;
 import static org.apache.commons.math.util.MathUtils.round;
 /**
  *
@@ -575,6 +576,13 @@ public class Algorithms {
             Files.createFile(filePathExecTimeValue);
         return directoryData;
     }
+    public static String DefaultDirectory(Move_Data Data){
+        String IRES_HOME = new App().readhome("IRES_HOME");
+        String IRES_library = IRES_HOME+"/asap-platform/asap-server";
+        String NameOp = Data.get_Operator()+"_"+Data.get_From()+"_"+Data.get_To();
+        String directory_operator = IRES_library+"defaultAsapLibrary/operators/"+ NameOp;
+        return directory_operator;
+    }
     public static String operatorFolder (){
         String IRES_HOME = new App().readhome("IRES_HOME");       
         String IRES_library = IRES_HOME+"/asap-platform/asap-server";    
@@ -804,8 +812,10 @@ public class Algorithms {
         }
         if(Data.get_Operator().toLowerCase().contains("sql")){
             IRES.createDatasetSQL(Data, size, SQL, TimeOfDay);//createDatasetMove(Data, SQL);
-            IRES.createDataMove2(Data, SQL, yarnValue); 
+            IRES.createDataSQL(Data, SQL, yarnValue); 
         }
+        FileUtils.copyDirectory(FileUtils.getFile(DefaultDirectory(Data)+"/data"), 
+                            FileUtils.getFile(directory+"/data"));
 //        }
         
     }
