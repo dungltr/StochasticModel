@@ -781,7 +781,7 @@ public class Algorithms {
             TimeOfDay = 24*Math.random();
             randomQuery = testQueryPlan.createRandomQuery("",Size_tpch);
             size_random = TPCHQuery.calculateSize(randomQuery,Data.get_From(), Data.get_To(),Size_tpch,KindOfMoving);
-            TimeRepsonse =  Math.random()*500;//IRES.runWorkflow(NameOfWorkflow, policy);
+            TimeRepsonse =  Math.random()*50;//IRES.runWorkflow(NameOfWorkflow, policy);
             double delay = SimulateStochastic.waiting(Numberuser,TimeOfDay);
             TimeRepsonse = TimeRepsonse + delay;                   
             size_random[size_random.length-1] = TimeOfDay;  
@@ -802,8 +802,8 @@ public class Algorithms {
             testWriteMatrix2CSV.storeParameter(Data, Parameter, NameOfParameter);
         
         }
-        FileUtils.copyDirectory(FileUtils.getFile(DefaultDirectory(Data)+"/data"), 
-                            FileUtils.getFile(directory));
+        //FileUtils.copyDirectory(FileUtils.getFile(DefaultDirectory(Data)+"/data"), 
+        //                    FileUtils.getFile(directory));
         if(Data.get_Operator().toLowerCase().contains("move")){
             IRES.createDatasetMove_Hive_Postgres(Data, size, SQL, TimeOfDay);//createDatasetMove(Data, SQL);
             IRES.createDataMove2(Data, SQL, yarnValue);   
