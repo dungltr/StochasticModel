@@ -775,7 +775,7 @@ public class Algorithms {
             
 
         double[] Parameter = initParamter(numberParameter);
-
+        Random rn = new Random();
         for (i = 0; i < size.length+2; i++){   
             System.out.println("\nTest Time:"+i+"--------------------------------------------------------");
             TimeOfDay = 24*Math.random();
@@ -787,7 +787,7 @@ public class Algorithms {
             size_random[size_random.length-1] = TimeOfDay;  
             int Max = 0;
             int random = 0;
-            Random rn = new Random();
+            
             if (!Files.exists(filePathRealValue)){
             String fileLink = DefaultDirectory(Data)+"/data/"+NameOfRealValue+".csv";
             Path filePath = Paths.get(fileLink);
