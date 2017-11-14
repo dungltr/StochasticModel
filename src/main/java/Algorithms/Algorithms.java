@@ -795,34 +795,44 @@ public class Algorithms {
                 Max = CsvFileReader.count(fileLink)-1;
                 double[][] matrix = readMatrix(fileLink, Max);          
                 random = rn.nextInt(matrix.length);
-                double[] array = resetValue(Data, NameOfRealValue, size_random, random);     
+                double[] Array = resetValue(Data, NameOfRealValue, size_random, random); 
+                TimeRepsonse = Array[Array.length-1];
+                double[] array = cutOff(Array);
                 testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(array,TimeRepsonse)), NameOfRealValue);
                 }
                 else testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfRealValue);
             }
             if (!Files.exists(filePathExecTime)){
-            double[] matrix = resetValue(Data, "execTime", size_random, random); 
-            testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(matrix, TimeRepsonse)), "execTime");
+            double[] Array = resetValue(Data, "execTime", size_random, random); 
+            TimeRepsonse = Array[Array.length-1];
+            double[] array = cutOff(Array);
+            testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(array, TimeRepsonse)), "execTime");
             //testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random, TimeRepsonse)), "execTime");
             
             }
             if (!Files.exists(filePathEstimateValue)){
-            double[] matrix = resetValue(Data, NameOfEstimateValue, size_random, random);     
-            testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(matrix, TimeRepsonse)), NameOfEstimateValue);
+            double[] Array = resetValue(Data, NameOfEstimateValue, size_random, random);
+            TimeRepsonse = Array[Array.length-1];
+            double[] array = cutOff(Array);
+            testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(array, TimeRepsonse)), NameOfEstimateValue);
             //testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfEstimateValue);
             
             }
             if (!Files.exists(filePathExecTime_Estimate)){
-            double[] matrix = resetValue(Data, "execTime_estimate", size_random, random); 
-            testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(matrix,TimeRepsonse)), "execTime_estimate");
+            double[] Array = resetValue(Data, "execTime_estimate", size_random, random); 
+            TimeRepsonse = Array[Array.length-1];
+            double[] array = cutOff(Array);
+            testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(array,TimeRepsonse)), "execTime_estimate");
             //testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), "execTime_estimate");
             }
             if (!Files.exists(filePathParameterValue)){
                 String fileLink = DefaultDirectory(Data)+"/data/"+NameOfParameter+".csv";
             Path filePath = Paths.get(fileLink);
             if (Files.exists(filePath)){
-                double[] matrix = resetValue(Data, NameOfParameter, size_random, random); 
-                testWriteMatrix2CSV.storeParameter(Data, matrix, NameOfParameter);
+                double[] Array = resetValue(Data, NameOfParameter, size_random, random); 
+                //TimeRepsonse = Array[Array.length-1];
+                //double[] array = cutOff(Array);
+                testWriteMatrix2CSV.storeParameter(Data, Array, NameOfParameter);
                 }
             else testWriteMatrix2CSV.storeParameter(Data, Parameter, NameOfParameter);
             }
@@ -844,6 +854,12 @@ public class Algorithms {
         
 //        }
         
+    }
+    public static double[] cutOff (double[] Array){
+        double [] array = new double[Array.length-1];
+        for (int i = 0; i< array.length; i++)
+            array[i] = Array[i];
+        return array;
     }
     public static double[] resetValue(Move_Data Data, String NameOfRealValue, double[] array, int random) throws IOException{
         String fileLink = DefaultDirectory(Data)+"/data/"+NameOfRealValue+".csv";
