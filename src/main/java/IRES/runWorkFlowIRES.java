@@ -296,11 +296,11 @@ public class runWorkFlowIRES {
         d1.add("Execution.schema", Data.get_Schema());
         d1.add("Execution.path", "hdfs://"+HDFS+"/"+Data.get_DatabaseIn()+".db/"+Data.get_DataIn());
 	d1.add("Optimization.size",Data.get_DataInSize());      
-        if (Data.get_To().toLowerCase().equals("postgres")){
+/*        if (Data.get_To().toLowerCase().equals("postgres")){
                 d1.add("Optimization.page",Double.toString(size[1]));
                 d1.add("Optimization.tuple",Double.toString(size[2]));           
             }
-        d1.add("Optimization.random",Double.toString(TimeOfDay));
+*/        d1.add("Optimization.random",Double.toString(TimeOfDay));
 	d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
         
         Dataset d2 = new Dataset(datasetout(Data));
@@ -312,11 +312,11 @@ public class runWorkFlowIRES {
 	d2.add("Execution.name",Data.get_DataOut());
         d2.add("Execution.schema", Data.get_Schema());
 	d2.add("Optimization.size",Data.get_DataOutSize());  
-        if (Data.get_To().toLowerCase().equals("postgres")){          
+/*        if (Data.get_To().toLowerCase().equals("postgres")){          
             d2.add("Optimization.page",Double.toString(size[4]));
             d2.add("Optimization.tuple",Double.toString(size[5]));
         }
-	d2.writeToPropertiesFile(directory_datasets + d2.datasetName);  
+*/	d2.writeToPropertiesFile(directory_datasets + d2.datasetName);  
         
         Dataset d3 = new Dataset(datasetout2 (Data));
         d3.add("Constraints.Engine.SQL",Data.get_To());
@@ -497,6 +497,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
             mop1.add("Optimization.inputSpace.In0.page", "Double,1E8,1E10,l");
             mop1.add("Optimization.inputSpace.In0.tuple", "Double,1E8,1E10,l");
         }
+
 /*        if ((Data.get_To().toLowerCase().equals("postgres")||
                 Data.get_From().toLowerCase().equals("postgres"))&&(SQL.equals(""))){
             mop1.add("Optimization.inputSpace.In0.page", "Double,1E8,1E10,l");
@@ -713,13 +714,13 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         mop1.add("Optimization.inputSpace.In0.size", "Double,1E8,1E10,l");
         mop1.add("Optimization.inputSpace.In1.size", "Double,1E8,1E10,l");
         
-        if (Data.get_To().toLowerCase().equals("postgres")){
+/*        if (Data.get_To().toLowerCase().equals("postgres")){
             mop1.add("Optimization.inputSpace.In0.page", "Double,1E8,1E10,l");
             mop1.add("Optimization.inputSpace.In0.tuple", "Double,1E8,1E10,l");
 //            mop1.add("Optimization.inputSpace.In1.page", "Double,1E8,1E10,l");
 //            mop1.add("Optimization.inputSpace.In1.tuple", "Double,1E8,1E10,l");
         }
-        mop1.add("Optimization.inputSpace.In0.random", "Double,1E8,1E10,l");
+*/        mop1.add("Optimization.inputSpace.In0.random", "Double,1E8,1E10,l");
 
 	mop1.add("Optimization.model.Out0.size", "gr.ntua.ece.cslab.panic.core.models.UserFunction");
         mop1.add("Optimization.model.cost",      "gr.ntua.ece.cslab.panic.core.models.UserFunction");//AbstractWekaModel");//UserFunction");//UserFunction");       
