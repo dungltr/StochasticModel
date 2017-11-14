@@ -834,7 +834,7 @@ public class Algorithms {
         
     }
     public static double[] resetValue(Move_Data Data, String NameOfRealValue) throws IOException{
-        String fileLink = DefaultDirectory(Data)+"/data/"+NameOfRealValue;
+        String fileLink = DefaultDirectory(Data)+"/data/"+NameOfRealValue+".csv";
         int Max = Max = CsvFileReader.count(fileLink)-1;
         double[][] matrix = readMatrix(fileLink, Max);
         Random rn = new Random();
