@@ -785,22 +785,22 @@ public class Algorithms {
             double delay = SimulateStochastic.waiting(Numberuser,TimeOfDay);
             TimeRepsonse = TimeRepsonse + delay;                   
             size_random[size_random.length-1] = TimeOfDay;  
-            /*
+        
             if (!Files.exists(filePathRealValue))
             testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfRealValue);
             
-            //if (!Files.exists(filePathExecTime))
-            //testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random, TimeRepsonse)), "execTime");
+            if (!Files.exists(filePathExecTime))
+            testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random, TimeRepsonse)), "execTime");
             
             if (!Files.exists(filePathEstimateValue))
             testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfEstimateValue);
             
-            //if (!Files.exists(filePathExecTime_Estimate))
-            //testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), "execTime_estimate");
+            if (!Files.exists(filePathExecTime_Estimate))
+            testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), "execTime_estimate");
             
             if (!Files.exists(filePathParameterValue))
             testWriteMatrix2CSV.storeParameter(Data, Parameter, NameOfParameter);
-            */
+        
         }
         FileUtils.copyDirectory(FileUtils.getFile(DefaultDirectory(Data)+"/data"), 
                             FileUtils.getFile(directory));
