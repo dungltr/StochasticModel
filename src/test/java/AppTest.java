@@ -10,7 +10,6 @@ import Algorithms.testScilab;
 import Algorithms.testWriteMatrix2CSV;
 import IRES.TPCHQuery;
 import IRES.runWorkFlowIRES;
-import IRES.testCreateDatabase;
 import IRES.testQueryPlan;
 import LibraryIres.Move;
 import LibraryIres.Move_Data;
@@ -169,7 +168,7 @@ public class AppTest{
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training");
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Postgres","Move","training");
-            TPCHQuery.SQL(Math.random(),"tpch","100m","Hive","Postgres","SQL","training");
+            TPCHQuery.SQL(Math.random(),"tpch","100m","Hive","Hive","SQL","training");
 
 //          TPCHQuery.Join(Math.random(),"tpch","100m","Postgres","Postgres","Join","training");
 //          TPCHQuery.Join(Math.random(),"tpch","100m","Hive","Hive","Join","training");

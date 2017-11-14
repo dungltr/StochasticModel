@@ -62,12 +62,12 @@ public class Script {
 "BASE=/mnt/Data/tmp\n" +
 "BASE_IN="+base_in+"\n" +
 "BASE_OUT="+base_out+"\n" +
-"DATABASE=$1\n" +
-"#DATABASE="+Database_In+"\n" +                
-"TABLE=$2\n" +
-"#TABLE="+Table_In+"\n" + 
-"SCHEMA=$3\n"+ 
-"#SCHEMA="+Schema+"\n"+  
+"#DATABASE=$1\n" +
+"DATABASE="+Database_In+"\n" +                
+"#TABLE=$2\n" +
+"TABLE="+Table_In+"\n" + 
+"#SCHEMA=$3\n"+ 
+"SCHEMA="+Schema+"\n"+  
 "SPARK_PORT=$4\n" +
 "#SPARK_PORT=local[*]\n" +                
 "DATABASE_OUT="+Database_Out+"\n" +
@@ -229,7 +229,7 @@ public class Script {
 //"#rm /mnt/Data/tmp/$TABLE_OUT.csv\n" +
 //"#rm /mnt/Data/tmp/$TABLE.csv\n" +                
                 
-"rm -r $BASE_IN/$TABLE/*\n"+ "\n";
+"#rm -r $BASE_IN/$TABLE/*\n"+ "\n";
         return CSV2Postgres;
     }
     public String Postgres2CSV() {
@@ -254,7 +254,7 @@ public class Script {
 "$HADOOP_HOME/bin/hdfs dfs -rm -r $HDFS/$TABLE\n" +                
 "#rm /mnt/Data/tmp/$TABLE_OUT.csv\n" +
 "#rm /mnt/Data/tmp/$TABLE.csv\n" +                
-"rm -r $BASE_IN/$TABLE\n" + "\n";
+"#rm -r $BASE_IN/$TABLE\n" + "\n";
         return HDFS2Hive;
     }
     public String Parquet2CSV(Move_Data Data) {
