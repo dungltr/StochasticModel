@@ -786,21 +786,34 @@ public class Algorithms {
             TimeRepsonse = TimeRepsonse + delay;                   
             size_random[size_random.length-1] = TimeOfDay;  
         
-            if (!Files.exists(filePathRealValue))
-            testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfRealValue);
+            if (!Files.exists(filePathRealValue)){
+            double[] matrix = resetValue(Data, NameOfRealValue);     
+            testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(matrix,TimeRepsonse)), NameOfRealValue);
+           
+            //testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfRealValue);
+            }
+            if (!Files.exists(filePathExecTime)){
+            double[] matrix = resetValue(Data, "execTime"); 
+            testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(matrix, TimeRepsonse)), "execTime");
+            //testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random, TimeRepsonse)), "execTime");
             
-            if (!Files.exists(filePathExecTime))
-            testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random, TimeRepsonse)), "execTime");
+            }
+            if (!Files.exists(filePathEstimateValue)){
+            double[] matrix = resetValue(Data, NameOfEstimateValue);     
+            testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(matrix, TimeRepsonse)), NameOfEstimateValue);
+            //testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfEstimateValue);
             
-            if (!Files.exists(filePathEstimateValue))
-            testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfEstimateValue);
-            
-            if (!Files.exists(filePathExecTime_Estimate))
-            testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), "execTime_estimate");
-            
-            if (!Files.exists(filePathParameterValue))
-            testWriteMatrix2CSV.storeParameter(Data, Parameter, NameOfParameter);
-        
+            }
+            if (!Files.exists(filePathExecTime_Estimate)){
+            double[] matrix = resetValue(Data, "execTime_estimate"); 
+            testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(matrix,TimeRepsonse)), "execTime_estimate");
+            //testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), "execTime_estimate");
+            }
+            if (!Files.exists(filePathParameterValue)){
+            double[] matrix = resetValue(Data, NameOfParameter); 
+            testWriteMatrix2CSV.storeParameter(Data, matrix, NameOfParameter);
+            //testWriteMatrix2CSV.storeParameter(Data, Parameter, NameOfParameter);
+            }
         }
         //FileUtils.copyDirectory(FileUtils.getFile(DefaultDirectory(Data)+"/data"), 
         //                    FileUtils.getFile(directory));
@@ -819,6 +832,14 @@ public class Algorithms {
         
 //        }
         
+    }
+    public static double[] resetValue(Move_Data Data, String NameOfRealValue) throws IOException{
+        String fileLink = DefaultDirectory(Data)+"/data/"+NameOfRealValue;
+        int Max = Max = CsvFileReader.count(fileLink)-1;
+        double[][] matrix = readMatrix(fileLink, Max);
+        Random rn = new Random();
+        int random = rn.nextInt(matrix.length);
+        return matrix[random];
     }
     public static double[] roundMaxtrix(double [] tmp){
         double [] matrix = new double[tmp.length];
