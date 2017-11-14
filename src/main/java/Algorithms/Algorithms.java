@@ -787,16 +787,18 @@ public class Algorithms {
             size_random[size_random.length-1] = TimeOfDay;  
             int Max = 0;
             int random = 0;
+            Random rn = new Random();
             if (!Files.exists(filePathRealValue)){
             String fileLink = DefaultDirectory(Data)+"/data/"+NameOfRealValue+".csv";
-            Max = CsvFileReader.count(fileLink)-1;
-            double[][] matrix = readMatrix(fileLink, Max);
-            Random rn = new Random();
-            random = rn.nextInt(matrix.length);
-            double[] array = resetValue(Data, NameOfRealValue, size_random, random);     
-            testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(array,TimeRepsonse)), NameOfRealValue);
-           
-            //testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfRealValue);
+            Path filePath = Paths.get(fileLink);
+                if (Files.exists(filePath)){
+                Max = CsvFileReader.count(fileLink)-1;
+                double[][] matrix = readMatrix(fileLink, Max);          
+                random = rn.nextInt(matrix.length);
+                double[] array = resetValue(Data, NameOfRealValue, size_random, random);     
+                testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(array,TimeRepsonse)), NameOfRealValue);
+                }
+                else testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfRealValue);
             }
             if (!Files.exists(filePathExecTime)){
             double[] matrix = resetValue(Data, "execTime", size_random, random); 
