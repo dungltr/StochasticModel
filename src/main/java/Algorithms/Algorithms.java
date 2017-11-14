@@ -803,7 +803,7 @@ public class Algorithms {
             */
         }
         FileUtils.copyDirectory(FileUtils.getFile(DefaultDirectory(Data)+"/data"), 
-                            FileUtils.getFile(directory+"/data"));
+                            FileUtils.getFile(directory));
         if(Data.get_Operator().toLowerCase().contains("move")){
             IRES.createDatasetMove_Hive_Postgres(Data, size, SQL, TimeOfDay);//createDatasetMove(Data, SQL);
             IRES.createDataMove2(Data, SQL, yarnValue);   
