@@ -569,7 +569,7 @@ public class testQueryPlan {
                     break;
                 case "customer":
                     {
-                    size = 2.3;
+                    size = 2.32;
                     }
                     break; 
                 case "orders":
