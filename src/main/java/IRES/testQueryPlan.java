@@ -194,7 +194,7 @@ public class testQueryPlan {
 //        String [] query         = {"query0","query0",   "query4","query4",    "query12","query12",      "query13","query13",   "query14","query14",  "query17","query17",  "query19","query19",  "query22","query22"};
 //        String [] dataset_up    = {"lineitem","orders", "lineitem","orders",  "lineitem","orders",       "orders","customer",   "lineitem","part",   "part","lineitem",     "lineitem","part",    "orders","customer"};
         String [] dataset_move  = {"orders","customer","part","lineitem"};
-        String [] query         = {"query12","query13","query14","query17"};
+        String [] query         = {"query12","query13","query14","query19"};
         String [] dataset_up    = {"lineitem","orders","lineitem","part"};
 
         double [] size = new double [dataset_move.length];
