@@ -194,14 +194,8 @@ public class testQueryPlan {
 //        String [] query         = {"query0","query0",   "query4","query4",    "query12","query12",      "query13","query13",   "query14","query14",  "query17","query17",  "query19","query19",  "query22","query22"};
 //        String [] dataset_up    = {"lineitem","orders", "lineitem","orders",  "lineitem","orders",       "orders","customer",   "lineitem","part",   "part","lineitem",     "lineitem","part",    "orders","customer"};
         String [] dataset_move  = {"orders","customer","part","lineitem"};
-<<<<<<< HEAD
-        String [] query         = {"query12","query13","query14","query19"};
-        String [] dataset_up    = {"lineitem","orders","lineitem","part"};
-=======
         String [] query         = {"query12","query13","query14","query4"};
         String [] dataset_up    = {"lineitem","orders","lineitem","orders"};
->>>>>>> 9fb49c5fe4ca6a9665be33d77eccb0e144109c62
-
         double [] size = new double [dataset_move.length];
         int i = rand.nextInt(dataset_move.length);//rand.nextInt(4) + 6;//
         int j,k;
