@@ -313,11 +313,11 @@ public class TPCHQuery {
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
         runWorkFlowIRES IRES = new runWorkFlowIRES();
-        String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);
+        String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);// Running is training or testing
         String From = from;
         String To   = to;
 
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfMoving);
+        double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfMoving);// Moving is join, move or sql
         if (KindOfRunning.equals("testing")&&(From.equals("hive"))&&(To.equals("hive"))) size[1] = Double.parseDouble(randomQuery[0]); 
         double[] Yarn = testQueryPlan.createRandomYarn();
         ////////////////////////////////////////////
