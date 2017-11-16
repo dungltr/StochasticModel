@@ -776,7 +776,7 @@ public class Algorithms {
 
         double[] Parameter = initParamter(numberParameter);
         Random rn = new Random();
-        for (i = 0; i < size.length+2; i++){   
+        for (i = 0; i < size.length+3; i++){   
             System.out.println("\nTest Time:"+i+"--------------------------------------------------------");
             TimeOfDay = 24*Math.random();
             randomQuery = testQueryPlan.createRandomQuery("",Size_tpch);
