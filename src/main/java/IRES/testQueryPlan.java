@@ -196,7 +196,6 @@ public class testQueryPlan {
         String [] dataset_move  = {"orders","customer","part","lineitem"};
         String [] query         = {"query12","query13","query14","query4"};
         String [] dataset_up    = {"lineitem","orders","lineitem","orders"};
-
         double [] size = new double [dataset_move.length];
         int i = rand.nextInt(dataset_move.length);//rand.nextInt(4) + 6;//
         int j,k;
