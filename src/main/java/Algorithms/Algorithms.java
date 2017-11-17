@@ -776,65 +776,60 @@ public class Algorithms {
 
         double[] Parameter = initParamter(numberParameter);
         Random rn = new Random();
-        for (i = 0; i < size.length+3; i++){   
-            System.out.println("\nTest Time:"+i+"--------------------------------------------------------");
-            TimeOfDay = 24*Math.random();
-            randomQuery = testQueryPlan.createRandomQuery("",Size_tpch);
-            size_random = TPCHQuery.calculateSize(randomQuery,Data.get_From(), Data.get_To(),Size_tpch,KindOfMoving);
-            TimeRepsonse =  Math.random()*50;//IRES.runWorkflow(NameOfWorkflow, policy);
-            double delay = SimulateStochastic.waiting(Numberuser,TimeOfDay);
-            TimeRepsonse = TimeRepsonse + delay;                   
-            size_random[size_random.length-1] = TimeOfDay;  
-            int Max = 0;
-            int random = 0;
-            
-            if (!Files.exists(filePathRealValue)){
-            String fileLink = DefaultDirectory(Data)+"/data/"+NameOfRealValue+".csv";
-            Path filePath = Paths.get(fileLink);
+        if (!Files.exists(filePathRealValue)){
+        
+            for (i = 0; i < size.length+3; i++){   
+                System.out.println("\nTest Time:"+i+"--------------------------------------------------------");
+                TimeOfDay = Math.random();
+                randomQuery = testQueryPlan.createRandomQuery("",Size_tpch);
+                size_random = TPCHQuery.calculateSize(randomQuery,Data.get_From(), Data.get_To(),Size_tpch,KindOfMoving);
+                TimeRepsonse =  Math.random()*50;//IRES.runWorkflow(NameOfWorkflow, policy);
+                double delay = SimulateStochastic.waiting(Numberuser,TimeOfDay);
+                TimeRepsonse = TimeRepsonse + delay;                   
+                size_random[size_random.length-1] = TimeOfDay;  
+                int Max = 0;
+                int random = 0;
+
+                String fileLink = DefaultDirectory(Data)+"/data/"+NameOfRealValue+".csv";
+                Path filePath = Paths.get(fileLink);
                 if (Files.exists(filePath)){
-                Max = CsvFileReader.count(fileLink)-1;
-                double[][] matrix = readMatrix(fileLink, Max);          
-                random = rn.nextInt(matrix.length);
-                double[] Array = resetValue(Data, NameOfRealValue, size_random, random); 
-                TimeRepsonse = Array[Array.length-1];
-                double[] array = cutOff(Array);
-                testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(array,TimeRepsonse)), NameOfRealValue);
+                    Max = CsvFileReader.count(fileLink)-1;
+                    double[][] matrix = readMatrix(fileLink, Max);          
+                    random = rn.nextInt(matrix.length);
+                    double[] Array = resetValue(Data, NameOfRealValue, size_random, random); 
+                    TimeRepsonse = Array[Array.length-1];
+                    double[] array = cutOff(Array);
+                    testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(array,TimeRepsonse)), NameOfRealValue);
+
+                    Array = resetValue(Data, "execTime", size_random, random);
+                    TimeRepsonse = Array[Array.length-1];
+                    array = cutOff(Array);
+                    testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(array, TimeRepsonse)), "execTime");
+
+                    Array = resetValue(Data, NameOfEstimateValue, size_random, random);
+                    TimeRepsonse = Array[Array.length-1];
+                    array = cutOff(Array);
+                    testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(array, TimeRepsonse)), NameOfEstimateValue);
+                    //
+                    Array = resetValue(Data, "execTime_estimate", size_random, random); 
+                    TimeRepsonse = Array[Array.length-1];
+                    array = cutOff(Array);
+                    testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(array,TimeRepsonse)), "execTime_estimate");
+
+                    fileLink = DefaultDirectory(Data)+"/data/"+NameOfParameter+".csv";
+                    filePath = Paths.get(fileLink);
+                    double[] Array2 = resetValue(Data, NameOfParameter, size_random, random);
+                    testWriteMatrix2CSV.storeParameter(Data, Array2, NameOfParameter);
                 }
-                else testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfRealValue);
-            }
-            if (!Files.exists(filePathExecTime)){
-            double[] Array = resetValue(Data, "execTime", size_random, random); 
-            TimeRepsonse = Array[Array.length-1];
-            double[] array = cutOff(Array);
-            testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(array, TimeRepsonse)), "execTime");
-            //testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random, TimeRepsonse)), "execTime");
-            
-            }
-            if (!Files.exists(filePathEstimateValue)){
-            double[] Array = resetValue(Data, NameOfEstimateValue, size_random, random);
-            TimeRepsonse = Array[Array.length-1];
-            double[] array = cutOff(Array);
-            testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(array, TimeRepsonse)), NameOfEstimateValue);
-            //testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfEstimateValue);
-            
-            }
-            if (!Files.exists(filePathExecTime_Estimate)){
-            double[] Array = resetValue(Data, "execTime_estimate", size_random, random); 
-            TimeRepsonse = Array[Array.length-1];
-            double[] array = cutOff(Array);
-            testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(array,TimeRepsonse)), "execTime_estimate");
-            //testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), "execTime_estimate");
-            }
-            if (!Files.exists(filePathParameterValue)){
-                String fileLink = DefaultDirectory(Data)+"/data/"+NameOfParameter+".csv";
-            Path filePath = Paths.get(fileLink);
-            if (Files.exists(filePath)){
-                double[] Array = resetValue(Data, NameOfParameter, size_random, random); 
-                //TimeRepsonse = Array[Array.length-1];
-                //double[] array = cutOff(Array);
-                testWriteMatrix2CSV.storeParameter(Data, Array, NameOfParameter);
+                
+            else {
+                    testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfRealValue);
+                    testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), "execTime");
+                    testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), NameOfEstimateValue);
+                    testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size_random,TimeRepsonse)), "execTime_estimate");
+                    testWriteMatrix2CSV.storeParameter(Data, Parameter, NameOfParameter);
                 }
-            else testWriteMatrix2CSV.storeParameter(Data, Parameter, NameOfParameter);
+            
             }
         }
         //FileUtils.copyDirectory(FileUtils.getFile(DefaultDirectory(Data)+"/data"), 
