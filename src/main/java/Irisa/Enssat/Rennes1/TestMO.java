@@ -5,29 +5,14 @@
  */
 package Irisa.Enssat.Rennes1;
 import static Algorithms.ReadMatrixCSV.readMatrix;
-import Algorithms.testScilab;
-import static Irisa.Enssat.Rennes1.TestMOEA.MOEA_HOME;
 import WriteReadData.CsvFileReader;
 import com.sparkexample.App;
-import java.io.BufferedReader;
-import java.io.File;
 import static java.lang.Math.pow;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.moeaframework.util.ReferenceSetMerger;
 import org.moeaframework.Executor;
 import org.moeaframework.core.NondominatedPopulation;
-import org.moeaframework.core.Population;
-import org.moeaframework.core.Problem;
 import org.moeaframework.core.Solution;
 import org.moeaframework.core.variable.EncodingUtils;
 import org.moeaframework.core.variable.RealVariable;
