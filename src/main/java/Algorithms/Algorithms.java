@@ -778,7 +778,7 @@ public class Algorithms {
         Random rn = new Random();
         if (!Files.exists(filePathRealValue)){
         
-            for (i = 0; i < size.length+3; i++){   
+            for (i = 0; i < size.length+2; i++){   
                 System.out.println("\nTest Time:"+i+"--------------------------------------------------------");
                 TimeOfDay = Math.random();
                 randomQuery = testQueryPlan.createRandomQuery("",Size_tpch);
@@ -786,7 +786,7 @@ public class Algorithms {
                 TimeRepsonse =  Math.random()*50;//IRES.runWorkflow(NameOfWorkflow, policy);
                 double delay = SimulateStochastic.waiting(Numberuser,TimeOfDay);
                 TimeRepsonse = TimeRepsonse + delay;                   
-                size_random[size_random.length-1] = TimeOfDay;  
+                //size_random[size_random.length-1] = TimeOfDay;  
                 int Max = 0;
                 int random = 0;
 
