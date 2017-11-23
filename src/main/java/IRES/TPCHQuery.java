@@ -29,7 +29,7 @@ public class TPCHQuery {
     private static int numberOfSize = 3;
     
     private static int numberOfSize_Hive_Postgres = 6;
-    private static int numberOfSize_SQL_Hive_Postgres = 2;
+    private static int numberOfSize_SQL_Hive_Postgres = 3;
     private static int numberOfSize_Postgres_Hive = 5;
     private static int numberOfSize_Postgres_Postgres = 7;
     private static int numberOfSize_TPCH_Postgres_Postgres = 7;
@@ -883,7 +883,7 @@ public class TPCHQuery {
                 double[] size = new double[numberOfSize_SQL_Hive_Postgres];
                 size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
                 size[1] = testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);
-                //size[2] = 0;
+                size[2] = size[0]*size[1];
                 return size;
             }
             if (KindOfMoving.toLowerCase().contains("move")) {   
@@ -911,7 +911,7 @@ public class TPCHQuery {
                 double[] size = new double[numberOfSize_SQL_Hive_Postgres];
                 size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
                 size[1] = testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);
-                //size[2] = 0;
+                size[2] = size[0]*size[1];
                 return size;
             }
             if (KindOfMoving.toLowerCase().contains("move")) {   
