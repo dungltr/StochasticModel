@@ -96,8 +96,24 @@ public class runWorkFlowIRES {
             }
         }
     }
+    public static void deleteModel (Move_Data Data){
+        String modelDirPath = OperatorFolder+Nameop(Data) + "/models";
+        System.out.println("Directory will be deleted is: " + modelDirPath);
+	File modelDir = new File(modelDirPath);
+            if (modelDir.exists()) {
+            //modelDir.delete();
+                try {
+                //Deleting the directory recursively using FileUtils.
+                    FileUtils.deleteDirectory(modelDir);
+                    System.out.println("Directory has been deleted recursively !: " +modelDirPath);
+                } catch (IOException ee) {
+                    System.out.println("Problem occurs when deleting the directory : " + modelDirPath);
+                    ee.printStackTrace();
+                }
+            }
+    }
     public double runWorkflow(Move_Data Data, double[] size, String workflow, String policy) throws Exception{
-        
+        Thread.sleep(1000);
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
         WorkflowClient wcli = new WorkflowClient();
         wcli.setConfiguration(conf);
@@ -108,6 +124,7 @@ public class runWorkFlowIRES {
         System.out.println(materializedWorkflow);
         System.out.println("Add materializedWorkflow successful"+workflow);
         ////Execution 
+	Thread.sleep(1000);
         double estimatedTime = 0;
         double estimatedCost = 0;
         System.out.println(NameOp);
@@ -124,11 +141,12 @@ public class runWorkFlowIRES {
         testWriteMatrix2CSV.storeValueServer(Data, "", setupStochasticValue(setupValue(size, estimatedTime)), "execTime_estimate");    
         int count=0;
 	copydata(materializedWorkflow);
-        
+        Thread.sleep(1000);
         while(true){
             String w = wcli.executeWorkflow(materializedWorkflow);
             long start = System.currentTimeMillis();
             wcli.waitForCompletion(w);
+	    //deleteModel(Data);
             long stop = System.currentTimeMillis();
             actualTime = (double)(stop-start)/1000.0;// -12.0;
             System.out.println("ActualTime of "+NameOp+" is: "+actualTime+" and EstimatedTime of "+NameOp+" is: "+estimatedTime+"-and EstimateCost of "+NameOp+" is: "+estimatedCost);                    
@@ -139,8 +157,6 @@ public class runWorkFlowIRES {
         } 
         //RunningWorkflowLibrary.executeWorkflow(MaterializedWorkflowLibrary.get(workflow));
         wcli.removeMaterializedWorkflow(materializedWorkflow);
-        
-        //actualTime = 12;
         return actualTime;
     }
     public static void reset(String directory){
@@ -518,7 +534,11 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         mop1.add("Optimization.outputSpace.cost", "Double");        
         mop1.add("Optimization.outputSpace.execTime", "Double");
         
+<<<<<<< HEAD
         mop1.add("Optimization.inputSource.type","mongodb");//"csv");
+=======
+        mop1.add("Optimization.inputSource.type","csv");//"mongodb");//"csv");
+>>>>>>> 57ec6edfdd68d857ed644311ef6296f7c19314c6
         mop1.add("Optimization.inputSource.host",node_pc);
         mop1.add("Optimization.inputSource.db","metrics");
        
@@ -655,7 +675,8 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         mop1.add("Execution.Output0.schema", "In0.schema");
 
         cli.addOperator(mop1); 
-        mop1.writeToPropertiesFile(directory_operator+mop1.opName);
+        Thread.sleep(2000);
+	//mop1.writeToPropertiesFile(directory_operator+mop1.opName);
     }
     public void createOperatorSQL(Move_Data Data, String SQL, double costEstimateValue) throws IOException, Exception {
         String node_pc = new App().getComputerName();

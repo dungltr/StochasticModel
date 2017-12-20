@@ -34,6 +34,7 @@ public class Script {
     String ASAP_HOME = IRES_HOME;
     String IRES_library = ASAP_HOME+"/asap-platform/asap-server";
     String directory_operator = IRES_library+"/target/asapLibrary/operators/";
+    String workflow = IRES_library+"/target/asapLibrary/workflows/";
     public String top_sh(Move_Data Data) {
         String NameOp = runWorkFlowIRES.Nameop(Data);
         String Database_In = Data.get_DatabaseIn();
@@ -72,7 +73,7 @@ public class Script {
 "#SPARK_PORT=local[*]\n" +                
 "export DATABASE_OUT="+Database_Out+"\n" +
 "export TABLE_OUT="+Table_Out+"\n" +            
-
+//"#rm -r "+workflow+"*"+"\n"+
 "echo -e \"BASE_IN = \" $BASE_IN\n" +
 "echo -e \"BASE_OUT = \" $BASE_OUT\n" +
 "echo -e \"KEY = \" $key\n" +

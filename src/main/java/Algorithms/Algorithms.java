@@ -694,8 +694,32 @@ public class Algorithms {
         long delay = SimulateStochastic.TimeWaiting(Numberuser,TimeOfDay)/1000;
         Time_Cost = Time_Cost + delay;        
         testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), NameOfRealValue);
-        testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), "execTime");
-        System.out.println("\n Estimate Value is: " + costEstimateValue);
+        testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), "execTime_realValue");
+        int Max_train = 15;
+        if (CsvFileReader.count(directory + "/execTime_realValue.csv")<Max_train)
+        {
+            //testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), "execTime_realValue");
+            testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), "execTime");     
+        }
+        else fixExecTime(Data, Max_train);
+	storeCost(Data,Time_Cost,"execTime_estimate","weka");
+        storeCost(Data,Time_Cost,NameOfEstimateValue,"dream");
+	/*
+	String modelDirPath = OperatorFolder+"/"+NameOp + "/models";
+        File modelDir = new File(modelDirPath);
+            if (modelDir.exists()) {
+            //modelDir.delete();
+                try {
+                //Deleting the directory recursively using FileUtils.
+                    FileUtils.deleteDirectory(modelDir);
+                    System.out.println("Directory has been deleted recursively !");
+                } catch (IOException ee) {
+                    System.out.println("Problem occurs when deleting the directory : " + modelDirPath);
+                    ee.printStackTrace();
+                }
+            }
+	*/
+	System.out.println("\n Estimate Value is: " + costEstimateValue);
         System.out.println("\n Real Value with Delay is: " + Double.toString(Time_Cost));
         System.out.println("\n Real Value without Delay is: " + Double.toString(Time_Cost-delay));
         System.out.println("\n Delay Value is: " + delay); 
@@ -706,10 +730,34 @@ public class Algorithms {
 //        double costEstimateValue2 = batchgradientdescent.estimateGradient(sizeOfValue, realValue, parameter, StochasticValue, R_2_limit);
         //Thread.sleep(1000);
 //        OptimizeWorkFlow Optimize = new OptimizeWorkFlow();
-        OptimizeWorkFlow.OptimizeWorkFlow(Data, policy);
+        //OptimizeWorkFlow.OptimizeWorkFlow(Data, policy);
 
 //////////////////////////////////////////////////////////////////////////////////////          
     }   
+    public static void storeCost(Move_Data Data, double realValue, String estimate, String result) throws IOException {
+        String directory = testWriteMatrix2CSV.getDirectory(Data) ;
+        double [][] estimateMatrix = readMatrix(directory + "/data/"+estimate+".csv",1);
+        double [][] resultMatrix = new double [estimateMatrix.length][estimateMatrix[0].length+1];
+        for (int i = 0; i < resultMatrix.length; i++){
+            for (int j = 0; j < estimateMatrix[0].length; j++)
+                resultMatrix[i][j] = estimateMatrix[i][j];
+            resultMatrix[i][estimateMatrix[0].length] = realValue;
+        }           
+        String resultFile = directory + "/data/"+result+".csv";
+        File file = new File(result);
+        if (file.exists()) 
+            file.delete();
+        Writematrix2CSV.addMatrix2Csv(resultFile, resultMatrix);
+    }
+	public static void fixExecTime(Move_Data Data, int Max) throws IOException{
+        String directory = testWriteMatrix2CSV.getDirectory(Data) ;
+        double [][] execTime = readMatrix(directory + "/data/execTime_realValue.csv", Max);
+        String execTimeFile = directory + "/data/execTime.csv";
+        File file = new File(execTimeFile);
+        if (file.exists()) 
+            file.delete();
+        Writematrix2CSV.addMatrix2Csv(execTimeFile, execTime);
+    }
     public static double[] setupValue(double[] size, double value){
         double[] Value = new double [size.length+1];
         for (int i = 0; i < size.length; i++)
