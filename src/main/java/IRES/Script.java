@@ -73,7 +73,7 @@ public class Script {
 "#SPARK_PORT=local[*]\n" +                
 "export DATABASE_OUT="+Database_Out+"\n" +
 "export TABLE_OUT="+Table_Out+"\n" +            
-"rm -r "+workflow+"*"+"\n"+
+//"#rm -r "+workflow+"*"+"\n"+
 "echo -e \"BASE_IN = \" $BASE_IN\n" +
 "echo -e \"BASE_OUT = \" $BASE_OUT\n" +
 "echo -e \"KEY = \" $key\n" +

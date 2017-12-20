@@ -730,7 +730,7 @@ public class Algorithms {
 //        double costEstimateValue2 = batchgradientdescent.estimateGradient(sizeOfValue, realValue, parameter, StochasticValue, R_2_limit);
         //Thread.sleep(1000);
 //        OptimizeWorkFlow Optimize = new OptimizeWorkFlow();
-        OptimizeWorkFlow.OptimizeWorkFlow(Data, policy);
+        //OptimizeWorkFlow.OptimizeWorkFlow(Data, policy);
 
 //////////////////////////////////////////////////////////////////////////////////////          
     }   

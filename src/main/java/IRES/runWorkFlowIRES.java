@@ -113,7 +113,7 @@ public class runWorkFlowIRES {
             }
     }
     public double runWorkflow(Move_Data Data, double[] size, String workflow, String policy) throws Exception{
-        Thread.sleep(10000);
+        Thread.sleep(1000);
         ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
         WorkflowClient wcli = new WorkflowClient();
         wcli.setConfiguration(conf);
@@ -124,7 +124,7 @@ public class runWorkFlowIRES {
         System.out.println(materializedWorkflow);
         System.out.println("Add materializedWorkflow successful"+workflow);
         ////Execution 
-	Thread.sleep(10000);
+	Thread.sleep(1000);
         double estimatedTime = 0;
         double estimatedCost = 0;
         System.out.println(NameOp);
@@ -141,7 +141,7 @@ public class runWorkFlowIRES {
         testWriteMatrix2CSV.storeValueServer(Data, "", setupStochasticValue(setupValue(size, estimatedTime)), "execTime_estimate");    
         int count=0;
 	copydata(materializedWorkflow);
-        Thread.sleep(10000);
+        Thread.sleep(1000);
         while(true){
             String w = wcli.executeWorkflow(materializedWorkflow);
             long start = System.currentTimeMillis();
@@ -151,7 +151,7 @@ public class runWorkFlowIRES {
             actualTime = (double)(stop-start)/1000.0;// -12.0;
             System.out.println("ActualTime of "+NameOp+" is: "+actualTime+" and EstimatedTime of "+NameOp+" is: "+estimatedTime+"-and EstimateCost of "+NameOp+" is: "+estimatedCost);                    
             count++;
-            Thread.sleep(10000);
+            Thread.sleep(1000);
             if(count>=1)// old value is 1000
 	    break;
         } 
