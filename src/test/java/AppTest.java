@@ -160,7 +160,8 @@ public class AppTest{
 //        LinearRegressionManual.test_minDataset(training_file,testing_file,0.8);
 //        LinearRegressionManual.TPCH(0.0, "", "100m", "Hive", "Hive", "predict");
 //        Irisa.Enssat.Rennes1.TestScript.testall();
-	
+	//TestMO1.main(new String[] {"arg1", "arg2", "arg3"});
+        Drap.SparkControlPartitionSizeLocally.main(new String[] {"arg1", "arg2", "arg3"});
         for (int i =0; i<1; i++)
         { 
 //            Irisa.Enssat.Rennes1.TestMO.main(new String[] {"arg"});
@@ -168,7 +169,7 @@ public class AppTest{
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training");
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Postgres","Move","training");
-            TPCHQuery.SQL(Math.random(),"tpch","100m","Hive","Postgres","SQL","training");
+//            TPCHQuery.SQL(Math.random(),"tpch","100m","Hive","Postgres","SQL","training");
 
 //          TPCHQuery.Join(Math.random(),"tpch","100m","Postgres","Postgres","Join","training");
 //          TPCHQuery.Join(Math.random(),"tpch","100m","Hive","Hive","Join","training");

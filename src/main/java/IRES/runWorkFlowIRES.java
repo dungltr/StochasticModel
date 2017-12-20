@@ -518,7 +518,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         mop1.add("Optimization.outputSpace.cost", "Double");        
         mop1.add("Optimization.outputSpace.execTime", "Double");
         
-        mop1.add("Optimization.inputSource.type","csv");
+        mop1.add("Optimization.inputSource.type","mongodb");//"csv");
         mop1.add("Optimization.inputSource.host",node_pc);
         mop1.add("Optimization.inputSource.db","metrics");
        

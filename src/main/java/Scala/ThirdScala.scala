@@ -32,6 +32,7 @@ class ThirdScala {
   }
   
   def first(){
+    println("\n Hello from Hive")
     val conf = new SparkConf()
             .setAppName("jdf-dt-rtoc-withSQL")
             .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
@@ -41,10 +42,11 @@ class ThirdScala {
     val sc = new SparkContext(conf)
     val sqlContext = new org.apache.spark.sql.SQLContext(sc)
 //    SQLContext sqlContext = new HiveContext(sc) // The error occurred.
-    val data_hive = sqlContext.table("tpch100m.orders")
-    data_hive.createOrReplaceTempView("orders")
-    data_hive.show();
-    
+    //
+    //val data_hive = sqlContext.table("tpch100m.orders")
+    //data_hive.createOrReplaceTempView("orders")
+    //data_hive.show();
+    println("\n Hello from Postgres")
     val spark = SparkSession
         .builder()
         .appName("Spark Postgres Example")
