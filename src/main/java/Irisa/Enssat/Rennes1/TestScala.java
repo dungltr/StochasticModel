@@ -5,13 +5,13 @@
  */
 package Irisa.Enssat.Rennes1;
 
-<<<<<<< HEAD
+
 //import Scala.SimpleApp;
 //import Scala.SecondScala;
-=======
+
 import Scala.SimpleApp;
 import Scala.SecondScala;
->>>>>>> 57ec6edfdd68d857ed644311ef6296f7c19314c6
+
 import Scala.ThirdScala;
 
 /**
@@ -25,11 +25,8 @@ public class TestScala {
         SecondScala Second = new SecondScala();
 //        Second.main_test();
         ThirdScala Third = new ThirdScala();
-<<<<<<< HEAD
-        Third.main();
-=======
 //        Third.main();
->>>>>>> 57ec6edfdd68d857ed644311ef6296f7c19314c6
+
     }
     
 }

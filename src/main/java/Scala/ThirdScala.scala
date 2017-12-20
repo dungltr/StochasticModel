@@ -43,12 +43,12 @@ class ThirdScala {
     val sc = new SparkContext(conf)
     val sqlContext = new org.apache.spark.sql.SQLContext(sc)
 //    SQLContext sqlContext = new HiveContext(sc) // The error occurred.
-<<<<<<< HEAD
+
     //
     //val data_hive = sqlContext.table("tpch100m.orders")
     //data_hive.createOrReplaceTempView("orders")
     //data_hive.show();
-=======
+
     val sparktest = SparkSession
         .builder()
         .appName("Spark HiveTest Example")
@@ -59,7 +59,7 @@ class ThirdScala {
     val data_hive = sqlContext.table("default.orders")
     data_hive.createOrReplaceTempView("orders")
     data_hive.show();
->>>>>>> 57ec6edfdd68d857ed644311ef6296f7c19314c6
+
     println("\n Hello from Postgres")
     val spark = SparkSession
         .builder()

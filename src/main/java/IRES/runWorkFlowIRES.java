@@ -124,7 +124,7 @@ public class runWorkFlowIRES {
         System.out.println(materializedWorkflow);
         System.out.println("Add materializedWorkflow successful"+workflow);
         ////Execution 
-	Thread.sleep(1000);
+	//Thread.sleep(1000);
         double estimatedTime = 0;
         double estimatedCost = 0;
         System.out.println(NameOp);
@@ -141,7 +141,7 @@ public class runWorkFlowIRES {
         testWriteMatrix2CSV.storeValueServer(Data, "", setupStochasticValue(setupValue(size, estimatedTime)), "execTime_estimate");    
         int count=0;
 	copydata(materializedWorkflow);
-        Thread.sleep(1000);
+        //Thread.sleep(1000);
         while(true){
             String w = wcli.executeWorkflow(materializedWorkflow);
             long start = System.currentTimeMillis();
@@ -534,11 +534,8 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         mop1.add("Optimization.outputSpace.cost", "Double");        
         mop1.add("Optimization.outputSpace.execTime", "Double");
         
-<<<<<<< HEAD
-        mop1.add("Optimization.inputSource.type","mongodb");//"csv");
-=======
+
         mop1.add("Optimization.inputSource.type","csv");//"mongodb");//"csv");
->>>>>>> 57ec6edfdd68d857ed644311ef6296f7c19314c6
         mop1.add("Optimization.inputSource.host",node_pc);
         mop1.add("Optimization.inputSource.db","metrics");
        
@@ -675,7 +672,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         mop1.add("Execution.Output0.schema", "In0.schema");
 
         cli.addOperator(mop1); 
-        Thread.sleep(2000);
+        //Thread.sleep(2000);
 	//mop1.writeToPropertiesFile(directory_operator+mop1.opName);
     }
     public void createOperatorSQL(Move_Data Data, String SQL, double costEstimateValue) throws IOException, Exception {
