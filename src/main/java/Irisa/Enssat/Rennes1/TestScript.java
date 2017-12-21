@@ -60,7 +60,7 @@ public class TestScript {
         tmp[4] = ToCheck(console.readLine("Enter Second table of operator(h-Hive; p-Postgres; s-Spark):"));
         tmp[5] = MoreCheck(console.readLine("Do you want to add more (yes/no): "));
         tmp[6] = MoreCheck(console.readLine("Do you want to use delay time (yes/no): "));
-        tmp[7] = MoreCheck(console.readLine("How is the biggest data size for Weka and Dream: "));
+        tmp[7] = SizeDataCheck(console.readLine("How is the biggest data size for Weka and Dream: "));
 	return tmp;
     }
     public static void testall() throws Exception{
@@ -97,7 +97,7 @@ public class TestScript {
             System.out.println("\n First Table of operator "+i+": "+call[i][3]);
             System.out.println("\n Second Table of operator "+i+": "+call[i][4]);
             System.out.println("\n Using delay time of operator "+i+": "+call[i][6]);
-            System.out.println("\n The biggest data size for Weka and Dream: "+i+": "+Integer.parseInt(call[i][7]));
+            System.out.println("\n The biggest data size for Weka and Dream "+i+": "+call[i][7]);
 	}              
         System.out.printf("Enter the number of loop:  ");
         int times = 1;
@@ -200,5 +200,9 @@ public class TestScript {
             else
                 return "no";
     }
-    
+    public static String SizeDataCheck(String Kind){
+        if (Integer.parseInt(Kind)>0)
+            return Kind;
+        else return "0";
+    }
 }
