@@ -589,7 +589,7 @@ public class Algorithms {
         String OperatorFolder = IRES_library+"/target/asapLibrary/operators";
         return OperatorFolder;
     }
-    public static void mainIRES(Move_Data Data, String SQL, YarnValue yarnValue, double TimeOfDay, double[] size, String KindOfRunning ) throws Exception{      
+    public static void mainIRES(Move_Data Data, String SQL, YarnValue yarnValue, double TimeOfDay, double[] size, String KindOfRunning, int Max_train) throws Exception{      
         String OperatorFolder = operatorFolder();
         String realValue, parameter, estimate, directory, Error;
         directory = testWriteMatrix2CSV.getDirectory(Data) ;
@@ -635,9 +635,11 @@ public class Algorithms {
         
 	int Max = 0;
 	Path filePathRealValue = Paths.get(realValue);
-        if (Files.exists(filePathRealValue))
-        Max = CsvFileReader.count(realValue)-1;
-        
+        if (Files.exists(filePathRealValue)){
+            if (Max_train!=0)
+                Max = Max_train;
+            else Max = CsvFileReader.count(realValue)-1;
+        }       
         double R_2_limit = 0.8;////////////////////////////////////////////////////////////////////
         int sizeOfValue;
         
@@ -695,7 +697,7 @@ public class Algorithms {
         Time_Cost = Time_Cost + delay;        
         testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), NameOfRealValue);
         testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), "execTime_realValue");
-        int Max_train = 15;
+        Max_train = Max;
         if (CsvFileReader.count(directory + "/execTime_realValue.csv")<Max_train)
         {
             //testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), "execTime_realValue");
