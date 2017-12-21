@@ -86,7 +86,7 @@ public class testQueryPlan {
 //            Files.createFile(filePathRealValue);
             Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,"");
         }
-        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay,size,"");         
+        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay,size,"",0);         
 //        }
     }
 //    @Test 
@@ -151,7 +151,7 @@ public class testQueryPlan {
 //            Files.createFile(filePathRealValue);
             Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,"");
         }
-        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay,size,"");         
+        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay,size,"",0);         
 //        }
     }
     public static double[] createRandomYarn() {
