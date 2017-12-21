@@ -97,7 +97,7 @@ public class TestScript {
             System.out.println("\n First Table of operator "+i+": "+call[i][3]);
             System.out.println("\n Second Table of operator "+i+": "+call[i][4]);
             System.out.println("\n Using delay time of operator "+i+": "+call[i][6]);
-            System.out.println("\n The biggest data size for Weka and Dream: "+i+": "+call[i][7]);
+            System.out.println("\n The biggest data size for Weka and Dream: "+i+": "+Integer.parseInt(call[i][7]));
 	}              
         System.out.printf("Enter the number of loop:  ");
         int times = 1;
