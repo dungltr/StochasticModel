@@ -179,13 +179,13 @@ public class LuaScript {
 "	container = { \n" +
 "		instances = "+yarn.get_Core()+",\n" +
 "		command = { \n" +
-"			base = SHELL_COMMAND\n" +
+"			base = SHELL_COMMAND,\n" +
 "		},\n" +
 "		resources = { \n" +
 "			[ SCRIPT] = { \n" +
 "				file = OPERATOR_HOME .. \"/\" .. SCRIPT,\n" +
 "				type = \"file\",               -- other value: \"archive\",\n" +
-"				visibility = \"application\",  -- other values: \"private\", \"public\"\n" +
+"				visibility = \"application\",  -- other values: \"private\", \"public\",\n" +
 "			}" + convert +
 "		}\n" + 
 "       }\n" +
