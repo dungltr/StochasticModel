@@ -128,11 +128,11 @@ public class TestScript {
     public static void TPCH(double TimeOfDay, String[] call, String KindOfRunning) throws Exception{
         if ((KindOfRunning=="training")||(KindOfRunning=="testing")){
             if (call[0]=="IRES")
-                TPCHQuery.TPCH(TimeOfDay, call[1], call[2], call[3], call[4], "TPCH", KindOfRunning);
+                TPCHQuery.TPCH(TimeOfDay, call[1], call[2], call[3], call[4], "TPCH", KindOfRunning,Integer.parseInt(call[7]));
             else {  if (call[0]=="Move")
-                        TPCHQuery.Move(TimeOfDay, call[1], call[2], call[3], call[4], "Move", KindOfRunning);
+                        TPCHQuery.Move(TimeOfDay, call[1], call[2], call[3], call[4], "Move", KindOfRunning,Integer.parseInt(call[7]));
                     else {  if (call[0]=="Join")
-                            TPCHQuery.Join(TimeOfDay, call[1], call[2], call[3], call[4], "Join", KindOfRunning);
+                            TPCHQuery.Join(TimeOfDay, call[1], call[2], call[3], call[4], "Join", KindOfRunning,Integer.parseInt(call[7]));
                         else    {  if (call[0]=="SQL")
                                     TPCHQuery.SQL(TimeOfDay, call[1], call[2], call[3], call[4], "SQL", KindOfRunning, Integer.parseInt(call[7]));
                                 else    TPCHStandalone.TPCH_Standalone(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);

@@ -13,9 +13,9 @@ import IRES.TPCHQuery;
  */
 public class TestTPCH {
     public static void main(String args[]) throws Exception{
-        TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
-        TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training");
-        TPCHQuery.WorkflowMove(Math.random(),"tpch","100m","Hive","Postgres","Move", "training");
-        TPCHQuery.WorkflowMove(Math.random(),"tpch","100m","Postgres","Hive","Move", "training");
+        TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training",0);
+        TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training",0);
+        TPCHQuery.WorkflowMove(Math.random(),"tpch","100m","Hive","Postgres","Move", "training",0);
+        TPCHQuery.WorkflowMove(Math.random(),"tpch","100m","Postgres","Hive","Move", "training",0);
     }
 }
