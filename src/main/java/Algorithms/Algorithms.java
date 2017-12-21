@@ -704,8 +704,8 @@ public class Algorithms {
             testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), "execTime");     
         }
         else fixExecTime(Data, Max_train);
-	storeCost(Data,Time_Cost,"execTime_estimate","weka");
-        storeCost(Data,Time_Cost,NameOfEstimateValue,"dream");
+	storeCost(Data,Time_Cost,"execTime_estimate","weka"+Max_train);
+        storeCost(Data,Time_Cost,NameOfEstimateValue,"dream"+Max_train);
 	/*
 	String modelDirPath = OperatorFolder+"/"+NameOp + "/models";
         File modelDir = new File(modelDirPath);
