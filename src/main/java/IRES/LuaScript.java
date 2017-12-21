@@ -184,7 +184,7 @@ public class LuaScript {
 "		resources = { \n" +
 "			[ SCRIPT] = { \n" +
 "				file = OPERATOR_HOME .. \"/\" .. SCRIPT,\n" +
-"				type = \"file\",               -- other value: 'archive'\n" +
+"				type = \"file\",               -- other value: 'archive',\n" +
 "				visibility = \"application\",  -- other values: 'private', 'public'\n" +
 "			}" + convert +
 "		}\n" + 
