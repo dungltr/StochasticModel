@@ -5,7 +5,7 @@
  */
 package Irisa.Enssat.Rennes1;
 
-//import Scala.SimpleApp;
+import Scala.SimpleApp;
 //import Scala.SecondScala;
 //import Scala.ThirdScala;
 
@@ -14,9 +14,17 @@ package Irisa.Enssat.Rennes1;
  * @author letrung
  */
 public class TestScala {
+    public static void main(String[] args){
+        SimpleApp ScalaApp = new SimpleApp();
+        ScalaApp.main();
+//        SecondScala Second = new SecondScala();
+//        Second.main_test();
+//        ThirdScala Third = new ThirdScala();
+//        Third.main();
+    }
     public static void test(){
-//        SimpleApp ScalaApp = new SimpleApp();
-//        ScalaApp.main();
+        SimpleApp ScalaApp = new SimpleApp();
+        ScalaApp.main();
 //        SecondScala Second = new SecondScala();
 //        Second.main_test();
 //        ThirdScala Third = new ThirdScala();

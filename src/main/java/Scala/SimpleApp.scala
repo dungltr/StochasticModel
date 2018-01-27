@@ -51,7 +51,7 @@ class SimpleApp {
       .getOrCreate()
 //    val textFile = spark.read.textFile("hdfs://master:9000/user/hive/warehouse/people.txt")
 //    println("\n The number of word in file is:=" + textFile.count)
-//    first()
+    first()
     //runBasicDataFrameExample(spark)
     //runDatasetCreationExample(spark)
     //UntypedUserDefinedAggregate(spark)
@@ -63,6 +63,7 @@ class SimpleApp {
   def first(){
     val conf = new SparkConf()
             .setAppName("jdf-dt-rtoc-withSQL")
+            .set("spark.driver.allowMultipleContexts", "true")
             .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
             .set("hive.metastore.uris", "thrift://master:9083")
             .set("spark.sql.warehouse.dir", "/user/hive/warehouse")

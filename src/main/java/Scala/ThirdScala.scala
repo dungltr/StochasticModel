@@ -32,15 +32,28 @@ class ThirdScala {
   }
   
   def first(){
+//    val sparktest = SparkSession
+//		.builder()
+//		.master("local[*]")
+//		.appName("hivetable")
+//		.enableHiveSupport()
+//		.getOrCreate()
+
+//    sparktest.sql("create table hivetab (name string, age int, location string) row format delimited fields terminated by ',' stored as textfile")
+//    sparktest.sql("load data local inpath '/home/ubuntu/hivetab.csv' into table hivetab").show()
+//    val x = sparktest.sql("select * from hivetab")
+//    x.write.saveAsTable("hivetab")
+
     val conf = new SparkConf()
             .setAppName("jdf-dt-rtoc-withSQL")
             .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-            .set("hive.metastore.uris", "thrift://localhost:9083")
-            .set("spark.sql.warehouse.dir", "/user/hive/warehouse")
+            .set("hive.metastore.uris", "thrift://master:9083")
+            .set("spark.sql.warehouse.dir", "hdfs://master:9000/user/hive/warehouse")
             .setMaster("local[*]")
     val sc = new SparkContext(conf)
     val sqlContext = new org.apache.spark.sql.SQLContext(sc)
 //    SQLContext sqlContext = new HiveContext(sc) // The error occurred.
+
     val data_hive = sqlContext.table("tpch100m.orders")
     data_hive.createOrReplaceTempView("orders")
     data_hive.show();
