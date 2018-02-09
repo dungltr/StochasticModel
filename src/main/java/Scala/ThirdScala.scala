@@ -30,7 +30,8 @@ class ThirdScala {
     first()
     println("\n Goodbye")
   }
-  
+  def tableExists(table: String, spark: SparkSession) = spark.catalog.tableExists(table)
+  def databaseExists(database: String, spark: SparkSession) = spark.catalog.databaseExists(database)
   def first(){
 //    val sparktest = SparkSession
 //		.builder()
@@ -44,20 +45,36 @@ class ThirdScala {
 //    val x = sparktest.sql("select * from hivetab")
 //    x.write.saveAsTable("hivetab")
 
+    println("\n Hello from Hive")
     val conf = new SparkConf()
             .setAppName("jdf-dt-rtoc-withSQL")
             .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
             .set("hive.metastore.uris", "thrift://master:9083")
             .set("spark.sql.warehouse.dir", "hdfs://master:9000/user/hive/warehouse")
+//            .set("spark.sql.warehouse.dir", "/user/hive/warehouse")
             .setMaster("local[*]")
     val sc = new SparkContext(conf)
     val sqlContext = new org.apache.spark.sql.SQLContext(sc)
 //    SQLContext sqlContext = new HiveContext(sc) // The error occurred.
 
-    val data_hive = sqlContext.table("tpch100m.orders")
+    //val data_hive = sqlContext.table("tpch100m.orders")
+    //
+    //val data_hive = sqlContext.table("tpch100m.orders")
+    //data_hive.createOrReplaceTempView("orders")
+    //data_hive.show();
+
+    val sparktest = SparkSession
+        .builder()
+        .appName("Spark HiveTest Example")
+        .master("local[*]")
+        .getOrCreate();
+    println("\n Test database is:"+ databaseExists("tpch100m",sparktest) +" Test table is: " +tableExists("default.orders",sparktest))
+    
+    val data_hive = sqlContext.table("default.orders")
     data_hive.createOrReplaceTempView("orders")
     data_hive.show();
-    
+
+    println("\n Hello from Postgres")
     val spark = SparkSession
         .builder()
         .appName("Spark Postgres Example")

@@ -6,8 +6,14 @@
 package Irisa.Enssat.Rennes1;
 
 import Scala.SimpleApp;
+
+//import Scala.SimpleApp;
 //import Scala.SecondScala;
-//import Scala.ThirdScala;
+
+import Scala.SimpleApp;
+import Scala.SecondScala;
+
+import Scala.ThirdScala;
 
 /**
  *
@@ -26,9 +32,13 @@ public class TestScala {
         SimpleApp ScalaApp = new SimpleApp();
         ScalaApp.main();
 //        SecondScala Second = new SecondScala();
+//        ScalaApp.main();
+        SecondScala Second = new SecondScala();
+
 //        Second.main_test();
-//        ThirdScala Third = new ThirdScala();
+        ThirdScala Third = new ThirdScala();
 //        Third.main();
+
     }
     
 }

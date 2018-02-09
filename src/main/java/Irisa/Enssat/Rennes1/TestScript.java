@@ -52,7 +52,7 @@ public class TestScript {
     }
     public static String [] Ask(){
         Console console = System.console();
-        String[] tmp = new String [7];
+        String[] tmp = new String [8];
         tmp[0] = KindCheck(console.readLine("Kind of operator (a-IRES; b-StandAlone; c-Move; d-Join; e-SQL): "));
         tmp[1] = DbCheck(console.readLine("Enter database of operator(a-tpch):"));   
         tmp[2] = SizeCheck(console.readLine("Enter database size of operator(default = 100m):"));
@@ -60,6 +60,7 @@ public class TestScript {
         tmp[4] = ToCheck(console.readLine("Enter Second table of operator(h-Hive; p-Postgres; s-Spark):"));
         tmp[5] = MoreCheck(console.readLine("Do you want to add more (yes/no): "));
         tmp[6] = MoreCheck(console.readLine("Do you want to use delay time (yes/no): "));
+        tmp[7] = SizeDataCheck(console.readLine("How is the biggest data size for Weka and Dream: "));
 	return tmp;
     }
     public static void testall() throws Exception{
@@ -79,7 +80,7 @@ public class TestScript {
             return;
         }
 
-        String[][] call = new String [k][7];
+        String[][] call = new String [k][8];
         String more = "yes";
         int count = 0;
         while ((more=="yes")&&(count<k))
@@ -96,6 +97,7 @@ public class TestScript {
             System.out.println("\n First Table of operator "+i+": "+call[i][3]);
             System.out.println("\n Second Table of operator "+i+": "+call[i][4]);
             System.out.println("\n Using delay time of operator "+i+": "+call[i][6]);
+            System.out.println("\n The biggest data size for Weka and Dream "+i+": "+call[i][7]);
 	}              
         System.out.printf("Enter the number of loop:  ");
         int times = 1;
@@ -126,13 +128,13 @@ public class TestScript {
     public static void TPCH(double TimeOfDay, String[] call, String KindOfRunning) throws Exception{
         if ((KindOfRunning=="training")||(KindOfRunning=="testing")){
             if (call[0]=="IRES")
-                TPCHQuery.TPCH(TimeOfDay, call[1], call[2], call[3], call[4], "TPCH", KindOfRunning);
+                TPCHQuery.TPCH(TimeOfDay, call[1], call[2], call[3], call[4], "TPCH", KindOfRunning,Integer.parseInt(call[7]));
             else {  if (call[0]=="Move")
-                        TPCHQuery.Move(TimeOfDay, call[1], call[2], call[3], call[4], "Move", KindOfRunning);
+                        TPCHQuery.Move(TimeOfDay, call[1], call[2], call[3], call[4], "Move", KindOfRunning,Integer.parseInt(call[7]));
                     else {  if (call[0]=="Join")
-                            TPCHQuery.Join(TimeOfDay, call[1], call[2], call[3], call[4], "Join", KindOfRunning);
+                            TPCHQuery.Join(TimeOfDay, call[1], call[2], call[3], call[4], "Join", KindOfRunning,Integer.parseInt(call[7]));
                         else    {  if (call[0]=="SQL")
-                                    TPCHQuery.SQL(TimeOfDay, call[1], call[2], call[3], call[4], "SQL", KindOfRunning);
+                                    TPCHQuery.SQL(TimeOfDay, call[1], call[2], call[3], call[4], "SQL", KindOfRunning, Integer.parseInt(call[7]));
                                 else    TPCHStandalone.TPCH_Standalone(TimeOfDay, call[1], call[2], call[3], call[4], KindOfRunning);
                         }        
                     }
@@ -198,5 +200,9 @@ public class TestScript {
             else
                 return "no";
     }
-    
+    public static String SizeDataCheck(String Kind){
+        if (Integer.parseInt(Kind)>0)
+            return Kind;
+        else return "0";
+    }
 }

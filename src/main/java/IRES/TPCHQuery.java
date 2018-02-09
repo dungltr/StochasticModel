@@ -40,7 +40,7 @@ public class TPCHQuery {
     private static int numberOfSize_Move_Postgres_Hive = 4;
     private static int numberOfSize_Move_Postgres_Postgres = 4;
     
-    public static void TPCH_Hive_Postgres(double TimeOfDay, String Table, String query, String KindOfRunning) throws Exception {
+    public static void TPCH_Hive_Postgres(double TimeOfDay, String Table, String query, String KindOfRunning, int Max_train) throws Exception {
         String Size_tpch = "100m";
         String database = "tpch";
         String SQL_folder = new App().readhome("SQL");
@@ -109,9 +109,9 @@ public class TPCHQuery {
 //            Files.createFile(filePathRealValue);
             Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,KindOfRunning);
         }
-        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay,size,KindOfRunning);
+        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay,size,KindOfRunning, Max_train);
     }
-    public static void TPCH_Hive_Hive(double TimeOfDay, String Table, String KindOfRunning) throws Exception {
+    public static void TPCH_Hive_Hive(double TimeOfDay, String Table, String KindOfRunning, int Max_train) throws Exception {
         String Size_tpch = "100m";
         String database = "tpch";
         String SQL_folder = new App().readhome("SQL");
@@ -175,9 +175,9 @@ public class TPCHQuery {
 //            Files.createFile(filePathRealValue);
             Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,KindOfRunning);
         }
-        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
+        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning, Max_train);
     }
-    public static void TPCH_Postgres_Postgres(double TimeOfDay, String Table, String KindOfRunning) throws Exception {
+    public static void TPCH_Postgres_Postgres(double TimeOfDay, String Table, String KindOfRunning, int Max_train) throws Exception {
         String Size_tpch = "100m";
         String database = "tpch";
         String SQL_folder = new App().readhome("SQL");
@@ -241,9 +241,9 @@ public class TPCHQuery {
 //            Files.createFile(filePathRealValue);
             Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,KindOfRunning);
         }
-        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
+        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning, Max_train);
     }
-    public static void WorkflowMove(double TimeOfDay, String DB, String Size, String from, String to, String KindOfMoving, String KindOfRunning) throws Exception {
+    public static void WorkflowMove(double TimeOfDay, String DB, String Size, String from, String to, String KindOfMoving, String KindOfRunning, int Max_train) throws Exception {
         String Size_tpch = Size;
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
@@ -371,7 +371,7 @@ public class TPCHQuery {
         if (KindOfMoving.toLowerCase().contains("join"))
             TestWorkFlow.workflowJoin(Data, Size_tpch, SQL, yarnValue, KindOfMoving, KindOfRunning);
     }
-    public static void WorkflowJoinMove(double TimeOfDay, String DB, String Size, String from, String to, String KindOfMoving, String KindOfRunning) throws Exception {
+    public static void WorkflowJoinMove(double TimeOfDay, String DB, String Size, String from, String to, String KindOfMoving, String KindOfRunning, int Max_train) throws Exception {
         String Size_tpch = Size;
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
@@ -434,7 +434,7 @@ public class TPCHQuery {
         if (KindOfMoving.toLowerCase().contains("join"))
             TestWorkFlow.workflowJoinMove(Data, Size_tpch, SQL, yarnValue, KindOfMoving, KindOfRunning);
     }
-    public static void TPCH(double TimeOfDay, String DB, String Size, String from, String to, String TPCH, String KindOfRunning) throws Exception {
+    public static void TPCH(double TimeOfDay, String DB, String Size, String from, String to, String TPCH, String KindOfRunning, int Max_train) throws Exception {
         String Size_tpch = Size;
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
@@ -509,9 +509,9 @@ public class TPCHQuery {
             IRES.createOperatorMove(Data, SQL, 0);            
 //            Files.createFile(filePathRealValue);          
         }
-        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
+        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning, Max_train);
     }    
-    public static void Move(double TimeOfDay, String DB, String Size, String from, String to, String Move, String KindOfRunning) throws Exception {
+    public static void Move(double TimeOfDay, String DB, String Size, String from, String to, String Move, String KindOfRunning, int Max_train) throws Exception {
         String Size_tpch = Size;
         //String KindOfRunning = "training";
         String database = DB;
@@ -583,9 +583,9 @@ public class TPCHQuery {
         {   Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,KindOfRunning);
             IRES.createOperatorMove(Data, SQL, 0);                       
         }
-        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
+        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning, Max_train);
     } 
-    public static void Join(double TimeOfDay, String DB, String Size, String from, String to, String Join, String KindOfRunning) throws Exception {
+    public static void Join(double TimeOfDay, String DB, String Size, String from, String to, String Join, String KindOfRunning, int Max_train) throws Exception {
         String Size_tpch = Size;
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
@@ -658,9 +658,9 @@ public class TPCHQuery {
         {   Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,KindOfRunning);
             IRES.createOperatorJoin(Data, SQL, 0);                       
         }
-        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
+        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning, Max_train);
     }
-    public static void SQL(double TimeOfDay, String DB, String Size, String from, String to, String KindSQL, String KindOfRunning) throws Exception {
+    public static void SQL(double TimeOfDay, String DB, String Size, String from, String to, String KindSQL, String KindOfRunning, int Max_train) throws Exception {
         String Size_tpch = Size;
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
@@ -733,7 +733,7 @@ public class TPCHQuery {
         {   Algorithms.setup(Data,yarnValue,size,Size_tpch,TimeOfDay,KindOfRunning);
             IRES.createOperatorSQL(Data, SQL, 0);                       
         }
-        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
+        Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning, Max_train);
     }
     public static String Schema(String Table) {
         String Schema = "";
