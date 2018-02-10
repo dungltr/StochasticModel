@@ -16,11 +16,11 @@ import Scala.ThirdScala;
 public class TestScala {
     public static void test(){
         SimpleApp ScalaApp = new SimpleApp();
-//        ScalaApp.main();
+        ScalaApp.main();
         SecondScala Second = new SecondScala();
-//        Second.main_test();
+        Second.main_test();
         ThirdScala Third = new ThirdScala();
-//        Third.main();
+        Third.main();
     }
     
 }

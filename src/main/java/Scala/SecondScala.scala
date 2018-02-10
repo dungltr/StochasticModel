@@ -28,7 +28,7 @@ class SecondScala {
         .master("local[*]")
         .config("spark.sql.warehouse.dir", "/user/hive/warehouse")
         .getOrCreate()
-      val textFile = spark.read.textFile("hdfs://localhost:9000/user/hive/warehouse/people.txt")
+      val textFile = spark.read.textFile("hdfs://localhost:9000//Volumes/DATAHD/user/hive/warehouse/people.txt")
       println("\n The number of word in file is:=" + textFile.count)
 
       //////////////////////////////////////////////////////////////
