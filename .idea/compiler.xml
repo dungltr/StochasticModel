@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="StochasticModel" />
+        <module name="TestPostgre_V9" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="StochasticModel" target="1.8" />
+      <module name="TestPostgre_V9" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

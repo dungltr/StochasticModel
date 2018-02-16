@@ -21,17 +21,22 @@ class ThirdScala {
         left
     }
   }
-  def main () {
+  def main(): Unit = {
     println("\n Hello from Scala")
-    first()
-    //second()
+    //first()
+    second()
     println("\n Goodbye")
   }
+  def desktopLocation = "hdfs://master:9000/user/hive/warehouse"
+  def laptopLocation = "hdfs://localhost:9000/Volumes/DATAHD/user/hive/warehouse"
+  def desktopThrift = "thrift://master:9083"
+  def laptopThrift = "thrift://localhost:9083"
+
   def tableExists(table: String, spark: SparkSession) = spark.catalog.tableExists(table)
   def databaseExists(database: String, spark: SparkSession) = spark.catalog.databaseExists(database)
 
   def second(): Unit ={
-    val hiveLocation   = "hdfs://localhost:9000/Volumes/DATAHD/user/hive/warehouse"
+    val hiveLocation   = desktopLocation
     val conf = new SparkConf()
       .setAppName("SOME APP NAME")
       .setMaster("local[*]")
@@ -39,11 +44,12 @@ class ThirdScala {
       .set("spark.sql.warehouse.dir",hiveLocation)
 
     //val sc = new SparkContext(conf)
+    val thrift = desktopThrift
     val spark = SparkSession
       .builder()
       .appName("SparkHiveExample")
       .master("local[*]")
-      .config("hive.metastore.uris", "thrift://localhost:9083")
+      .config("hive.metastore.uris", thrift)
       //.config("spark.sql.warehouse.dir", hiveLocation)
       .config("spark.driver.allowMultipleContexts", "true")
       .enableHiveSupport()
@@ -77,7 +83,7 @@ class ThirdScala {
     println("\n Hello from Hive")
 
     ///////////////////////////////////////////////////////////////////////
-    val hiveLocation   = "hdfs://localhost:9000/Volumes/DATAHD/user/hive/warehouse"
+    val hiveLocation   = desktopLocation
     val conf = new SparkConf()
       .setAppName("SOME APP NAME")
       .setMaster("local[*]")
@@ -85,11 +91,12 @@ class ThirdScala {
       .set("spark.sql.warehouse.dir",hiveLocation)
 
     //val sc = new SparkContext(conf)
+    val thrift = desktopThrift
     val spark = SparkSession
       .builder()
       .appName("SparkHiveExample")
       .master("local[*]")
-      .config("hive.metastore.uris", "thrift://localhost:9083")
+      .config("hive.metastore.uris", thrift)
       //.config("spark.sql.warehouse.dir", hiveLocation)
       .config("spark.driver.allowMultipleContexts", "true")
       .enableHiveSupport()

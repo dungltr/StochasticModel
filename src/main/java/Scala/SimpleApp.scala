@@ -8,13 +8,9 @@ package Scala
 
 import java.io.File
 
-import org.apache.spark.sql.SQLContext
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.api.java.JavaSparkContext
-import org.apache.spark.sql.Row
 import org.apache.spark.SparkConf
-import org.apache.spark.SparkContext
-
+import org.apache.spark.api.java.JavaSparkContext
+import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.catalyst.expressions.{Literal, Multiply}
 import org.apache.spark.sql.catalyst.plans.logical.LogicalPlan
 import org.apache.spark.sql.catalyst.rules.Rule
@@ -43,24 +39,27 @@ class SimpleApp {
   def main() {
   //def main(args: Array[String]) {
     println("\n Hello world")
+    /*
     val spark = SparkSession
       .builder()
       .appName("Spark SQL basic example")
       .master("local[*]")
       .config("spark.sql.warehouse.dir", "/user/hive/warehouse")
       .getOrCreate()
+      */
 //    val textFile = spark.read.textFile("hdfs://master:9000/user/hive/warehouse/people.txt")
 //    println("\n The number of word in file is:=" + textFile.count)
-//    first()
+    first()
     //runBasicDataFrameExample(spark)
     //runDatasetCreationExample(spark)
     //UntypedUserDefinedAggregate(spark)
     //runInferSchemaExample(spark)
     //runProgrammaticSchemaExample(spark) // can not run in this example
-    spark.stop()
+    //spark.stop()
     println("\n Goodbye")
   }
   def first(){
+    
     val conf = new SparkConf()
             .setAppName("jdf-dt-rtoc-withSQL")
             .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
@@ -69,23 +68,26 @@ class SimpleApp {
             .setMaster("local[*]")
     val sc = new JavaSparkContext(conf)
     val sqlContext = new HiveContext(sc)
-    import sqlContext.implicits._
-    val data_hive = sqlContext.table("tpch100m.orders")
-    val dbHive = "orders"
-    data_hive.createOrReplaceTempView(dbHive)
-    data_hive.show()
+    //val data_hive = sqlContext.table("tpch100m.orders")
+    //val dbHive = "orders"
+    //data_hive.createOrReplaceTempView(dbHive)
+    //data_hive.show()
 
-    val dbTablePostgres = "lineitem"
-
+    //val dbTablePostgres = "lineitem"
+    
+    
     val spark = SparkSession
         .builder()
         .appName("Spark Postgres Example")
         .master("local[*]")
+        .config("spark.sql.warehouse.dir", "/user/hive/warehouse")
         .getOrCreate();
 //    val dataDF_postgres = spark.read.jdbc("jdbc:postgresql://localhost:5432", "tpch100m.lineitem")
 //        .option("user", username)
 //        .option("password", password)
 //        .load()
+    
+    /*
     val dataDF_postgres = sqlContext.read.format("jdbc").options(
         Map("url" -> "jdbc:postgresql:tpch100m",
         "dbtable" -> "lineitem",
@@ -93,8 +95,12 @@ class SimpleApp {
         "password" -> password)).load()
     dataDF_postgres.createOrReplaceTempView("lineitem");
     dataDF_postgres.show();    
-
-    val query = spark.sql(query4)//"select * from orders,lineitem where l_orderkey = o_orderkey")
+    */
+    /*
+    val query = spark.sql(query4)//Dataset.ofRows(self, sessionState.sqlParser.parsePlan(sqlText))
+    println(query.toString())
+    // "select * from orders,lineitem where l_orderkey = o_orderkey")
+    
     println("--------------------sparkPlan--------------------------------")
     println(query.queryExecution.sparkPlan)
     println("--------------------show()-----------------------------------")
@@ -103,7 +109,7 @@ class SimpleApp {
     println(query.queryExecution)
     println("---------------------optimizedPlan.numberedTreeString--------")
     println(query.queryExecution.optimizedPlan.numberedTreeString)
-    
+    */
     //Second(spark)
     
     
