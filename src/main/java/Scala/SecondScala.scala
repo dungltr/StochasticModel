@@ -15,7 +15,7 @@ class SecondScala {
   object MultiplyOptimizationRule extends Rule[LogicalPlan] {
     def apply(plan: LogicalPlan): LogicalPlan = plan transformAllExpressions {
       case Multiply(left,right) if right.isInstanceOf[Literal] &&
-        right.asInstanceOf[Literal].value.asInstanceOf[Double] < 1.0 =>
+        right.asInstanceOf[Literal].value.asInstanceOf[Double] == 1.0 =>
         println("optimization of one applied")
         left
     }
@@ -48,11 +48,18 @@ class SecondScala {
 //    println(SalesJoinCustomers)
     val WhereCustomersID = SalesJoinCustomers.where(sales("customerID")<3)
     val GroupBy = WhereCustomersID.groupBy(sales("customerID"), customers("customerID"))
-    
-    val query = spark.sql("select * from sales, customers where sales.customerId = customers.customerId and sales.customerId < 3")
+    val sqlTxt = "select * from sales, customers where sales.customerId = customers.customerId and sales.customerId < 3"
+    val query = spark.sql(sqlTxt)
+    val test = spark.sessionState.sqlParser.parsePlan(sqlTxt)
+    println("Show text of sqlParser"+test)
     query.show()
-    println(query.queryExecution.optimizedPlan.numberedTreeString)
-    println(GroupBy.toString)
+    println("Heeeeee"+query.toString+"quitIIIIIII")
+    //println(GroupBy.toString)
+    println("This is the executedPlan \n"+query.queryExecution.executedPlan)
+    println("This is the logicalPlan \n"+query.queryExecution.logical)
+    println("This is the sparkPlan \n"+query.queryExecution.sparkPlan)
+    println("This is the optimizedPlan \n"+query.queryExecution.optimizedPlan.numberedTreeString)
+    //println(GroupBy.toString)
 /*    //add our custom optimization
     spark.experimental.extraOptimizations = Seq(MultiplyOptimizationRule)
     val multipliedDFWithOptimization = df.selectExpr("amountPaid * 1")
@@ -66,6 +73,7 @@ class SecondScala {
     val multipliedDFWithOptimization = df.selectExpr("amountPaid * 1")
     println("after optimization")
     println(multipliedDFWithOptimization.queryExecution.optimizedPlan.numberedTreeString)
+    println("This is the logicalPlan \n"+multipliedDFWithOptimization.queryExecution.logical)
   }  
 
 }

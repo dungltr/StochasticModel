@@ -67,12 +67,13 @@ class SimpleApp {
             .set("spark.sql.warehouse.dir", "/user/hive/warehouse")
             .setMaster("local[*]")
     val sc = new JavaSparkContext(conf)
+    /*
     val sqlContext = new HiveContext(sc)
-    //val data_hive = sqlContext.table("tpch100m.orders")
-    //val dbHive = "orders"
-    //data_hive.createOrReplaceTempView(dbHive)
-    //data_hive.show()
-
+    val data_hive = sqlContext.table("tpch100m.orders")
+    val dbHive = "orders"
+    data_hive.createOrReplaceTempView(dbHive)
+    data_hive.show()
+    */
     //val dbTablePostgres = "lineitem"
     
     
@@ -96,9 +97,9 @@ class SimpleApp {
     dataDF_postgres.createOrReplaceTempView("lineitem");
     dataDF_postgres.show();    
     */
-    /*
+    
     val query = spark.sql(query4)//Dataset.ofRows(self, sessionState.sqlParser.parsePlan(sqlText))
-    println(query.toString())
+    //println(query.toString())
     // "select * from orders,lineitem where l_orderkey = o_orderkey")
     
     println("--------------------sparkPlan--------------------------------")
@@ -109,7 +110,7 @@ class SimpleApp {
     println(query.queryExecution)
     println("---------------------optimizedPlan.numberedTreeString--------")
     println(query.queryExecution.optimizedPlan.numberedTreeString)
-    */
+    
     //Second(spark)
     
     
