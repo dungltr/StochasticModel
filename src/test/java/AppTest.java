@@ -145,8 +145,11 @@ public class AppTest{
         //SparkExample.JavaUserDefinedUntypedAggregation.main(new String[] {"arg"});
         //Irisa.Enssat.Rennes1.TestCatalys.should_get_dataframe_from_database();
         //Bootstrap.main(new String[] {"arg"});
-        Irisa.Enssat.Rennes1.TestScala.test();
-        Irisa.Enssat.Rennes1.TestJava.main();
+        //////////////////////////////////////
+        //Irisa.Enssat.Rennes1.TestScala.test();
+        Irisa.Enssat.Rennes1.TestJava.main(new String[] {"arg1", "arg2", "arg3"});
+        //Irisa.Enssat.Rennes1.TestSparkMlib.test();
+        //////////////////////////////////////
 //	testall();
 //        com.sparkexample.testSparkDataFrame.test();
 //        RATree.test_ratree();
