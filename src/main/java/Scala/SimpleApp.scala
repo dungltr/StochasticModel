@@ -63,7 +63,7 @@ class SimpleApp {
     val conf = new SparkConf()
             .setAppName("jdf-dt-rtoc-withSQL")
             .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-            .set("hive.metastore.uris", "thrift://masterisima:9083")
+            .set("hive.metastore.uris", "thrift://localhost:9083")
             .set("spark.sql.warehouse.dir", "/user/hive/warehouse")
             .setMaster("local[*]")
     val sc = new JavaSparkContext(conf)
@@ -110,6 +110,13 @@ class SimpleApp {
     println(query.queryExecution)
     println("---------------------optimizedPlan.numberedTreeString--------")
     println(query.queryExecution.optimizedPlan.numberedTreeString)
+    println("---------------------query.queryExecution.analyzed--------")
+    println(query.queryExecution.analyzed)
+    println("---------------------query.explain(true)--------")
+    query.explain(true)
+    println("---------------------query.queryExecution.executedPlan--------")
+    println(query.queryExecution.executedPlan)
+    
     
     //Second(spark)
     

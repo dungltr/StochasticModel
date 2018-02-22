@@ -20,11 +20,11 @@ import Scala.SimpleApp;
 public class TestScala {
     public static void test(){
         SimpleApp ScalaApp = new SimpleApp();
-        //ScalaApp.main();
+        ScalaApp.main();
         SecondScala Second = new SecondScala();
         //Second.main_test();
         fourthApp FourthApp = new fourthApp();
-        FourthApp.main();
+        //FourthApp.main();
 
     }
     public static void main(String[] args){
