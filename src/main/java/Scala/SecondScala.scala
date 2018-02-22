@@ -6,6 +6,7 @@
 
 package Scala
 
+//import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.catalyst.expressions.{Literal, Multiply}
 import org.apache.spark.sql.catalyst.plans.logical.LogicalPlan
@@ -20,6 +21,7 @@ class SecondScala {
         left
     }
   }
+
   def main_test() {
     println("\n Hello world")
       val spark = SparkSession
@@ -33,12 +35,12 @@ class SecondScala {
 
       //////////////////////////////////////////////////////////////
       OriginalExample(spark)
-      CustomExample(spark)
+      //CustomExample(spark)
       /////////////////////////////////////////////////////////////
       spark.stop()
       println("\n Goodbye")
   }
-  private def OriginalExample(spark: SparkSession): Unit = {
+  def OriginalExample(spark: SparkSession): Unit = {
     val sales = spark.read.option("header","true").csv("src/main/resources/sales.csv")
     sales.createOrReplaceTempView("sales")
     val customers = spark.read.option("header","true").csv("src/main/resources/customers.csv")
@@ -50,30 +52,40 @@ class SecondScala {
     val GroupBy = WhereCustomersID.groupBy(sales("customerID"), customers("customerID"))
     val sqlTxt = "select * from sales, customers where sales.customerId = customers.customerId and sales.customerId < 3"
     val query = spark.sql(sqlTxt)
+
     val test = spark.sessionState.sqlParser.parsePlan(sqlTxt)
-    println("Show text of sqlParser"+test)
+    println("Show text of sqlParser \n"+test)
     query.show()
-    println("Heeeeee"+query.toString+"quitIIIIIII")
     //println(GroupBy.toString)
-    println("This is the executedPlan \n"+query.queryExecution.executedPlan)
-    println("This is the logicalPlan \n"+query.queryExecution.logical)
-    println("This is the sparkPlan \n"+query.queryExecution.sparkPlan)
+    println("This is the queryExecution \n"+query.queryExecution)
     println("This is the optimizedPlan \n"+query.queryExecution.optimizedPlan.numberedTreeString)
-    //println(GroupBy.toString)
-/*    //add our custom optimization
-    spark.experimental.extraOptimizations = Seq(MultiplyOptimizationRule)
-    val multipliedDFWithOptimization = df.selectExpr("amountPaid * 1")
-    println("after optimization")
-    println(multipliedDFWithOptimization.queryExecution.optimizedPlan.numberedTreeString)
-*/  }
-  private def CustomExample(spark: SparkSession): Unit = {
-    val df = spark.read.option("header","true").csv("src/main/resources/sales.csv")
+    println("This is the query.explain(true) \n")
+    query.explain(true)
+    val physicalPlan = query.queryExecution.executedPlan
+    println("This is the physicalPlan of query.queryExecution.executedPlan \n" + query.queryExecution.executedPlan)
+
+    WhereCustomersID.queryExecution.executedPlan
+    println("This is the physicalPlan of WhereCustomersID.queryExecution.executedPlan \n" + WhereCustomersID.queryExecution.executedPlan)
+    //println()
+    //val df = spark.read.option("header","true").csv("src/main/resources/sales.csv")
     //add our custom optimization
-    spark.experimental.extraOptimizations = Seq(MultiplyOptimizationRule)
+    //spark.experimental.extraOptimizations = Seq(MultiplyOptimizationRule)
+    /*
     val multipliedDFWithOptimization = df.selectExpr("amountPaid * 1")
     println("after optimization")
     println(multipliedDFWithOptimization.queryExecution.optimizedPlan.numberedTreeString)
     println("This is the logicalPlan \n"+multipliedDFWithOptimization.queryExecution.logical)
-  }  
-
+    println("This is the logicalPlan \n"+multipliedDFWithOptimization.queryExecution.logical)
+    println("This is the logicalPlan \n"+multipliedDFWithOptimization.queryExecution.logical)
+    */
+  }
+  def CustomExample(spark: SparkSession): Unit = {
+    val df = spark.read.option("header","true").csv("src/main/resources/sales.csv")
+    //add our custom optimization
+    spark.experimental.extraOptimizations = Seq(MultiplyOptimizationRule)
+    val multipliedDFWithOptimization = df.selectExpr("amountPaid * 2")
+    println("after optimization")
+    println(multipliedDFWithOptimization.queryExecution.optimizedPlan.numberedTreeString)
+    println("This is the logicalPlan \n"+multipliedDFWithOptimization.queryExecution.logical)
+  }
 }

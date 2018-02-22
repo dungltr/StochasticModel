@@ -5,6 +5,7 @@
  */
 package Irisa.Enssat.Rennes1;
 
+import Scala.SecondScala;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.Dataset;
@@ -13,12 +14,8 @@ import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.catalyst.parser.ParseException;
 import org.apache.spark.sql.catalyst.plans.logical.LogicalPlan;
-import org.apache.spark.sql.catalyst.rules.RuleExecutor;
-import org.apache.spark.sql.catalyst.analysis.EliminateSubqueryAliases;
-import org.apache.spark.sql.catalyst.optimizer.CostBasedJoinReorder;
 import org.apache.spark.sql.hive.HiveContext;
 import org.apache.spark.sql.internal.SQLConf;
-import scala.collection.immutable.Nil;
 
 import java.io.Serializable;
 
@@ -48,28 +45,34 @@ public class TestJava {
       this.age = age;
     }
   }
-  public RuleExecutor Optimize (LogicalPlan logicalPlan) {
-    
-  }
     public static void main (String [] arg) throws ParseException{
     System.out.println("\n Hello from Java");
+    
     SparkSession spark = SparkSession
         .builder()
         .appName("Spark SQL basic example")
         .master("local[*]")
         .config("spark.sql.warehouse.dir", "/user/hive/warehouse")
+        .config("spark.driver.allowMultipleContexts", "true")
         .getOrCreate();
-    Dataset<Row> jsonFile = spark.read().format("json").load("hdfs://localhost:9000//Volumes/DATAHD/user/hive/warehouse/people.txt");
-    System.out.println("\n The number of word in file is:=" + jsonFile.count());
+    //Dataset<Row> jsonFile = spark.read().format("json").load("hdfs://localhost:9000//Volumes/DATAHD/user/hive/warehouse/people.txt");
+    //System.out.println("\n The number of word in file is:=" + jsonFile.count());
     //////////////////////////////////////////////////////////////
-    OriginalExample(spark);
-//    FirstExample();
+    //OriginalExample(spark);
+    FirstExample();
 //    CustomExample(spark);
       /////////////////////////////////////////////////////////////
     spark.stop();
     System.out.println("\n Goodbye");
     }
     public static void OriginalExample(SparkSession spark) throws ParseException {
+      String orders = "src/main/resources/nation.tbl";
+      String lineitem = "src/main/resources/region.tbl";
+      Dataset<Row> ordersDataset = spark.read().option("header","true").csv(orders);
+      Dataset<Row> lineitemDataset = spark.read().option("header","true").csv(lineitem);
+      ordersDataset.createOrReplaceTempView("orders");
+      lineitemDataset.createOrReplaceTempView("lineitem");
+
     Dataset<Row> sales = spark.read().option("header","true").csv("src/main/resources/sales.csv");
     sales.createOrReplaceTempView("sales");
     Dataset<Row> customers = spark.read().option("header","true").csv("src/main/resources/customers.csv");
@@ -84,10 +87,23 @@ public class TestJava {
     //System.out.println(SalesJoinCustomers);
     //Dataset<Row> WhereCustomersID = SalesJoinCustomers.where("customerID < 3");
     //Dataset<Row> GroupBy = WhereCustomersID.groupBy(sales.col("customerID"), customers.col("customerID"));
-    
-    String sqlTxt = "select * from sales, customers where sales.customerId = customers.customerId and sales.customerId < 3";
-    Dataset<Row> query = spark.sql(sqlTxt);
+      SQLConf conf = new SQLConf();
+      spark.sessionState().conf().setConf(conf.CBO_ENABLED(), true);
+      spark.sessionState().conf().setConf(conf.JOIN_REORDER_ENABLED(), true);
+      System.out.println(spark.sessionState().conf().cboEnabled());
 
+      String sql1 = "select * from orders";
+      Dataset<Row> query1 = spark.sql(sql1);
+      query1.show();
+
+      String sql2 = "select * from lineitem";
+      Dataset<Row> query2 = spark.sql(sql2);
+      query2.show();
+
+    String sqlTxt = "select * from sales, customers where sales.customerId = customers.customerId and sales.customerId < 3";
+
+    Dataset<Row> query = spark.sql(sqlTxt);
+    //spark.catalog().listDatabases().select("customerId").show();
     LogicalPlan test = spark.sessionState().sqlParser().parsePlan(sqlTxt);
     System.out.println("-----------Show text of sqlParser--------------------------------");
     System.out.println(""+test);
@@ -95,6 +111,13 @@ public class TestJava {
     //test.computeStats(spark).toString();
     System.out.println("-----------query.show()--------------------------------");
     query.show();
+    query.explain(true);
+    System.out.println("calling Second Scala--------------------------------");
+    SecondScala scala = new SecondScala();
+    scala.OriginalExample(spark);
+    //scala.CustomExample(spark);
+    System.out.println("ending Second Scala--------------------------------");
+    /*
     System.out.println("-----------This is the query.explain()--------------------------------");
     System.out.println("");
     query.explain();
@@ -115,31 +138,18 @@ public class TestJava {
       System.out.println(";");
       System.out.println("---------This is the query.explain()----------------------------------");
       query.explain();
-      SQLConf conf = new SQLConf();
-      spark.sessionState().conf().setConf(conf.CBO_ENABLED(), true);
-      spark.sessionState().conf().setConf(conf.JOIN_REORDER_ENABLED(), true);
-      System.out.println(spark.sessionState().conf().cboEnabled());
+
       System.out.println("---------query.logicalPlan()----------------------------------");
       System.out.println(" \n"+query.logicalPlan());
       System.out.println("---------query.queryExecution().analyzed()----------------------------------");
       System.out.println(query.queryExecution().analyzed());
       System.out.println("---------query.queryExecution().optimizedPlan().stats(conf)----------------------------------");
       System.out.println(query.queryExecution().optimizedPlan().stats(conf));
+  */
 
-      /*
-      for(plan: query.logicalPlan()){
-        int i = 0;
-      }
-      */
-//    System.out.println(GroupBy.toString);
-    //add our custom optimization
-      //spark.experimental().extraOptimizations() = SecondScala.MultiplyOptimizationRule$.MODULE$.apply(query.queryExecution().logical());
-    //spark.experimental().extraOptimizations() = Seq(MultiplyOptimizationRule);
-    //val multipliedDFWithOptimization = df.selectExpr("amountPaid * 1")
-    //println("after optimization")
-    //println(multipliedDFWithOptimization.queryExecution.optimizedPlan.numberedTreeString)
   }
     public static void FirstExample() {
+      System.out.println("\n Hello from First in Java");
     String HOME=System.getenv().get("HOME");
     String FILEUSER = HOME + "/username.txt";
     String username = com.sparkexample.TestPostgreSQLDatabase.readpass(FILEUSER);
@@ -178,11 +188,12 @@ public class TestJava {
     SparkConf conf = new SparkConf()
             .setAppName("jdf-dt-rtoc-withSQL")
             .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-            .set("hive.metastore.uris", "thrift://master:9083")
+            .set("hive.metastore.uris", "thrift://localhost:9083")
+            .set("spark.driver.allowMultipleContexts", "true")
             .set("spark.sql.warehouse.dir", "/user/hive/warehouse")
             .setMaster("local[*]");
     JavaSparkContext sc = new JavaSparkContext(conf);
-
+    
     SQLContext sqlContext = new HiveContext(sc); // The error occurred.
     Dataset<Row> data_hive = sqlContext.table("tpch100m.orders");
     data_hive.createOrReplaceTempView("orders");

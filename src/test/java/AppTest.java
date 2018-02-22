@@ -1,84 +1,15 @@
 
-import Algorithms.Algorithms;
-import static Algorithms.Algorithms.estimateCostValue;
-import static Algorithms.Algorithms.estimateSizeOfMatrix;
-import Algorithms.CreateDatabase;
-import Algorithms.LinearRegression;
-import Algorithms.LinearRegressionManual;
-import Algorithms.Writematrix2CSV;
-import Algorithms.testScilab;
-import Algorithms.testWriteMatrix2CSV;
-import IRES.TPCHQuery;
-import IRES.runWorkFlowIRES;
-import IRES.testQueryPlan;
-import LibraryIres.Move;
-import LibraryIres.Move_Data;
-import LibraryIres.Move_IRES;
-import LibraryIres.createWorkflow;
-import LibraryIres.runWorkflow;
-import Standalone.TPCHStandalone;
-import Irisa.Enssat.Rennes1.TestScript;
-import Irisa.Enssat.Rennes1.*;
-import Scala.Bootstrap;
-import Scala.UsingClasses;
-import WriteReadData.CsvWriteReadTest;
+import com.sparkexample.App;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import com.sparkexample.*;
+
 import java.io.IOException;
 
-import java.net.URISyntaxException;
-import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
-import org.junit.BeforeClass;
-
-import gr.ntua.cslab.asap.client.ClientConfiguration;
-import gr.ntua.cslab.asap.client.OperatorClient;
-import gr.ntua.cslab.asap.client.RestClient;
-import gr.ntua.cslab.asap.client.WorkflowClient;
-import gr.ntua.cslab.asap.examples.AddWorkflowFromDir;
-import static gr.ntua.cslab.asap.examples.AddWorkflowFromDir.readFromDir;
-import gr.ntua.cslab.asap.examples.TestOperators;
-import gr.ntua.cslab.asap.examples.TestWorkflows;
-import gr.ntua.cslab.asap.examples.TestWorkflowsIMR;
-
-import gr.ntua.cslab.asap.operators.AbstractOperator;
-import gr.ntua.cslab.asap.operators.Dataset;
-import gr.ntua.cslab.asap.operators.MaterializedOperators;
-import gr.ntua.cslab.asap.operators.NodeName;
-import gr.ntua.cslab.asap.operators.Operator;
-import gr.ntua.cslab.asap.workflow.AbstractWorkflow;
-import gr.ntua.cslab.asap.workflow.AbstractWorkflow1;
-import gr.ntua.cslab.asap.workflow.MaterializedWorkflow1;
-import gr.ntua.cslab.asap.workflow.Workflow;
-import gr.ntua.cslab.asap.workflow.WorkflowNode;
-
-import java.io.BufferedReader;
-import java.io.Console;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import static java.lang.System.in;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 //import java.text.DateFormat;
 //import java.text.SimpleDateFormat;
 //import java.time.LocalDate;
 //import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 //import trctree.TupleTree;
 
@@ -146,8 +77,8 @@ public class AppTest{
         //Irisa.Enssat.Rennes1.TestCatalys.should_get_dataframe_from_database();
         //Bootstrap.main(new String[] {"arg"});
         //////////////////////////////////////
-        //Irisa.Enssat.Rennes1.TestScala.test();
-        Irisa.Enssat.Rennes1.TestJava.main(new String[] {"arg1", "arg2", "arg3"});
+        Irisa.Enssat.Rennes1.TestScala.test();
+        //Irisa.Enssat.Rennes1.TestJava.main(new String[] {"arg1", "arg2", "arg3"});
         //Irisa.Enssat.Rennes1.TestSparkMlib.test();
         //////////////////////////////////////
 //	testall();

@@ -21,10 +21,10 @@ class ThirdScala {
         left
     }
   }
-  def main(): Unit = {
+  def main_test(){
     println("\n Hello from Scala")
-    //first()
-    second()
+    first()
+    //second()
     println("\n Goodbye")
   }
   def desktopLocation = "hdfs://master:9000/user/hive/warehouse"
@@ -92,6 +92,7 @@ class ThirdScala {
 
     //val sc = new SparkContext(conf)
     val thrift = desktopThrift
+    println("Start of SQL aaaaaaaaaaaa--------------------")
     val spark = SparkSession
       .builder()
       .appName("SparkHiveExample")
@@ -110,7 +111,7 @@ class ThirdScala {
     val conf_new = new SparkConf()
       .setAppName("jdf-dt-rtoc-withSQL")
       .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-      .set("hive.metastore.uris", "thrift://masterisima:9083")
+      //.set("hive.metastore.uris", "thrift://masterisima:9083")
       .set("spark.sql.warehouse.dir", hiveLocation_new)
       .set("spark.driver.allowMultipleContexts", "true")
       .setMaster("local[*]")

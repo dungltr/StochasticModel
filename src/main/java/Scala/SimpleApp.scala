@@ -63,17 +63,17 @@ class SimpleApp {
     val conf = new SparkConf()
             .setAppName("jdf-dt-rtoc-withSQL")
             .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-            .set("hive.metastore.uris", "thrift://master:9083")
+            .set("hive.metastore.uris", "thrift://masterisima:9083")
             .set("spark.sql.warehouse.dir", "/user/hive/warehouse")
             .setMaster("local[*]")
     val sc = new JavaSparkContext(conf)
-    /*
+    
     val sqlContext = new HiveContext(sc)
     val data_hive = sqlContext.table("tpch100m.orders")
     val dbHive = "orders"
     data_hive.createOrReplaceTempView(dbHive)
     data_hive.show()
-    */
+    
     //val dbTablePostgres = "lineitem"
     
     
