@@ -63,7 +63,8 @@ class SimpleApp {
     val conf = new SparkConf()
             .setAppName("jdf-dt-rtoc-withSQL")
             .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-            .set("hive.metastore.uris", "thrift://localhost:9083")
+            .set("hive.metastore.uris", "thrift://master:9083")
+            .set("spark.driver.allowMultipleContexts", "true")
             .set("spark.sql.warehouse.dir", "/user/hive/warehouse")
             .setMaster("local[*]")
     val sc = new JavaSparkContext(conf)
@@ -81,6 +82,7 @@ class SimpleApp {
         .builder()
         .appName("Spark Postgres Example")
         .master("local[*]")
+        .config("spark.driver.allowMultipleContexts", "true")
         .config("spark.sql.warehouse.dir", "/user/hive/warehouse")
         .getOrCreate();
 //    val dataDF_postgres = spark.read.jdbc("jdbc:postgresql://localhost:5432", "tpch100m.lineitem")
@@ -88,7 +90,7 @@ class SimpleApp {
 //        .option("password", password)
 //        .load()
     
-    /*
+    
     val dataDF_postgres = sqlContext.read.format("jdbc").options(
         Map("url" -> "jdbc:postgresql:tpch100m",
         "dbtable" -> "lineitem",
@@ -96,10 +98,10 @@ class SimpleApp {
         "password" -> password)).load()
     dataDF_postgres.createOrReplaceTempView("lineitem");
     dataDF_postgres.show();    
-    */
+    
     
     val query = spark.sql(query4)//Dataset.ofRows(self, sessionState.sqlParser.parsePlan(sqlText))
-    //println(query.toString())
+    println(query.toString())
     // "select * from orders,lineitem where l_orderkey = o_orderkey")
     
     println("--------------------sparkPlan--------------------------------")

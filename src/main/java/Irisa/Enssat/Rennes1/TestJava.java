@@ -45,6 +45,14 @@ public class TestJava {
       this.age = age;
     }
   }
+    static String HOME = System.getenv().get("HOME");
+    static String FILEUSER = HOME + "/username.txt";
+    static String username = com.sparkexample.TestPostgreSQLDatabase.readpass(FILEUSER);
+
+    static String FILENAME = HOME + "/password.txt";
+    static String password = com.sparkexample.TestPostgreSQLDatabase.readpass(FILENAME);
+    static String query4 = IRES.TPCHQuery.readSQL(HOME+"/SQL/tpch_query4");
+    
     public static void main (String [] arg) throws ParseException{
     System.out.println("\n Hello from Java");
     
@@ -59,7 +67,8 @@ public class TestJava {
     //System.out.println("\n The number of word in file is:=" + jsonFile.count());
     //////////////////////////////////////////////////////////////
     //OriginalExample(spark);
-    FirstExample();
+    //FirstExample();
+    lastExample();
 //    CustomExample(spark);
       /////////////////////////////////////////////////////////////
     spark.stop();
@@ -249,4 +258,79 @@ public class TestJava {
     println("after optimization")
     println(multipliedDFWithOptimization.queryExecution.optimizedPlan.numberedTreeString)
 */  }
+    public static void lastExample(){
+        SparkSession spark = SparkSession
+            .builder()
+            .appName("Spark Postgres Example")
+            .master("local[*]")
+            .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+            .config("spark.driver.allowMultipleContexts", "true")
+            .config("hive.metastore.uris", "thrift://master:9083")    
+            .config("spark.sql.warehouse.dir", "/user/hive/warehouse")              
+            .enableHiveSupport()
+            .getOrCreate();
+        
+        SparkConf conf = new SparkConf()
+            .setAppName("jdf-dt-rtoc-withSQL")
+            .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+            .set("hive.metastore.uris", "thrift://master:9083")
+            .set("spark.driver.allowMultipleContexts", "true")
+            .set("spark.sql.warehouse.dir", "/user/hive/warehouse")
+            .setMaster("local[*]");
+        JavaSparkContext sc = new JavaSparkContext(conf);
+        SQLContext sqlContext = new HiveContext(sc); // The error occurred.
+        
+        Dataset<Row> data_hive = spark.table("tpch100m.orders");
+        String dbHive = "orders";
+        data_hive.createOrReplaceTempView(dbHive);
+        data_hive.show();
+    
+    //val dbTablePostgres = "lineitem"
+    
+
+        
+//    val dataDF_postgres = spark.read.jdbc("jdbc:postgresql://localhost:5432", "tpch100m.lineitem")
+//        .option("user", username)
+//        .option("password", password)
+//        .load()
+    
+        
+        
+        Dataset<Row> dataDF_postgres = sqlContext.read()
+                .format("jdbc")
+                .option("url", "jdbc:postgresql:tpch100m")
+                .option("user", username)
+                .option("password", password)
+                .load();
+    dataDF_postgres.createOrReplaceTempView("lineitem");
+    dataDF_postgres.show();    
+    
+    
+    Dataset<Row> query = spark.sql(query4);//Dataset.ofRows(self, sessionState.sqlParser.parsePlan(sqlText))
+    System.out.println(query.toString());
+    // "select * from orders,lineitem where l_orderkey = o_orderkey")
+    
+    System.out.println("--------------------sparkPlan--------------------------------");
+    System.out.println(query.queryExecution().sparkPlan());
+    System.out.println("--------------------show()-----------------------------------");
+    query.show();
+    System.out.println("---------------------queryExecution--------------------------");
+    System.out.println(query.queryExecution());
+    System.out.println("---------------------optimizedPlan.numberedTreeString--------");
+    System.out.println(query.queryExecution().optimizedPlan().numberedTreeString());
+    System.out.println("---------------------query.queryExecution.analyzed--------");
+    System.out.println(query.queryExecution().analyzed());
+    System.out.println("---------------------query.explain(true)--------");
+    query.explain(true);
+    System.out.println("---------------------query.queryExecution.executedPlan--------");
+    System.out.println(query.queryExecution().executedPlan());
+    
+    
+    //Second(spark)
+    
+    
+    sc.stop();
+    sc.close();
+    spark.stop();
+    }
 }
