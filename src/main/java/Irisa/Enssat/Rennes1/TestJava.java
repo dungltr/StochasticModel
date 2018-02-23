@@ -260,7 +260,7 @@ public class TestJava {
     println(multipliedDFWithOptimization.queryExecution.optimizedPlan.numberedTreeString)
 */  }
     public static void lastExample(){
-        SparkSession spark = SparkSession
+      SparkSession spark = SparkSession
             .builder()
             .appName("Spark Postgres Example")
             .master("local[*]")

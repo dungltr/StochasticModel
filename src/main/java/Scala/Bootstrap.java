@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package Scala;
-import Scala.GreetingInJava;
+import Scala.GreetingScala;
 /**
  *
  * @author letrung
@@ -12,7 +12,7 @@ import Scala.GreetingInJava;
 public class Bootstrap {
  
     public static void main(String[] args) {
-        GreetingInScala scala = new GreetingInScala();
+        GreetingScala scala = new GreetingScala();
         scala.greet();
         scala.main();
     }
