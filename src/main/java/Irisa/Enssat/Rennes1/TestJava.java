@@ -5,6 +5,9 @@
  */
 package Irisa.Enssat.Rennes1;
 
+import static IRES.TPCHQuery.readSQL;
+import static IRES.testQueryPlan.createRandomQuery;
+import com.sparkexample.App;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.Dataset;
@@ -21,6 +24,8 @@ import org.apache.spark.sql.internal.SQLConf;
 import scala.collection.immutable.Nil;
 
 import java.io.Serializable;
+import org.apache.spark.sql.catalyst.planning.QueryPlanner;
+import org.apache.spark.sql.execution.SparkPlanner;
 
 //import org.apache.derby.jdbc.EmbeddedDriver;
 /**
@@ -48,9 +53,12 @@ public class TestJava {
       this.age = age;
     }
   }
+    /*
   public RuleExecutor Optimize (LogicalPlan logicalPlan) {
-    
+    RuleExecutor a = logicalPlan.allAttributes();
+    return a;
   }
+    */
     public static void main (String [] arg) throws ParseException{
     System.out.println("\n Hello from Java");
     SparkSession spark = SparkSession
@@ -58,12 +66,14 @@ public class TestJava {
         .appName("Spark SQL basic example")
         .master("local[*]")
         .config("spark.sql.warehouse.dir", "/user/hive/warehouse")
+        .config("spark.driver.allowMultipleContexts", "true")
         .getOrCreate();
-    Dataset<Row> jsonFile = spark.read().format("json").load("hdfs://localhost:9000//Volumes/DATAHD/user/hive/warehouse/people.txt");
+    String path = "hdfs://master:9000/user/hive/warehouse/people.txt";
+    Dataset<Row> jsonFile = spark.read().format("json").load(path);
     System.out.println("\n The number of word in file is:=" + jsonFile.count());
     //////////////////////////////////////////////////////////////
-    OriginalExample(spark);
-//    FirstExample();
+    //OriginalExample(spark);
+    FirstExample();
 //    CustomExample(spark);
       /////////////////////////////////////////////////////////////
     spark.stop();
@@ -74,7 +84,7 @@ public class TestJava {
     sales.createOrReplaceTempView("sales");
     Dataset<Row> customers = spark.read().option("header","true").csv("src/main/resources/customers.csv");
     customers.createOrReplaceTempView("customers");
-
+    
     spark.sessionState().conf().cboEnabled();
     //val multipliedDF = df.selectExpr("amountPaid * 1")
     //Dataset<Row> SalesJoinCustomers = sales.join(customers, sales.col("customerId"));//===customers.col("customerId"));
@@ -85,47 +95,47 @@ public class TestJava {
     //Dataset<Row> WhereCustomersID = SalesJoinCustomers.where("customerID < 3");
     //Dataset<Row> GroupBy = WhereCustomersID.groupBy(sales.col("customerID"), customers.col("customerID"));
     
-    String sqlTxt = "select * from sales, customers where sales.customerId = customers.customerId and sales.customerId < 3";
+    
+    String sqlTxt = "select * from sales, customers where sales.customerId = customers.customerId and sales.customerId < 3 and transactionId = 120";
     Dataset<Row> query = spark.sql(sqlTxt);
 
     LogicalPlan test = spark.sessionState().sqlParser().parsePlan(sqlTxt);
     System.out.println("-----------Show text of sqlParser--------------------------------");
     System.out.println(""+test);
-    System.out.println("-----------Show test.computeStats().toString()--------------------------------");
-    //test.computeStats(spark).toString();
-    System.out.println("-----------query.show()--------------------------------");
-    query.show();
-    System.out.println("-----------This is the query.explain()--------------------------------");
-    System.out.println("");
-    query.explain();
-      System.out.println("---------This is the executedPlan ----------------------------------");
-      System.out.println("\n"+query.queryExecution().executedPlan());
+    //System.out.println("-----------Show test.computeStats().toString()--------------------------------");
+    //test.computeStats().toString();
+    //System.out.println("-----------query.show()--------------------------------");
+    //query.show();
+    //  System.out.println("---------This is the executedPlan ----------------------------------");
+    //  System.out.println("\n"+query.queryExecution().executedPlan());
 
-      System.out.println("---------query.queryExecution().logical()----------------------------------");
-      System.out.println(" \n"+query.queryExecution().logical());
-      System.out.println("---------This is the sparkPlan----------------------------------");
-      System.out.println(" \n"+query.queryExecution().sparkPlan());
-      System.out.println("---------This is the optimizedPlan----------------------------------");
-      System.out.println(" \n"+query.queryExecution().optimizedPlan().numberedTreeString());
-      System.out.println("---------This is the query.queryExecution().logical().children()----------------------------------");
-      System.out.println("\n" + query.queryExecution().logical().children());
-      System.out.println("---------This is the query.queryExecution().sparkPlan().children()----------------------------------");
-      System.out.println(" \n"+query.queryExecution().sparkPlan().children());
+    //  System.out.println("---------query.queryExecution().logical()----------------------------------");
+    //  System.out.println(" \n"+query.queryExecution().logical());
+    //  System.out.println("---------This is the sparkPlan----------------------------------");
+    //  System.out.println(" \n"+query.queryExecution().sparkPlan());
+      //System.out.println("---------This is the optimizedPlan----------------------------------");
+      //System.out.println(" \n"+query.queryExecution().optimizedPlan().numberedTreeString());
+    //  System.out.println("---------This is the query.queryExecution().logical().children()----------------------------------");
+    //  System.out.println("\n" + query.queryExecution().logical().children());
       System.out.println("-------------------------------------------");
-      System.out.println(";");
-      System.out.println("---------This is the query.explain()----------------------------------");
-      query.explain();
       SQLConf conf = new SQLConf();
-      spark.sessionState().conf().setConf(conf.CBO_ENABLED(), true);
-      spark.sessionState().conf().setConf(conf.JOIN_REORDER_ENABLED(), true);
-      System.out.println(spark.sessionState().conf().cboEnabled());
-      System.out.println("---------query.logicalPlan()----------------------------------");
+      //spark.sessionState().conf().setConf(conf.CBO_ENABLED(), true);
+      //spark.sessionState().conf().setConf(conf.JOIN_REORDER_ENABLED(), true);
+      //System.out.println(spark.sessionState().conf().cboEnabled());
+    /*  System.out.println("---------query.logicalPlan()----------------------------------");
       System.out.println(" \n"+query.logicalPlan());
       System.out.println("---------query.queryExecution().analyzed()----------------------------------");
       System.out.println(query.queryExecution().analyzed());
-      System.out.println("---------query.queryExecution().optimizedPlan().stats(conf)----------------------------------");
-      System.out.println(query.queryExecution().optimizedPlan().stats(conf));
-
+    */  
+    SparkPlanner spark_new = spark.sessionState().planner();
+    //QueryPlanner(query.logicalPlan());
+    System.out.println(spark.sessionState().planner());
+    System.out.println("---------query.queryExecution().optimizedPlan().stats(conf)----------------------------------");
+    System.out.println(query.queryExecution().optimizedPlan().stats(conf));
+    query.explain(true);
+    query.queryExecution().executedPlan();
+    System.out.println("---------queryTPCH.queryExecution().executedPlan()----------------------------------");
+    //System.out.println(queryTPCH.queryExecution().executedPlan());
       /*
       for(plan: query.logicalPlan()){
         int i = 0;
@@ -180,6 +190,7 @@ public class TestJava {
             .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
             .set("hive.metastore.uris", "thrift://master:9083")
             .set("spark.sql.warehouse.dir", "/user/hive/warehouse")
+            .set("spark.driver.allowMultipleContexts", "true")
             .setMaster("local[*]");
     JavaSparkContext sc = new JavaSparkContext(conf);
 

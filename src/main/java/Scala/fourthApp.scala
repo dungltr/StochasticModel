@@ -10,7 +10,7 @@ class fourthApp {
   val FILENAME = HOME + "/password.txt"
   val password = com.sparkexample.TestPostgreSQLDatabase.readpass(FILENAME)
   val query4 = IRES.TPCHQuery.readSQL(HOME+"/SQL/tpch_query4")
-def main{
+def main(){
   println("\n Hello world")
   val spark = SparkSession
     .builder()

@@ -8,8 +8,11 @@ package Scala
 
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.catalyst.expressions.{Literal, Multiply}
+import org.apache.spark.sql.catalyst.planning.GenericStrategy
+import org.apache.spark.sql.catalyst.planning.QueryPlanner
 import org.apache.spark.sql.catalyst.plans.logical.LogicalPlan
 import org.apache.spark.sql.catalyst.rules.Rule
+import org.apache.spark.sql.catalyst.trees.TreeNode
 
 class SecondScala {
   object MultiplyOptimizationRule extends Rule[LogicalPlan] {
@@ -59,13 +62,9 @@ class SecondScala {
     println("This is the logicalPlan \n"+query.queryExecution.logical)
     println("This is the sparkPlan \n"+query.queryExecution.sparkPlan)
     println("This is the optimizedPlan \n"+query.queryExecution.optimizedPlan.numberedTreeString)
-    //println(GroupBy.toString)
-/*    //add our custom optimization
-    spark.experimental.extraOptimizations = Seq(MultiplyOptimizationRule)
-    val multipliedDFWithOptimization = df.selectExpr("amountPaid * 1")
-    println("after optimization")
-    println(multipliedDFWithOptimization.queryExecution.optimizedPlan.numberedTreeString)
-*/  }
+    
+    query.queryExecution.executedPlan
+  }
   private def CustomExample(spark: SparkSession): Unit = {
     val df = spark.read.option("header","true").csv("src/main/resources/sales.csv")
     //add our custom optimization
@@ -74,6 +73,7 @@ class SecondScala {
     println("after optimization")
     println(multipliedDFWithOptimization.queryExecution.optimizedPlan.numberedTreeString)
     println("This is the logicalPlan \n"+multipliedDFWithOptimization.queryExecution.logical)
-  }  
+  }
+
 
 }

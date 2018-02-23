@@ -21,7 +21,7 @@ class ThirdScala {
         left
     }
   }
-  def main(): Unit = {
+  def main_test(){
     println("\n Hello from Scala")
     //first()
     second()
