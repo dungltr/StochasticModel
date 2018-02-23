@@ -55,7 +55,7 @@ public class TestJava {
     
     public static void main (String [] arg) throws ParseException{
     System.out.println("\n Hello from Java");
-    
+    /*
     SparkSession spark = SparkSession
         .builder()
         .appName("Spark SQL basic example")
@@ -63,6 +63,7 @@ public class TestJava {
         .config("spark.sql.warehouse.dir", "/user/hive/warehouse")
         .config("spark.driver.allowMultipleContexts", "true")
         .getOrCreate();
+    */
     //Dataset<Row> jsonFile = spark.read().format("json").load("hdfs://localhost:9000//Volumes/DATAHD/user/hive/warehouse/people.txt");
     //System.out.println("\n The number of word in file is:=" + jsonFile.count());
     //////////////////////////////////////////////////////////////
@@ -71,7 +72,7 @@ public class TestJava {
     lastExample();
 //    CustomExample(spark);
       /////////////////////////////////////////////////////////////
-    spark.stop();
+    //spark.stop();
     System.out.println("\n Goodbye");
     }
     public static void OriginalExample(SparkSession spark) throws ParseException {
@@ -278,9 +279,10 @@ public class TestJava {
             .set("spark.sql.warehouse.dir", "/user/hive/warehouse")
             .setMaster("local[*]");
         JavaSparkContext sc = new JavaSparkContext(conf);
-        SQLContext sqlContext = new HiveContext(sc); // The error occurred.
+        SQLContext sqlContext; // The error occurred.
+        sqlContext = new HiveContext(sc);
         
-        Dataset<Row> data_hive = spark.table("tpch100m.orders");
+        Dataset<Row> data_hive = sqlContext.table("tpch100m.orders");
         String dbHive = "orders";
         data_hive.createOrReplaceTempView(dbHive);
         data_hive.show();
@@ -299,6 +301,7 @@ public class TestJava {
         Dataset<Row> dataDF_postgres = sqlContext.read()
                 .format("jdbc")
                 .option("url", "jdbc:postgresql:tpch100m")
+                .option("dbtable", "lineitem")
                 .option("user", username)
                 .option("password", password)
                 .load();
