@@ -1,21 +1,6 @@
 package thesis.experiments;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.rmi.RemoteException;
-import java.text.ParseException;
-
-import thesis.query_plan_tree.Plan;
-import thesis.query_plan_tree.PlanCost;
-import thesis.query_plan_tree.QueryPlanTreeException;
-import thesis.scheduler.Scheduler;
-import thesis.scheduler.SchedulerException;
-import thesis.utilities.Pair;
-
+import com.sparkexample.App;
 import thesis.catalog.Catalog;
 import thesis.catalog.CatalogException;
 import thesis.enumeration_algorithms.DPccp;
@@ -24,22 +9,38 @@ import thesis.join_graph_generator_framework.CatalogGenerator;
 import thesis.join_graph_generator_framework.QueryGenerator;
 import thesis.joingraph.JoinGraph;
 import thesis.joingraph.JoinGraphException;
+import thesis.query_plan_tree.Plan;
+import thesis.query_plan_tree.PlanCost;
+import thesis.query_plan_tree.QueryPlanTreeException;
+import thesis.scheduler.Scheduler;
+import thesis.scheduler.SchedulerException;
+import thesis.utilities.Pair;
+
+import java.io.*;
+import java.text.ParseException;
+
+//import java.io.*;
 
 public class DPccpExperiment {
+	static String HOME_Thesis = new App().readhome("HOME_Thesis");
 	static String dirname;
 	//Clique goes after cycle, Star goes after clique
 	static String[] types = {"Chain", "Cycle", "Clique", "Star"};
 	static int numberOfRelations = 2;
 	static int numberOfSites = 15;
 
-	public static void main(String args[]) throws Exception{
+	public static void main(String args[]) throws Exception, IOException{
 		for(int i = 2; i<5; i++){
 			numberOfRelations=i;
-			dirname = System.getenv().get("HOME") + "/assembla_svn/Experiments/DPccpTest/Relations_resident_at_all_site/"+numberOfSites
+			dirname = HOME_Thesis + "/assembla_svn/Experiments/DPccpTest/Relations_resident_at_all_site/"+numberOfSites
 			+"_Site/"+numberOfSites+
 			"_Site_"+numberOfRelations+"_Relations";
 			File f = new File(dirname);
-			f.mkdir();
+                        System.out.println("create dir");
+			if(!f.exists()) {
+                            f.mkdirs();
+                            System.out.println("creating dir suscessful");
+                        }
 			generateCatalog();
 			String sites_filename = dirname+"/SystemSites.conf";
 			String relations_filename = dirname+"/Catalog.conf";

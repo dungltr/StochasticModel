@@ -3,6 +3,7 @@ import com.sparkexample.App;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import thesis.experiments.DPccpExperiment;
 
 import java.io.IOException;
 
@@ -66,6 +67,7 @@ public class AppTest{
     @Test
     public void testConvert_IRES() throws Exception {
         createProperties();
+        DPccpExperiment.main(new String[] {"arg1", "arg2", "arg3"});
 //        String file_test = test;
 //        String training_file = training;
 //        String testing_file = testing;
@@ -77,7 +79,7 @@ public class AppTest{
         //Irisa.Enssat.Rennes1.TestCatalys.should_get_dataframe_from_database();
         //Bootstrap.main(new String[] {"arg"});
         //////////////////////////////////////
-        Irisa.Enssat.Rennes1.TestScala.test();
+        //Irisa.Enssat.Rennes1.TestScala.test();
         //Irisa.Enssat.Rennes1.TestJava.main(new String[] {"arg1", "arg2", "arg3"});
         //Irisa.Enssat.Rennes1.TestSparkMlib.test();
         //////////////////////////////////////

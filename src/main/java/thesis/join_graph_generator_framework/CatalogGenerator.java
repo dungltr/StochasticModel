@@ -1,23 +1,16 @@
 package thesis.join_graph_generator_framework;
 
+import thesis.catalog.CatalogException;
+import thesis.catalog.Domain;
+import thesis.catalog.Domain.Type;
+import thesis.catalog.Field;
+import thesis.query_plan_tree.Site;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-
-import thesis.catalog.Catalog;
-import thesis.catalog.CatalogException;
-import thesis.catalog.Domain;
-import thesis.catalog.Field;
-import thesis.catalog.Domain.Type;
-import thesis.query_plan_tree.Site;
+import java.util.*;
 
 public class CatalogGenerator {
 	private int _numberOfRelations;
@@ -40,8 +33,8 @@ public class CatalogGenerator {
 	}
 	
 	public void generate() throws FileNotFoundException, CatalogException {
-		System.out.println(_dirname+"SystemSites.conf");
-		PrintWriter p = new PrintWriter(_dirname+"SystemSites.conf");
+		System.out.println(_dirname+"/SystemSites.conf");
+		PrintWriter p = new PrintWriter(_dirname+"/SystemSites.conf");
 		for(int i = 0; i<_numberOfSites; i++)
 		{
 			Site site = new Site("163.1.88."+i).internalize();
@@ -52,7 +45,7 @@ public class CatalogGenerator {
 		}
 		p.close();
 		
-		p = new PrintWriter(_dirname+"Catalog.conf");
+		p = new PrintWriter(_dirname+"/Catalog.conf");
 		
 		for(int i = 65; i<65+_numberOfRelations; i++){
 			String name = ""+(char)(65+((i-65)%26));
