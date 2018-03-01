@@ -1,7 +1,6 @@
 package thesis.experiments;
 
 import com.sparkexample.App;
-import thesis.catalog.Catalog;
 import thesis.catalog.CatalogException;
 import thesis.enumeration_algorithms.DPccp;
 import thesis.enumeration_algorithms.DPccpException;
@@ -26,11 +25,13 @@ public class DPccpExperiment {
 	static String dirname;
 	//Clique goes after cycle, Star goes after clique
 	static String[] types = {"Chain", "Cycle", "Clique", "Star"};
-	static int numberOfRelations = 2;
-	static int numberOfSites = 15;
+	static int numberOfRelations = 5;
+	static int numberOfSites = 3;
+	static int relationsResideAtNumberOfSites = 1;
 
 	public static void main(String args[]) throws Exception, IOException{
-		for(int i = 2; i<5; i++){
+		int maxNumberOfRelations = numberOfRelations;
+		for(int i = 2; i<maxNumberOfRelations; i++){
 			numberOfRelations=i;
 			dirname = HOME_Thesis + "/assembla_svn/Experiments/DPccpTest/Relations_resident_at_all_site/"+numberOfSites
 			+"_Site/"+numberOfSites+
@@ -41,16 +42,15 @@ public class DPccpExperiment {
                             f.mkdirs();
                             System.out.println("creating dir suscessful");
                         }
-			generateCatalog();
 			String sites_filename = dirname+"/SystemSites.conf";
 			String relations_filename = dirname+"/Catalog.conf";
-			Catalog.populate(sites_filename, relations_filename);
-
-			makeDirectoryStructure();
-			generateQueries();
-			executeQueries();
-			produceAverageTimeFile();
-			collectResults();
+			generateCatalog();
+			//Catalog.populate(sites_filename, relations_filename);
+			//makeDirectoryStructure();
+			//generateQueries();
+			//executeQueries();
+			//produceAverageTimeFile();
+			//collectResults();
 		}
 	}
 
@@ -100,7 +100,7 @@ public class DPccpExperiment {
 
 	public static void generateCatalog() throws CatalogException, FileNotFoundException{
 		CatalogGenerator catalogGenerator = new CatalogGenerator(numberOfRelations, 
-				numberOfSites, numberOfSites, dirname);
+				numberOfSites, relationsResideAtNumberOfSites, dirname);
 		catalogGenerator.generate();
 
 	}

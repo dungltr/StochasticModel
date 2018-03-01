@@ -82,7 +82,14 @@
 	<artifactId>scalatest_2.11</artifactId>
 	<version>2.2.2</version>
 	<scope>test</scope>
-    </dependency> 
+    </dependency>
+
+    <!--SQL parse-->
+        <dependency>
+            <groupId>com.github.jsqlparser</groupId>
+            <artifactId>jsqlparser</artifactId>
+            <version>0.9</version>
+        </dependency>
 <!--
     <dependency>
         <groupId>org.hamcrest</groupId>
