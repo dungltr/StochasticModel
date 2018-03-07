@@ -6,9 +6,8 @@
 package Irisa.Enssat.Rennes1;
 
 //import Scala.ThirdScala;
-import Scala.fourthApp;
-import Scala.SecondScala;
-import Scala.SimpleApp;
+import Scala.TestCostBasedJoinReorder;
+import Scala.testHello;
 
 
 
@@ -19,13 +18,16 @@ import Scala.SimpleApp;
  */
 public class TestScala {
     public static void test(){
-        SimpleApp ScalaApp = new SimpleApp();
-        ScalaApp.main();
-        SecondScala Second = new SecondScala();
+        //SimpleApp ScalaApp = new SimpleApp();
+        //ScalaApp.main();
+        //SecondScala Second = new SecondScala();
         //Second.main_test();
-        fourthApp FourthApp = new fourthApp();
+        //fourthApp FourthApp = new fourthApp();
         //FourthApp.main();
-
+        //TestCostBasedJoinReorder costBasedJoinReorder = new TestCostBasedJoinReorder();
+        TestCostBasedJoinReorder.test();
+       
+        testHello.test();
     }
     public static void main(String[] args){
         test();

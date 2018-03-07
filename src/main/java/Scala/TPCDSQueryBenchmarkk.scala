@@ -9,11 +9,16 @@ package Scala
 //import java.io.File
 import java.io.File
 
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.catalyst.TableIdentifier
 import org.apache.spark.sql.catalyst.analysis.UnresolvedRelation
 import org.apache.spark.sql.catalyst.expressions.SubqueryExpression
+
+
+//import Scala.TestCostBasedJoinReorder.spark
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.catalyst.TableIdentifier
+import org.apache.spark.sql.catalyst.analysis.EliminateSubqueryAliases
 import org.apache.spark.sql.catalyst.plans.logical.LogicalPlan
+import org.apache.spark.sql.catalyst.rules.RuleExecutor
 import org.apache.spark.sql.catalyst.util._
 import org.apache.spark.sql.internal.SQLConf
 import org.apache.spark.sql.internal.SQLConf.{CBO_ENABLED, JOIN_REORDER_ENABLED}
@@ -34,7 +39,7 @@ object TPCDSQueryBenchmark {
       .set("spark.sql.autoBroadcastJoinThreshold", (20 * 1024 * 1024).toString)
 
   val spark = SparkSession.builder.config(conf).getOrCreate()
-
+  val confSQL = spark.sessionState.conf
   val tables = Seq("catalog_page", "catalog_returns", "customer", "customer_address",
     "customer_demographics", "date_dim", "household_demographics", "inventory", "item",
     "promotion", "store", "store_returns", "catalog_sales", "web_sales", "store_sales",
@@ -52,7 +57,12 @@ object TPCDSQueryBenchmark {
 
 
 
-
+  def printList(args: List[String]): Unit = {
+    args.foreach(println)
+  }
+  def printListLogicalPlan(args: List[LogicalPlan]): Unit = {
+    args.foreach(println)
+  }
   def tpcdsAll(dataLocation: String, queries: Seq[String]): Unit = {
     require(dataLocation.nonEmpty,
       "please modify the value of dataLocation to point to your local TPCDS data")
@@ -64,6 +74,7 @@ object TPCDSQueryBenchmark {
       //val queryString = fileToString(new File(Thread.currentThread().getContextClassLoader
       //  .getResource(s"tpcds/$name.sql").getFile))
       val queryString = fileToString(new File(s"$dataLocation/$name.sql"))
+      println(queryString)
       /*
       val queriesString = fileToString(new
 
@@ -75,6 +86,10 @@ object TPCDSQueryBenchmark {
       // currently doesn't take WITH subqueries into account which might lead to fairly inaccurate
       // per-row processing time for those cases.
       val queryRelations = scala.collection.mutable.HashSet[String]()
+
+      //queryRelations.foreach(name => spark.table(name).count())
+
+      //println(name)
       println(spark.sql(queryString).queryExecution.logical)
       println("spark.sessionState.conf.cboEnabled: "+spark.sessionState.conf.cboEnabled)
       println("spark.sessionState.conf.joinReorderEnabled: "+spark.sessionState.conf.joinReorderEnabled)
@@ -83,7 +98,6 @@ object TPCDSQueryBenchmark {
           queryRelations.add(t.table)
         case lp: LogicalPlan =>
           lp.expressions.foreach { _ foreach {
-
             case subquery: SubqueryExpression =>
               subquery.plan.foreach {
                 case ur @ UnresolvedRelation(t: TableIdentifier) =>
@@ -96,18 +110,25 @@ object TPCDSQueryBenchmark {
         case _ =>
       }
 
-      val numRows = queryRelations.map(tableSizes.getOrElse(_, 0L)).sum
 
+      val listRelations = queryRelations.toList
+      val a = spark.sql(queryString).queryExecution.logical.subqueries
+      val b = a.toList
+      printList(listRelations)
+      printListLogicalPlan(b)
+      val numRows = queryRelations.map(tableSizes.getOrElse(_, 0L)).sum
+      /*
       val benchmark = new Benchmark("TPCDS Snappy", numRows, 5)
       benchmark.addCase(name) { i =>
         spark.sql(queryString).collect()
       }
       benchmark.run()
-
+      */
     }
 
-    spark.sql("DESC EXTENDED catalog_page").show(numRows = 30, truncate = false)
-    spark.sql("DESC EXTENDED catalog_returns").show(numRows = 30, truncate = false)
+    //spark.sql("DESC EXTENDED catalog_page").show(numRows = 30, truncate = false)
+    //spark.sql("DESC EXTENDED catalog_returns").show(numRows = 30, truncate = false)
+
     val tableName = "catalog_page"
     spark.read.parquet(s"$dataLocation/$tableName").createOrReplaceTempView(tableName)
     val tableId = TableIdentifier(tableName)
@@ -149,5 +170,50 @@ object TPCDSQueryBenchmark {
     // dataLocation below needs to be set to the location where the generated data is stored.
     val dataLocation = "/Volumes/DATAHD/Downloads/spark-tpc-ds-performance-test-master/spark-warehouse/tpcds.db/"
     tpcdsAll(dataLocation, queries = tpcdsQueries)
+    //testSomething(dataLocation, queries = tpcdsQueries, Tables = tables)
+  }
+  def testSomething(dataLocation: String, queries: Seq[String], Tables: Seq[String]): Unit = {
+    spark.conf.set(SQLConf.PARQUET_VECTORIZED_READER_ENABLED.key, "true")
+    spark.conf.set(CBO_ENABLED.key, "true")
+    spark.conf.set(JOIN_REORDER_ENABLED.key, "true")
+    spark.conf.set(SQLConf.WHOLESTAGE_CODEGEN_ENABLED.key, "true")
+    queries.foreach {
+      name => val queryString = fileToString(new File(s"$dataLocation/$name.sql"))
+      Tables.foreach {
+        tableName => spark.read.parquet(s"$dataLocation/$tableName").createOrReplaceTempView(tableName)
+      }
+
+        println("This is the logical plan for: " + name + "---------------------------------------------------")
+        val plan = spark.sql(queryString).queryExecution.analyzed
+        val noAliasesPlan = EliminateSubqueryAliases(plan)
+        println(noAliasesPlan.numberedTreeString)
+        println("spark.sessionState.conf.cboEnabled: "+spark.sessionState.conf.cboEnabled)
+        println("spark.sessionState.conf.joinReorderEnabled: "+spark.sessionState.conf.joinReorderEnabled)
+
+        /*
+        println("This is the optimization plan for: " + name + "---------------------------------------------------")
+        val optimizePlan = spark.sql(queryString).queryExecution.optimizedPlan
+        println(optimizePlan.numberedTreeString)
+        val noAliasesOptimizePlan = EliminateSubqueryAliases(optimizePlan)
+        println(noAliasesOptimizePlan.numberedTreeString)
+
+        //println(spark.sql(queryString).explain(true))
+        */
+        println("This is the ReOrder plan for: " + name + "---------------------------------------------------")
+        val reOrderPlan = spark.sql(queryString).queryExecution.analyzed
+        val joinsReordered = Optimize.execute(reOrderPlan)
+        println(joinsReordered.numberedTreeString)
+
+    }
+  }
+  object Optimize extends RuleExecutor[LogicalPlan] {
+    println("customer Optimize")
+    //val spark = SparkSession.builder.config(conf).getOrCreate()
+    val batches =
+      Batch("EliminateSubqueryAliases", Once, EliminateSubqueryAliases) ::
+        //Batch("RewriteSubquery", Once,
+        //  RewritePredicateSubquery,
+        //  CollapseProject) ::
+        Batch("Join Reorder", Once, CostBasedJoinReorder(confSQL)) :: Nil
   }
 }

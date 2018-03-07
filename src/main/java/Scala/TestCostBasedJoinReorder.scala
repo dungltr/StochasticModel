@@ -1,19 +1,20 @@
 package Scala
-
+import Irisa.Enssat.Rennes1.ParetoPlanSet
+import Scala.JoinReorderDP.JoinPlan
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.catalyst.analysis.EliminateSubqueryAliases
-import org.apache.spark.sql.catalyst.optimizer.{CollapseProject, CostBasedJoinReorder, RewritePredicateSubquery}
 import org.apache.spark.sql.catalyst.plans.logical.LogicalPlan
 import org.apache.spark.sql.catalyst.rules.RuleExecutor
 import org.apache.spark.sql.internal.SQLConf.{CBO_ENABLED, JOIN_REORDER_ENABLED}
+
+import scala.collection.mutable
 /**
   * Created by letrungdung on 01/03/2018.
   */
 object TestCostBasedJoinReorder {
-  val conf =
-    new SparkConf()
-      .setMaster("local[1]")
+  val conf = new SparkConf()
+      .setMaster("local[*]")
       .setAppName("test-sql-context")
       .set("spark.sql.parquet.compression.codec", "snappy")
       .set("spark.sql.shuffle.partitions", "4")
@@ -24,22 +25,49 @@ object TestCostBasedJoinReorder {
       .set(JOIN_REORDER_ENABLED.key, "true")
       .set("spark.sql.autoBroadcastJoinThreshold", (20 * 1024 * 1024).toString)
 
-  val spark = SparkSession.builder.config(conf).getOrCreate()
+  
   val tables = Seq("store_sales", "store_returns","catalog_sales"// "catalog_page", "catalog_returns", "customer"//, "customer_address",
     //"customer_demographics", "date_dim", "household_demographics", "inventory", "item",
     //"promotion", "store", "store_returns", "catalog_sales", "web_sales", "store_sales",
     //"web_returns", "web_site", "reason", "call_center", "warehouse", "ship_mode", "income_band",
     //"time_dim", "web_page"
   )
-
+  
   def setupTables(dataLocation: String): Map[String, Long] = {
-
+    println("Hello from setupTables")
+    val spark = SparkSession.builder.config(conf).getOrCreate()
+    println("Goodbye from setupTables")
     tables.map { tableName =>
       spark.read.parquet(s"$dataLocation/$tableName").createOrReplaceTempView(tableName)
       tableName -> spark.table(tableName).count()
-    }.toMap
+    }.toMap    
+  }
+  val allPlanMap = mutable.Map.empty[List[Int], JoinPlan]
+  def takeListPlan(listMapLogicalPlan: List[(List[Int], JoinReorderDP.JoinPlan)]):Unit = {
+    for (temp <- listMapLogicalPlan){
+      val listInt = temp._1
+      val listJoin = temp._2
+      println(listInt)
+      println(listJoin.itemIds)
+      println(listJoin.plan)
+      println(listJoin.planCost)
+      allPlanMap.update(listInt,listJoin)
+    }
+    takeLogicalPlan()
+  }
+  val allPlanList = List.empty[LogicalPlan]
+
+  def takeLogicalPlan(): Unit ={
+    for(temp<-allPlanMap){
+      ParetoPlanSet.addLogicalPlan(temp._2.plan)
+      ParetoPlanSet.addCostPlan(temp._2.planCost)
+      ParetoPlanSet.addSetPlan(temp._1)
+    }
+    ParetoPlanSet.filterPlans()
   }
   def tpcdsAll(dataLocation: String, queries: Seq[String]): Unit = {
+    println("Hello from tpcdsAll")
+    val spark = SparkSession.builder.config(conf).getOrCreate()
     require(dataLocation.nonEmpty,
       "please modify the value of dataLocation to point to your local TPCDS data")
     val tableSizes = setupTables(dataLocation)
@@ -66,11 +94,18 @@ object TestCostBasedJoinReorder {
     }
 
     val belowBroadcastJoinThreshold = spark.sessionState.conf.autoBroadcastJoinThreshold - 1
-    spark.range(belowBroadcastJoinThreshold).write.saveAsTable("t1")
+    println("spark.sessionState.conf.autoBroadcastJoinThreshold:=" + spark.sessionState.conf.autoBroadcastJoinThreshold)
+    spark.range(10).write.saveAsTable("t1")//404L
     // t2 is twice as big as t1
-    spark.range(0 * belowBroadcastJoinThreshold).write.saveAsTable("t2")
-    spark.range(2).write.saveAsTable("tiny")
+    spark.range(10).write.saveAsTable("t2")//408L
+    spark.range(10).write.saveAsTable("tiny") // 412L
+    // 123 412 404 408
+    // 132 412 404 408
+    // 231 412 404 408
 
+    // 213 412 408 404
+    // 312 412 408 404
+    // 321 412 408 404
     // Compute row count statistics
     tableNames.foreach { t =>
       spark.sql(s"ANALYZE TABLE $t COMPUTE STATISTICS")
@@ -81,26 +116,64 @@ object TestCostBasedJoinReorder {
     val t2 = spark.table("t2")
     val tiny = spark.table("tiny")
 
+    t1.show()
+    t2.show()
+    tiny.show()
+
     // Example: Inner join with join condition
     val q = t1.join(t2, Seq("id")).join(tiny, Seq("id"))
+    //val queryRelations = scala.collection.mutable.HashSet[String]()
+    /*q.queryExecution.logical.map {
+      case ur @ UnresolvedRelation(t: TableIdentifier) =>
+        queryRelations.add(t.table)
+      case lp: LogicalPlan =>
+        lp.expressions.foreach { _ foreach {
+          case subquery: SubqueryExpression =>
+            subquery.plan.foreach {
+              case ur @ UnresolvedRelation(t: TableIdentifier) =>
+                queryRelations.add(t.table)
+              case _ =>
+            }
+          case _ =>
+        }
+        }
+      case _ =>
+    }
+    val queryRelation = scala.collection.mutable.HashSet[String]()
+    val listRelations = queryRelations.toList
+    val a = q.queryExecution.logical.subqueries
+    val b = a.toList
+    printList(listRelations)
+    printListLogicalPlan(b)
+    */
     val plan = q.queryExecution.analyzed
     println(plan.numberedTreeString)
 
-    import org.apache.spark.sql.catalyst.analysis.EliminateSubqueryAliases
-    val noAliasesPlan = EliminateSubqueryAliases(plan)
-    println(noAliasesPlan.numberedTreeString)
+    //val optimizePlan = q.queryExecution.optimizedPlan
+    //println(optimizePlan)
+    //val noAliasesPlan = EliminateSubqueryAliases(plan)
+    //println(noAliasesPlan.numberedTreeString)
+
     val joinsReordered = Optimize.execute(plan)
+    //val condition = extractInnerJoins(plan)
     //val joinsReordered = Optimize.execute(plan)
     println(joinsReordered.numberedTreeString)
 
   }
+
+  //Optimizer(sessionCatalog: SessionCatalog, conf: SQLConf)
+  //extends RuleExecutor[LogicalPlan]
   object Optimize extends RuleExecutor[LogicalPlan] {
+
+    val spark = SparkSession.builder.config(conf).getOrCreate()
+    val confSQL = spark.sessionState.conf
     val batches =
       Batch("EliminateSubqueryAliases", Once, EliminateSubqueryAliases) ::
         //Batch("RewriteSubquery", Once,
         //  RewritePredicateSubquery,
         //  CollapseProject) :: Nil
-    Batch("Join Reorder", Once, CostBasedJoinReorder) :: Nil
+    Batch("Join Reorder", Once, CostBasedJoinReorder(confSQL)) :: Nil
+    spark.stop()
   }
   def main(args: Array[String]): Unit = {
     // List of all TPC-DS queries
@@ -119,6 +192,12 @@ object TestCostBasedJoinReorder {
     // https://github.com/databricks/spark-sql-perf/blob/master/README.md to generate the TPCDS data
     // locally (preferably with a scale factor of 5 for benchmarking). Thereafter, the value of
     // dataLocation below needs to be set to the location where the generated data is stored.
+    val dataLocation = "/Volumes/DATAHD/Downloads/spark-tpc-ds-performance-test-master/spark-warehouse/tpcds.db/"
+    tpcdsAll(dataLocation, queries = tpcdsQueries)
+  }
+  def test():Unit={
+    println("Hello from TestCostBasedJoinReorder")
+    val tpcdsQueries = Seq("query25")
     val dataLocation = "/Volumes/DATAHD/Downloads/spark-tpc-ds-performance-test-master/spark-warehouse/tpcds.db/"
     tpcdsAll(dataLocation, queries = tpcdsQueries)
   }
