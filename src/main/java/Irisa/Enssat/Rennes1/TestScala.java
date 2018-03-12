@@ -7,7 +7,7 @@ package Irisa.Enssat.Rennes1;
 
 //import Scala.ThirdScala;
 import Scala.TestCostBasedJoinReorder;
-import Scala.testHello;
+//import Scala.testHello;
 
 
 
@@ -27,7 +27,7 @@ public class TestScala {
         //TestCostBasedJoinReorder costBasedJoinReorder = new TestCostBasedJoinReorder();
         TestCostBasedJoinReorder.test();
        
-        testHello.test();
+        //testHello.test();
     }
     public static void main(String[] args){
         test();
