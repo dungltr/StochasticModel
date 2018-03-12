@@ -39,6 +39,7 @@ class ThirdScala {
             .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
             .set("hive.metastore.uris", "thrift://master:9083")
             .set("spark.sql.warehouse.dir", "/user/hive/warehouse")
+            //.setMaster("master")
             .setMaster("local[*]")
     val sc = new SparkContext(conf)
     val sqlContext = new org.apache.spark.sql.SQLContext(sc)
@@ -48,9 +49,9 @@ class ThirdScala {
         .appName("Spark HiveTest Example")
         .master("local[*]")
         .getOrCreate();
-    println("\n Test database is:"+ databaseExists("tpch100m",sparktest) +" Test table is: " +tableExists("default.orders",sparktest))
+    //println("\n Test database is:"+ databaseExists("default",sparktest) +" Test table is: " +tableExists("default.orders",sparktest))
     
-    val data_hive = sqlContext.table("default.orders")
+    val data_hive = sqlContext.table("tpch100m.orders")
     data_hive.createOrReplaceTempView("orders")
     data_hive.show();
     println("\n Hello from Postgres")
