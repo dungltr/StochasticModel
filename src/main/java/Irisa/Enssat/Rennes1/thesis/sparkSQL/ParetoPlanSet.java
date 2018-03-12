@@ -1,4 +1,4 @@
-package Irisa.Enssat.Rennes1;
+package Irisa.Enssat.Rennes1.thesis.sparkSQL;
 
 
 import Scala.Cost;

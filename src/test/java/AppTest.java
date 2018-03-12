@@ -3,7 +3,6 @@ import com.sparkexample.App;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import thesis.experiments.DPccpExperiment;
 
 import java.io.IOException;
 
@@ -79,7 +78,7 @@ public class AppTest{
         //Irisa.Enssat.Rennes1.TestCatalys.should_get_dataframe_from_database();
         //Bootstrap.main(new String[] {"arg"});
         //////////////////////////////////////
-        Irisa.Enssat.Rennes1.TestScala.test();
+        //Irisa.Enssat.Rennes1.TestScala.test();
         //Irisa.Enssat.Rennes1.TestJava.main(new String[] {"arg1", "arg2", "arg3"});
         //Irisa.Enssat.Rennes1.TestSparkMlib.test();
         //////////////////////////////////////
@@ -95,7 +94,7 @@ public class AppTest{
 //        LinearRegressionManual.main_test(training_file,testing_file);
 //        LinearRegressionManual.test_minDataset(training_file,testing_file,0.8);
 //        LinearRegressionManual.TPCH(0.0, "", "100m", "Hive", "Hive", "predict");
-//        Irisa.Enssat.Rennes1.TestScript.testall();
+        Irisa.Enssat.Rennes1.TestScript.testall();
 	
         for (int i =0; i<1; i++)
         { 

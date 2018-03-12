@@ -7,17 +7,18 @@ package IRES;
 
 import Algorithms.Algorithms;
 import Algorithms.testWriteMatrix2CSV;
-import static IRES.testQueryPlan.createRandomParameter;
-import static IRES.testQueryPlan.createRandomQuery;
 import LibraryIres.Move_Data;
 import LibraryIres.YarnValue;
 import com.sparkexample.App;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import static IRES.testQueryPlan.createRandomQuery;
 
 /**
  *
@@ -91,6 +92,7 @@ public class TPCHQuery {
         Data.set_From(From);
         Data.set_To(To);
         Data.set_Schema(Schema);
+
         
         YarnValue yarnValue = new YarnValue(Yarn[0], Yarn[1]);
         yarnValue.set_Ram(Yarn[0]);

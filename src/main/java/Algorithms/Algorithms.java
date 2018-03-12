@@ -4,37 +4,24 @@
  * and open the template in the editor.
  */
 package Algorithms;
-import LibraryIres.*;
-import IRES.*;
-import static Algorithms.ReadMatrixCSV.readMatrix;
-import static Algorithms.testScilab.invert;
-import static Algorithms.testScilab.multiply;
-import static Algorithms.testScilab.printArray;
-import static Algorithms.testScilab.transpose;
-import static Algorithms.LinearRegression.*;
-import static IRES.TPCHQuery.calculateSize;
-import static IRES.runWorkFlowIRES.Nameop;
-import static IRES.testQueryPlan.createRandomQuery;
+import IRES.TPCHQuery;
+import IRES.runWorkFlowIRES;
+import IRES.testQueryPlan;
 import LibraryIres.Move_Data;
-import LibraryIres.runWorkflow;
-import Irisa.Enssat.Rennes1.TestScript;
+import LibraryIres.YarnValue;
 import WriteReadData.CsvFileReader;
 import com.sparkexample.App;
-import gr.ntua.cslab.asap.operators.AbstractOperator;
-import gr.ntua.cslab.asap.operators.Dataset;
-import gr.ntua.cslab.asap.operators.MaterializedOperators;
-import gr.ntua.cslab.asap.workflow.AbstractWorkflow;
-import gr.ntua.cslab.asap.workflow.Workflow;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
-import org.apache.commons.io.FileUtils;
+
+import static Algorithms.ReadMatrixCSV.readMatrix;
+import static Algorithms.testScilab.*;
 import static org.apache.commons.math.util.MathUtils.round;
 /**
  *
@@ -589,6 +576,11 @@ public class Algorithms {
         String OperatorFolder = IRES_library+"/target/asapLibrary/operators";
         return OperatorFolder;
     }
+    public static String getNameQuery(String SQL){
+        return SQL.substring(SQL.lastIndexOf("DROP TABLE IF EXISTS "),SQL.indexOf("_"))
+                .replaceAll("DROP TABLE IF EXISTS ","")
+                .replaceAll(" ","");
+    }
     public static void mainIRES(Move_Data Data, String SQL, YarnValue yarnValue, double TimeOfDay, double[] size, String KindOfRunning ) throws Exception{      
         String OperatorFolder = operatorFolder();
         String realValue, parameter, estimate, directory, Error;
@@ -702,8 +694,14 @@ public class Algorithms {
             testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), "execTime");     
         }
         else fixExecTime(Data, Max_train);
-	storeCost(Data,Time_Cost,"execTime_estimate","weka");
+	    storeCost(Data,Time_Cost,"execTime_estimate","weka");
         storeCost(Data,Time_Cost,NameOfEstimateValue,"dream");
+
+        String wekaStore = "weka"+"_"+Data.get_DatabaseIn()+"_"+getNameQuery(SQL);
+        String dreamStore = "dream"+"_"+Data.get_DatabaseIn()+"_"+getNameQuery(SQL);
+
+        storeCost(Data,Time_Cost,"execTime_estimate",wekaStore);
+        storeCost(Data,Time_Cost,NameOfEstimateValue,dreamStore);
 	/*
 	String modelDirPath = OperatorFolder+"/"+NameOp + "/models";
         File modelDir = new File(modelDirPath);
@@ -741,7 +739,7 @@ public class Algorithms {
         for (int i = 0; i < resultMatrix.length; i++){
             for (int j = 0; j < estimateMatrix[0].length; j++)
                 resultMatrix[i][j] = estimateMatrix[i][j];
-            resultMatrix[i][estimateMatrix[0].length] = realValue;
+                resultMatrix[i][estimateMatrix[0].length] = realValue;
         }           
         String resultFile = directory + "/data/"+result+".csv";
         File file = new File(result);
@@ -840,6 +838,7 @@ public class Algorithms {
 
                 String fileLink = DefaultDirectory(Data)+"/data/"+NameOfRealValue+".csv";
                 Path filePath = Paths.get(fileLink);
+
                 if (Files.exists(filePath)){
                     Max = CsvFileReader.count(fileLink)-1;
                     double[][] matrix = readMatrix(fileLink, Max);          
@@ -919,5 +918,10 @@ public class Algorithms {
         for (int i = 0; i < tmp.length; i ++)
             matrix[i] = round(tmp[i], 2);
         return matrix;
+    }
+    public static void main (String [] args){
+        String test = "DROP TABLE IF EXISTS randomQuery[2]_From_To;";
+        String Query = getNameQuery(test);
+        System.out.println(Query);
     }
 }

@@ -20,6 +20,7 @@ public class Move_Data  {
     String DataOut;
     String DataOutSize;
     String DatabaseOut;
+
     
     public Move_Data (String Operator, String DataIn, String DataInSize, String DatabaseIn, String Schema, String From, String To, String DataOut, String DataOutSize, String DatabaseOut) {
         this.Operator = Operator;

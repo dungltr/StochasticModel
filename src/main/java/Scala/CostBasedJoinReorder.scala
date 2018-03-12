@@ -1,13 +1,14 @@
 package Scala
 
-import org.apache.spark.sql.internal.SQLConf
-import scala.collection.mutable
-
+import Irisa.Enssat.Rennes1.thesis.sparkSQL.Pareto
 import org.apache.spark.internal.Logging
 import org.apache.spark.sql.catalyst.expressions.{And, Attribute, AttributeSet, Expression, PredicateHelper}
-import org.apache.spark.sql.catalyst.plans.{Inner, InnerLike}
 import org.apache.spark.sql.catalyst.plans.logical.{BinaryNode, Join, LogicalPlan, Project}
+import org.apache.spark.sql.catalyst.plans.{Inner, InnerLike}
 import org.apache.spark.sql.catalyst.rules.Rule
+import org.apache.spark.sql.internal.SQLConf
+
+import scala.collection.mutable
 /**
   * Created by letrungdung on 07/03/2018.
   */
@@ -24,6 +25,7 @@ case class CostBasedJoinReorder(confSQL: SQLConf) extends Rule[LogicalPlan] with
         case p @ Project(projectList, Join(_, _, _: InnerLike, Some(cond)))
           if projectList.forall(_.isInstanceOf[Attribute]) =>
           reorder(p, p.output)
+        //case f @ Pro
       }
       // After reordering is finished, convert OrderedJoin back to Join
       result transformDown {
@@ -34,13 +36,31 @@ case class CostBasedJoinReorder(confSQL: SQLConf) extends Rule[LogicalPlan] with
 
   private def reorder(plan: LogicalPlan, output: Seq[Attribute]): LogicalPlan = {
     val (items, conditions) = extractInnerJoins(plan)
+    val test = items.forall(_.stats(confSQL).rowCount.isDefined)
+    //println("----------------test: " + test)
+    /*
+    if(test){
+      items.foreach(plan =>
+        //println("yes"+plan.numberedTreeString)
+      )
+    }
+    else{
+      items.foreach(plan =>
+        //println("no+"+plan.numberedTreeString)
+      )
+    }
+    */
+    //println("-------end of print item---------test: ")
     // TODO: Compute the set of star-joins and use them in the join enumeration
     // algorithm to prune un-optimal plan choices.
     val result =
     // Do reordering if the number of items is appropriate and join conditions exist.
     // We also need to check if costs of all items can be evaluated.
-    if (items.size > 2 && items.size <= confSQL.joinReorderDPThreshold && conditions.nonEmpty &&
-      items.forall(_.stats(confSQL).rowCount.isDefined)) {
+    if (items.size > 2
+      && items.size <= confSQL.joinReorderDPThreshold
+      && conditions.nonEmpty
+      && items.forall(_.stats(confSQL).rowCount.isDefined)
+    ) {
       JoinReorderDP.search(confSQL, items, conditions, output)
     } else {
       plan
@@ -199,12 +219,30 @@ object JoinReorderDP extends PredicateHelper with Logging {
       }
       k += 1
     }
-
     val listMapLogicalPlan = dungLevel.result().toList
-    TestCostBasedJoinReorder.takeListPlan(listMapLogicalPlan)
+    //TestCostBasedJoinReorder.
+    takeListPlan(listMapLogicalPlan)
     nextLevel.toMap
   }
+  val allPlanMap = mutable.Map.empty[List[Int], JoinPlan]
+  def takeListPlan(listMapLogicalPlan: List[(List[Int], JoinPlan)]):Unit = {
+    for (temp <- listMapLogicalPlan){
+      val listInt = temp._1
+      val listJoin = temp._2
+      allPlanMap.update(listInt,listJoin)
+    }
+    takeLogicalPlan()
+  }
+  val allPlanList = List.empty[LogicalPlan]
 
+  def takeLogicalPlan(): Unit ={
+    for(temp<-allPlanMap){
+      Pareto.addLogicalPlan(temp._2.plan)
+      Pareto.addCostPlan(temp._2.planCost)
+      Pareto.addSetPlan(temp._1)
+    }
+    Pareto.filterPlans()
+  }
   /**
     * Builds a new JoinPlan when both conditions hold:
     * - the sets of items contained in left and right sides do not overlap.

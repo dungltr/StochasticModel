@@ -87,7 +87,8 @@ object TPCDSQueryBenchmark {
       // per-row processing time for those cases.
       val queryRelations = scala.collection.mutable.HashSet[String]()
 
-      //queryRelations.foreach(name => spark.table(name).count())
+      //  spark.sql(s"ANALYZE TABLE $t COMPUTE STATISTICS")
+      queryRelations.foreach(name => spark.table(name).count())
 
       //println(name)
       println(spark.sql(queryString).queryExecution.logical)
