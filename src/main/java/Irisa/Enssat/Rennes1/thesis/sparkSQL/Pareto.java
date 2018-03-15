@@ -1,7 +1,7 @@
 package Irisa.Enssat.Rennes1.thesis.sparkSQL;
 
-import Scala.TestCostBasedJoinReorder$;
 import Scala.Cost;
+import Scala.TestCostBasedJoinReorder$;
 import org.apache.spark.sql.catalyst.plans.logical.LogicalPlan;
 import scala.Int;
 import scala.collection.immutable.List;
@@ -57,15 +57,17 @@ public class Pareto {
     public static void printAllLogicalPlans(java.util.List<LogicalPlan> finaLogicalPlansList,
                                             java.util.List<Cost> finalCostPlansList ,
                                             java.util.List<List<Int>> finalSetPlansList ){
-        System.out.println("These are logical plans in Pareto set");
+
         for (int i = 0; i < finaLogicalPlansList.size(); i++){
+            System.out.println("----");
+            System.out.println("LogicalPlans ----  "+ i );
             System.out.println(finaLogicalPlansList.get(i));
             System.out.println(finalCostPlansList.get(i));
             System.out.println(finalSetPlansList.get(i));
         }
-        String logical = finaLogicalPlansList.get(0).toString();
-        System.out.println("End of showing logical plans in Pareto set");
-        System.out.println(logical);
+        //String logical = finaLogicalPlansList.get(0).toString();
+
+        //System.out.println(logical);
     }
     public static void printLogicalPlans(java.util.List<LogicalPlan> finaLogicalPlansList){
         System.out.println("These are logical plans in Pareto set");
@@ -125,14 +127,174 @@ public class Pareto {
         }
         return finalSetPlansList;
     }
+    public static void printFront (java.util.List<Integer> currentFront){
+        for (int i = 0; i< currentFront.size(); i++)
+            System.out.println(currentFront.get(i));
+
+    }
+
+    public static java.util.List<LogicalPlan> paretoPlans (java.util.List<LogicalPlan> finaLogicalPlansList,
+                                                           java.util.List<Integer> currentFront){
+        java.util.List<LogicalPlan> Plans = new ArrayList<>();
+        for (int i = 0; i < currentFront.size(); i++){
+            Plans.add(finaLogicalPlansList.get(currentFront.get(i)));
+        }
+        return Plans;
+    }
+    public static java.util.List<Cost> paretoCost (java.util.List<Cost> finalCostPlansList,
+                                                           java.util.List<Integer> currentFront){
+        java.util.List<Cost> Plans = new ArrayList<>();
+        for (int i = 0; i < currentFront.size(); i++){
+            Plans.add(finalCostPlansList.get(currentFront.get(i)));
+        }
+        return Plans;
+    }
+    public static java.util.List<List<Int>> paretoSet (java.util.List<List<Int>> finalSetPlansList,
+                                                   java.util.List<Integer> currentFront){
+        java.util.List<List<Int>> Plans = new ArrayList<>();
+        for (int i = 0; i < currentFront.size(); i++){
+            Plans.add(finalSetPlansList.get(currentFront.get(i)));
+        }
+        return Plans;
+    }
+
+    public static int compare(Cost costA, Cost costB){
+        boolean dominate1 = false;
+        boolean dominate2 = false;
+        if (costA.size().doubleValue() < costB.size().doubleValue()) {
+            dominate1 = true;
+            if (dominate2) {
+                return 0;
+            }
+        } else{
+            if (costB.size().doubleValue() > costA.size().doubleValue()) {
+                dominate2 = true;
+                if (dominate1) {
+                    return 0;
+                }
+            }
+        }
+        if (costA.card().doubleValue() < costB.card().doubleValue()) {
+            dominate1 = true;
+            if (dominate2) {
+                return 0;
+            }
+        } else{
+            if (costB.card().doubleValue() > costA.card().doubleValue()) {
+                dominate2 = true;
+                if (dominate1) {
+                    return 0;
+                }
+            }
+        }
+        if (dominate1 == dominate2) {
+            return 0;
+        } else if (dominate1) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
+    public static int betterThan(Cost costA, Cost costB){
+        //double cardA = (double) costA.card().doubleValue();
+        /*
+        if ((costA.card().doubleValue() < costB.card().doubleValue())
+                &&(costA.size().doubleValue() < costB.size().doubleValue())){
+            return -1;
+        }
+        else{
+            return false;
+        }
+        */
+        if (costA.card().doubleValue() < costB.card().doubleValue()) {
+            return -1;
+        } else {
+            if (costA.card().doubleValue() > costB.card().doubleValue()) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+
+    }
+    public static java.util.List<Integer> Front (java.util.List<Cost> finalCostPlansList){
+        int N = finalCostPlansList.size();
+        int[][] dominanceChecks = new int[N][N];
+        for (int i = 0; i < N; i++) {
+            Cost si = finalCostPlansList.get(i);
+            for (int j = i+1; j < N; j++) {
+                if (i != j) {
+                    Cost sj = finalCostPlansList.get(j);
+                    dominanceChecks[i][j] = compare(si, sj);
+                    dominanceChecks[j][i] = -dominanceChecks[i][j];
+                }
+            }
+        }
+
+        int[] dominatedCounts = new int[N];
+        java.util.List<java.util.List<Integer>> dominatesList = new ArrayList<java.util.List<Integer>>();
+        java.util.List<Integer> currentFront = new ArrayList<Integer>();
+
+
+        for (int i = 0; i < N; i++) {
+            java.util.List<Integer> dominates = new ArrayList<Integer>();
+            int dominatedCount = 0;
+
+            for (int j = 0; j < N; j++) {
+                if (i != j) {
+                    if (dominanceChecks[i][j] < 0) {
+                        dominates.add(j);
+                    } else if (dominanceChecks[j][i] < 0) {
+                        dominatedCount += 1;
+                    }
+                }
+            }
+
+            if (dominatedCount == 0) {
+                currentFront.add(i);
+            }
+
+            dominatesList.add(dominates);
+            dominatedCounts[i] = dominatedCount;
+        }
+
+        return currentFront;
+    }
     public static void test(){
-        TestCostBasedJoinReorder$.MODULE$.testQuery();
+        System.out.println("These are logical plans in Spark Optimize processing set --------------");
+        TestCostBasedJoinReorder$.MODULE$.testBigTable();
         java.util.List<LogicalPlan> finaLogicalPlansList = filterPlans(logicalPlansList);
         java.util.List<Cost> finalCostPlansList = filterCosts(costPlansList);
         java.util.List<List<Int>> finalSetPlansList = filterSets(setPlansList);
-        printAllLogicalPlans(finaLogicalPlansList,finalCostPlansList,finalSetPlansList);
+        //printAllLogicalPlans(finaLogicalPlansList,finalCostPlansList,finalSetPlansList);
+        System.out.println("End of showing logical plans in Spark Optimize processing**************");
+        java.util.List<Integer> currentFront = Front(finalCostPlansList);
+        //printFront(currentFront);
+        System.out.println("These are logical plans in Pareto Optimize processing set ----------");
+        java.util.List<LogicalPlan> finaParetoPlans = paretoPlans(finaLogicalPlansList,currentFront);
+        java.util.List<Cost> finalParetoCost = paretoCost(finalCostPlansList,currentFront);
+        java.util.List<List<Int>> finalParetoSet = paretoSet(finalSetPlansList,currentFront);
+        //printAllLogicalPlans(finaParetoPlans,finalParetoCost,finalParetoSet);
+        System.out.println("End of showing logical plans in Pareto set ****************************");
     }
     public static void main(String[] args){
         test();
+    }
+    public static java.util.List<LogicalPlan> finaParetoPlans(){
+        System.out.println("These are logical plans in Spark Optimize processing set --------------");
+        java.util.List<LogicalPlan> finaLogicalPlansList = filterPlans(logicalPlansList);
+        java.util.List<Cost> finalCostPlansList = filterCosts(costPlansList);
+        java.util.List<List<Int>> finalSetPlansList = filterSets(setPlansList);
+        //printAllLogicalPlans(finaLogicalPlansList,finalCostPlansList,finalSetPlansList);
+        System.out.println("End of showing logical plans in Spark Optimize processing**************");
+        java.util.List<Integer> currentFront = Front(finalCostPlansList);
+        printFront(currentFront);
+        System.out.println("These are logical plans in Pareto Optimize processing set ----------");
+        java.util.List<LogicalPlan> finaParetoPlans = paretoPlans(finaLogicalPlansList,currentFront);
+        java.util.List<Cost> finalParetoCost = paretoCost(finalCostPlansList,currentFront);
+        java.util.List<List<Int>> finalParetoSet = paretoSet(finalSetPlansList,currentFront);
+        //printAllLogicalPlans(finaParetoPlans,finalParetoCost,finalParetoSet);
+        System.out.println("End of showing logical plans in Pareto set ****************************");
+        return finaParetoPlans;
     }
 }

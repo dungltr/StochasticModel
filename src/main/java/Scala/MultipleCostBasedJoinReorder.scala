@@ -1,6 +1,8 @@
 package Scala
 
 import Irisa.Enssat.Rennes1.thesis.sparkSQL.Pareto
+import Scala.JoinReorderDP.JoinPlanMap
+import Scala.MultipleJoinReorderDP.allPlanMap
 import org.apache.spark.internal.Logging
 import org.apache.spark.sql.catalyst.expressions.{And, Attribute, AttributeSet, Expression, PredicateHelper}
 import org.apache.spark.sql.catalyst.plans.logical.{BinaryNode, Join, LogicalPlan, Project}
@@ -12,7 +14,7 @@ import scala.collection.mutable
 /**
   * Created by letrungdung on 07/03/2018.
   */
-case class CostBasedJoinReorder(confSQL: SQLConf) extends Rule[LogicalPlan] with PredicateHelper {
+case class MultipleCostBasedJoinReorder(confSQL: SQLConf) extends Rule[LogicalPlan] with PredicateHelper {
 
   def apply(plan: LogicalPlan): LogicalPlan = {
     if (!confSQL.cboEnabled || !confSQL.joinReorderEnabled) {
@@ -61,7 +63,7 @@ case class CostBasedJoinReorder(confSQL: SQLConf) extends Rule[LogicalPlan] with
       && conditions.nonEmpty
       && items.forall(_.stats(confSQL).rowCount.isDefined)
     ) {
-      JoinReorderDP.search(confSQL, items, conditions, output)
+      MultipleJoinReorderDP.search(confSQL, items, conditions, output)
     } else {
       plan
     }
@@ -134,7 +136,7 @@ case class CostBasedJoinReorder(confSQL: SQLConf) extends Rule[LogicalPlan] with
   * For cost evaluation, since physical costs for operators are not available currently, we use
   * cardinalities and sizes to compute costs.
   */
-object JoinReorderDP extends PredicateHelper with Logging {
+object MultipleJoinReorderDP extends PredicateHelper with Logging {
 
   def search(
               conf: SQLConf,
@@ -146,6 +148,7 @@ object JoinReorderDP extends PredicateHelper with Logging {
     // Level i maintains all found plans for i + 1 items.
     // Create the initial plans: each plan is a single item with zero cost.
     val itemIndex = items.zipWithIndex
+    // found Plans is all the possible logic plans in Map for a plan //
     val foundPlans = mutable.Buffer[JoinPlanMap](itemIndex.map {
       case (item, id) => Set(id) -> JoinPlan(Set(id), item, Set(), Cost(0, 0))
     }.toMap)
@@ -153,7 +156,7 @@ object JoinReorderDP extends PredicateHelper with Logging {
     // Build plans for next levels until the last level has only one plan. This plan contains
     // all items that can be joined, so there's no need to continue.
     val topOutputSet = AttributeSet(output)
-    while (foundPlans.size < items.length && foundPlans.last.size > 1) {
+    while (foundPlans.size <= items.length && foundPlans.last.size > 1) {
       // Build plans for the next level.
       foundPlans += searchLevel(foundPlans, conf, conditions, topOutputSet)
     }
@@ -162,6 +165,9 @@ object JoinReorderDP extends PredicateHelper with Logging {
     logDebug(s"Join reordering finished. Duration: $durationInMs ms, number of items: " +
       s"${items.length}, number of plans in memo: ${foundPlans.map(_.size).sum}")
 
+    //bestPlan(foundPlans, items.length)
+    println(s"Join reordering finished. Duration: $durationInMs ms, number of items: " +
+      s"${items.length}, number of plans in memo: ${foundPlans.map(_.size).sum}")
     // The last level must have one and only one plan, because all items are joinable.
     assert(foundPlans.size == items.length && foundPlans.last.size == 1)
     foundPlans.last.head._2.plan match {
@@ -173,7 +179,25 @@ object JoinReorderDP extends PredicateHelper with Logging {
         finalPlan
     }
   }
-
+  def bestPlan (foundPlan: mutable.Buffer[JoinPlanMap], length: Int): Unit ={
+    println("**********************************************************")
+    val mapPlan = foundPlan.last
+    val values = mapPlan.values
+    val keys = mapPlan.keys
+    for (key <- keys){
+      println(key)
+    }
+    for (value <- values){
+      val plan = value.plan
+      val cost = value.planCost
+      val card = cost.card
+      val size = cost.size
+      println(plan)
+      println(card)
+      println(size)
+    }
+    println("**********************************************************")
+  }
   /** Find all possible plans at the next level, based on existing levels. */
   private def searchLevel(
                            existingLevels: Seq[JoinPlanMap],
@@ -218,7 +242,7 @@ object JoinReorderDP extends PredicateHelper with Logging {
                   nextLevel.update(newJoinPlan.itemIds, newJoinPlan)
                   dungLevel.update(newJoinPlan.itemIds.toList, newJoinPlan)
                 }
-                dungLevel.update(newJoinPlan.itemIds.toList, newJoinPlan)
+                //dungLevel.update(newJoinPlan.itemIds.toList, newJoinPlan)
               }
             case None =>
           }
@@ -231,6 +255,7 @@ object JoinReorderDP extends PredicateHelper with Logging {
     takeListPlan(listMapLogicalPlan)
     nextLevel.toMap
   }
+
   val allPlanMap = mutable.Map.empty[List[Int], JoinPlan]
   def takeListPlan(listMapLogicalPlan: List[(List[Int], JoinPlan)]):Unit = {
     for (temp <- listMapLogicalPlan){
@@ -366,10 +391,10 @@ object JoinReorderDP extends PredicateHelper with Logging {
   * @param card Cardinality (number of rows).
   * @param size Size in bytes.
   */
-
-case class Cost(card: BigInt, size: BigInt) {
-  def +(other: Cost): Cost = Cost(this.card + other.card, this.size + other.size)
+/*
+case class MultipleCost(card: BigInt, size: BigInt) {
+  def +(other: MultipleCost): MultipleCost = MultipleCost(this.card + other.card, this.size + other.size)
 }
-
+*/
 
 

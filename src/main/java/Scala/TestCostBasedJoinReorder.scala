@@ -1,6 +1,8 @@
 package Scala
 import java.io.File
 
+import Irisa.Enssat.Rennes1.thesis.sparkSQL.Pareto
+
 //import Scala.TPCDSQueryBenchmark.spark
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.catalyst.analysis.EliminateSubqueryAliases
@@ -149,7 +151,7 @@ object TestCostBasedJoinReorder {
         //  RewritePredicateSubquery,
         //  CollapseProject) :: Nil
     //Batch("Join Reorder", Once, CostBasedJoinReorder(confSQL)) :: Nil
-    Batch("Join Reorder", Once, CostBasedJoinReorder(confSQL)) :: Nil
+    Batch("Join Reorder", Once, MultipleCostBasedJoinReorder(confSQL)) :: Nil
   }
   def main(args: Array[String]): Unit = {
     // List of all TPC-DS queries
@@ -509,7 +511,7 @@ object TestCostBasedJoinReorder {
     val dataLocation = "/Volumes/DATAHD/Downloads/spark-tpc-ds-performance-test-master/spark-warehouse/tpcds.db/"
     require(dataLocation.nonEmpty,
       "please modify the value of dataLocation to point to your local TPCDS data")
-    val tableSizes = setupTables(dataLocation)
+    //val tableSizes = setupTables(dataLocation)
 
     tableNames.foreach { name =>
       spark.read.parquet(s"$dataLocation/$name").write.saveAsTable(s"frame$name")
@@ -520,21 +522,72 @@ object TestCostBasedJoinReorder {
     val Store_returns = spark.table("framestore_returns")
     val Catalog_sales = spark.table("framecatalog_sales")
     val Catalog_returns = spark.table("framecatalog_returns")
+    val Store = spark.table("framestore")
+    val Item = spark.table("frameitem")
 
     // Queries can then join DataFrame data with data stored in Hive.
     // Example: Inner join with join condition
-
+    //val queryString = fileToString(new File(s"$dataLocation/query25.sql"))
+    //println(queryString)
+    //val queryplan = spark.sql(queryString).queryExecution.analyzed
     val q = Store_sales
       .join(Store_returns,Store_sales("ss_item_sk")===Store_returns("sr_item_sk"))
       .join(Catalog_sales,Store_sales("ss_item_sk")===Catalog_sales("cs_item_sk"))
-      .join(Catalog_returns,Catalog_sales("cs_item_sk")===Catalog_returns("cr_item_sk"))
+      //.join(Catalog_returns,Catalog_sales("cs_item_sk")===Catalog_returns("cr_item_sk"))
+      .join(Item,Item("i_item_sk")===Catalog_sales("cs_item_sk"))
+      //.join(Store,Store("s_store_sk")===Store_sales("ss_store_sk"))
+      //.join(Store_returns,Store_returns("sr_item_sk")===Catalog_sales("cs_item_sk"))
 
-    val plan = q.queryExecution.analyzed
-    println(plan.numberedTreeString)
+
+    val plan = q.queryExecution.logical
+
+    println("The optimized plan of Spark-----------------------------------------------")
+    val optimizedPlan = q.queryExecution.optimizedPlan
+    println(optimizedPlan.numberedTreeString)
+    println("End of showing optimization plan------------------------------------------")
+
     val joinsReordered = OptimizeS.execute(plan)
-    println(joinsReordered.numberedTreeString)
+    val plans = Pareto.finaParetoPlans()
+    for (i<-0 until (plans.size())){
+      println("")
+      println("Begin running physical plan " + i + " with plans.size()= "+plans.size())
+      val startTime = System.nanoTime()
+      val runPlan = plans.get(plans.size()-1-i)
+      println(runPlan.numberedTreeString)
+      spark.sessionState.executePlan(runPlan)
+      val durationInMs = (System.nanoTime() - startTime) / (1000)
+      println("End of running optimization plan in: "+ durationInMs+"micro seconds")
+    }
+
+
+    //println(joinsReordered.numberedTreeString)
+    /*
+    var logicalQuery: LogicalPlan = plan
+    println("Begin running physical plan")
+    val physicalPlan = spark.sql(queryString).queryExecution.sparkPlan
+    for (physicalP <-physicalPlan){
+      println(physicalP.numberedTreeString)
+    }
+    println("End of running physical plan")
+    */
+    //println("Testing new")
+    //logicalQuery = EliminateSubqueryAliases.apply(logicalQuery)
+    //println("logicalQuery : " + logicalQuery)
+    //println(spark.sessionState.executePlan(logicalQuery).toString())
+    //val data: DataFrame = Dataset.apply(spark, logicalQuery)
+    //data.show()
+
+
 
   }
+
+  /*
+  import org.apache.spark.sql.SparkSession
+  def apply(Sqlctx: SparkSession, Plan: LogicalPlan): DataFrame = {
+    Dataset.ofRows(Sqlctx, Plan)
+  }
+  */
+  
   def testQuery():Unit={
     //val sc = new SparkContext(conf)
     //val sqlContext = new org.apache.spark.sql.SQLContext(sc)
@@ -591,7 +644,8 @@ object TestCostBasedJoinReorder {
         //"cs_item_sk = cr_item_sk "
       //val plan = spark.sql(queryString2).queryExecution.analyzed
       val plan = q.queryExecution.analyzed
-      q.show()
+      //q.show()
+
       //val df = sqlContext.sql(queryString2)
       //val plan = df.queryExecution.analyzed
       //println(plan.numberedTreeString)
