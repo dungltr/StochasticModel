@@ -546,21 +546,24 @@ object TestCostBasedJoinReorder {
     println("End of showing optimization plan------------------------------------------")
     val joinsReordered = OptimizeS.execute(plan)
     val plans = Pareto.finaParetoPlans()
+    val costs = Pareto.finaCostPlans()
     for (i<-0 until (plans.size())){
       println("")
       println("Begin running logical plan " + i + " with plans.size()= "+plans.size())
       val startTime = System.nanoTime()
       val runPlan = plans.get(i)
+      val costPlan = costs.get(i)
       println(runPlan.numberedTreeString)
+      println(costPlan)
       for (k<-0 until 10){
         spark.sessionState.executePlan(runPlan)
       }
       val listPhysicalPlan = spark.sessionState.planner.plan(runPlan).toSeq
+      println(" ")
       listPhysicalPlan.foreach(element => println(element))
       val durationInMs = System.nanoTime() - startTime
       println("End of running physical plan: " + "-------"  + durationInMs+" nano  seconds")
     }
-    spark.stop()
     //println(joinsReordered.numberedTreeString)
     /*
     var logicalQuery: LogicalPlan = plan
@@ -577,8 +580,6 @@ object TestCostBasedJoinReorder {
     //println(spark.sessionState.executePlan(logicalQuery).toString())
     //val data: DataFrame = Dataset.apply(spark, logicalQuery)
     //data.show()
-
-
 
   }
 
