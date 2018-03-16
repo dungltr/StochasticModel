@@ -276,25 +276,40 @@ public class Pareto {
         java.util.List<List<Int>> finalParetoSet = paretoSet(finalSetPlansList,currentFront);
         //printAllLogicalPlans(finaParetoPlans,finalParetoCost,finalParetoSet);
         System.out.println("End of showing logical plans in Pareto set ****************************");
+
     }
     public static void main(String[] args){
-        test();
+        /*
+        long start = System.nanoTime();
+        int N = 10;
+        for (int i = 0; i < N; i++) {
+            logicalPlansList.clear();
+            costPlansList.clear();
+            setPlansList.clear();
+            */
+            test();
+            /*
+        }
+        long stop = System.nanoTime();
+        long time = (stop - start)/(1000*1000);
+        System.out.println("Time for "+N+" timers is "+time + " micro seconds");
+        */
     }
     public static java.util.List<LogicalPlan> finaParetoPlans(){
-        System.out.println("These are logical plans in Spark Optimize processing set --------------");
+        //System.out.println("These are logical plans in Spark Optimize processing set --------------");
         java.util.List<LogicalPlan> finaLogicalPlansList = filterPlans(logicalPlansList);
         java.util.List<Cost> finalCostPlansList = filterCosts(costPlansList);
         java.util.List<List<Int>> finalSetPlansList = filterSets(setPlansList);
         //printAllLogicalPlans(finaLogicalPlansList,finalCostPlansList,finalSetPlansList);
-        System.out.println("End of showing logical plans in Spark Optimize processing**************");
+        //System.out.println("End of showing logical plans in Spark Optimize processing**************");
         java.util.List<Integer> currentFront = Front(finalCostPlansList);
-        printFront(currentFront);
-        System.out.println("These are logical plans in Pareto Optimize processing set ----------");
+        //printFront(currentFront);
+        //System.out.println("These are logical plans in Pareto Optimize processing set ----------");
         java.util.List<LogicalPlan> finaParetoPlans = paretoPlans(finaLogicalPlansList,currentFront);
         java.util.List<Cost> finalParetoCost = paretoCost(finalCostPlansList,currentFront);
         java.util.List<List<Int>> finalParetoSet = paretoSet(finalSetPlansList,currentFront);
         //printAllLogicalPlans(finaParetoPlans,finalParetoCost,finalParetoSet);
-        System.out.println("End of showing logical plans in Pareto set ****************************");
+        //System.out.println("End of showing logical plans in Pareto set ****************************");
         return finaParetoPlans;
     }
 }

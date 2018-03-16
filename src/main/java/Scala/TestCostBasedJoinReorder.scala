@@ -71,8 +71,8 @@ object TestCostBasedJoinReorder {
       sessionCatalog.dropTable(tableId, ignoreIfNotExists = true, purge = true)
     }
 
-    val belowBroadcastJoinThreshold = spark.sessionState.conf.autoBroadcastJoinThreshold - 1
-    println("spark.sessionState.conf.autoBroadcastJoinThreshold:=" + spark.sessionState.conf.autoBroadcastJoinThreshold)
+    //val belowBroadcastJoinThreshold = spark.sessionState.conf.autoBroadcastJoinThreshold - 1
+    //println("spark.sessionState.conf.autoBroadcastJoinThreshold:=" + spark.sessionState.conf.autoBroadcastJoinThreshold)
     spark.range(10).write.saveAsTable("t1")//404L
     // t2 is twice as big as t1
     spark.range(10).write.saveAsTable("t2")//408L
@@ -312,8 +312,8 @@ object TestCostBasedJoinReorder {
     tableIds.foreach { tableId =>
       sessionCatalog.dropTable(tableId, ignoreIfNotExists = true, purge = true)
     }
-    val belowBroadcastJoinThreshold = spark.sessionState.conf.autoBroadcastJoinThreshold - 1
-    println("spark.sessionState.conf.autoBroadcastJoinThreshold:=" + spark.sessionState.conf.autoBroadcastJoinThreshold)
+    //val belowBroadcastJoinThreshold = spark.sessionState.conf.autoBroadcastJoinThreshold - 1
+    //println("spark.sessionState.conf.autoBroadcastJoinThreshold:=" + spark.sessionState.conf.autoBroadcastJoinThreshold)
     spark.range(10).write.saveAsTable("t1")//404L
     spark.range(10).write.saveAsTable("t2")//408L
     spark.range(10).write.saveAsTable("tiny") // 412L
@@ -350,8 +350,8 @@ object TestCostBasedJoinReorder {
     tableIds.foreach { tableId =>
       sessionCatalog.dropTable(tableId, ignoreIfNotExists = true, purge = true)
     }
-    val belowBroadcastJoinThreshold = spark.sessionState.conf.autoBroadcastJoinThreshold - 1
-    println("spark.sessionState.conf.autoBroadcastJoinThreshold:=" + spark.sessionState.conf.autoBroadcastJoinThreshold)
+    //val belowBroadcastJoinThreshold = spark.sessionState.conf.autoBroadcastJoinThreshold - 1
+    //println("spark.sessionState.conf.autoBroadcastJoinThreshold:=" + spark.sessionState.conf.autoBroadcastJoinThreshold)
     spark.range(10).write.saveAsTable("t1")//404L
     spark.range(10).write.saveAsTable("t2")//408L
     spark.range(10).write.saveAsTable("tiny") // 412L
@@ -404,8 +404,8 @@ object TestCostBasedJoinReorder {
     tableIds.foreach { tableId =>
       sessionCatalog.dropTable(tableId, ignoreIfNotExists = true, purge = true)
     }
-    val belowBroadcastJoinThreshold = spark.sessionState.conf.autoBroadcastJoinThreshold - 1
-    println("spark.sessionState.conf.autoBroadcastJoinThreshold:=" + spark.sessionState.conf.autoBroadcastJoinThreshold)
+    //val belowBroadcastJoinThreshold = spark.sessionState.conf.autoBroadcastJoinThreshold - 1
+    //println("spark.sessionState.conf.autoBroadcastJoinThreshold:=" + spark.sessionState.conf.autoBroadcastJoinThreshold)
     val dataLocation = "/Volumes/DATAHD/Downloads/spark-tpc-ds-performance-test-master/spark-warehouse/tpcds.db/"
     require(dataLocation.nonEmpty,
       "please modify the value of dataLocation to point to your local TPCDS data")
@@ -506,9 +506,11 @@ object TestCostBasedJoinReorder {
     tableIds.foreach { tableId =>
       sessionCatalog.dropTable(tableId, ignoreIfNotExists = true, purge = true)
     }
-    val belowBroadcastJoinThreshold = spark.sessionState.conf.autoBroadcastJoinThreshold - 1
-    println("spark.sessionState.conf.autoBroadcastJoinThreshold:=" + spark.sessionState.conf.autoBroadcastJoinThreshold)
-    val dataLocation = "/Volumes/DATAHD/Downloads/spark-tpc-ds-performance-test-master/spark-warehouse/tpcds.db/"
+    //val belowBroadcastJoinThreshold = spark.sessionState.conf.autoBroadcastJoinThreshold - 1
+    //println("spark.sessionState.conf.autoBroadcastJoinThreshold:=" + spark.sessionState.conf.autoBroadcastJoinThreshold)
+    val homeDataDesktop = "/Users/letrung/"
+    val homeDataLaptop = "/Volumes/DATAHD/"
+    val dataLocation = homeDataLaptop + "/Downloads/spark-tpc-ds-performance-test-master/spark-warehouse/tpcds.db/"
     require(dataLocation.nonEmpty,
       "please modify the value of dataLocation to point to your local TPCDS data")
     //val tableSizes = setupTables(dataLocation)
@@ -537,29 +539,28 @@ object TestCostBasedJoinReorder {
       .join(Item,Item("i_item_sk")===Catalog_sales("cs_item_sk"))
       //.join(Store,Store("s_store_sk")===Store_sales("ss_store_sk"))
       //.join(Store_returns,Store_returns("sr_item_sk")===Catalog_sales("cs_item_sk"))
-
-
     val plan = q.queryExecution.logical
-
     println("The optimized plan of Spark-----------------------------------------------")
     val optimizedPlan = q.queryExecution.optimizedPlan
     println(optimizedPlan.numberedTreeString)
     println("End of showing optimization plan------------------------------------------")
-
     val joinsReordered = OptimizeS.execute(plan)
     val plans = Pareto.finaParetoPlans()
     for (i<-0 until (plans.size())){
       println("")
-      println("Begin running physical plan " + i + " with plans.size()= "+plans.size())
+      println("Begin running logical plan " + i + " with plans.size()= "+plans.size())
       val startTime = System.nanoTime()
-      val runPlan = plans.get(plans.size()-1-i)
+      val runPlan = plans.get(i)
       println(runPlan.numberedTreeString)
-      spark.sessionState.executePlan(runPlan)
-      val durationInMs = (System.nanoTime() - startTime) / (1000)
-      println("End of running optimization plan in: "+ durationInMs+"micro seconds")
+      for (k<-0 until 10){
+        spark.sessionState.executePlan(runPlan)
+      }
+      val listPhysicalPlan = spark.sessionState.planner.plan(runPlan).toSeq
+      listPhysicalPlan.foreach(element => println(element))
+      val durationInMs = System.nanoTime() - startTime
+      println("End of running physical plan: " + "-------"  + durationInMs+" nano  seconds")
     }
-
-
+    spark.stop()
     //println(joinsReordered.numberedTreeString)
     /*
     var logicalQuery: LogicalPlan = plan

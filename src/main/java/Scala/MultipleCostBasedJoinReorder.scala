@@ -166,8 +166,8 @@ object MultipleJoinReorderDP extends PredicateHelper with Logging {
       s"${items.length}, number of plans in memo: ${foundPlans.map(_.size).sum}")
 
     //bestPlan(foundPlans, items.length)
-    println(s"Join reordering finished. Duration: $durationInMs ms, number of items: " +
-      s"${items.length}, number of plans in memo: ${foundPlans.map(_.size).sum}")
+    //println(s"Join reordering finished. Duration: $durationInMs ms, number of items: " +
+    //  s"${items.length}, number of plans in memo: ${foundPlans.map(_.size).sum}")
     // The last level must have one and only one plan, because all items are joinable.
     assert(foundPlans.size == items.length && foundPlans.last.size == 1)
     foundPlans.last.head._2.plan match {
