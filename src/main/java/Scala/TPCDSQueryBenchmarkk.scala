@@ -110,8 +110,6 @@ object TPCDSQueryBenchmark {
         }
         case _ =>
       }
-
-
       val listRelations = queryRelations.toList
       val a = spark.sql(queryString).queryExecution.logical.subqueries
       val b = a.toList

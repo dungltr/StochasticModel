@@ -147,7 +147,7 @@ object JoinReorderDP extends PredicateHelper with Logging {
     // Create the initial plans: each plan is a single item with zero cost.
     val itemIndex = items.zipWithIndex
     val foundPlans = mutable.Buffer[JoinPlanMap](itemIndex.map {
-      case (item, id) => Set(id) -> JoinPlan(Set(id), item, Set(), Cost(0, 0))
+      case (item, id) => Set(id) -> JoinPlan(Set(id), item, Set(), Cost(0, 0, 0, 0))
     }.toMap)
 
     // Build plans for next levels until the last level has only one plan. This plan contains
@@ -332,10 +332,11 @@ object JoinReorderDP extends PredicateHelper with Logging {
     def rootCost(conf: SQLConf): Cost = {
       if (itemIds.size > 1) {
         val rootStats = plan.stats(conf)
-        Cost(rootStats.rowCount.get, rootStats.sizeInBytes)
+        Cost(rootStats.rowCount.get, rootStats.sizeInBytes,
+          rootStats.rowCount.get.toDouble, rootStats.sizeInBytes)
       } else {
         // If the plan is a leaf item, it has zero cost.
-        Cost(0, 0)
+        Cost(0, 0, 0, 0)
       }
     }
 
@@ -367,8 +368,12 @@ object JoinReorderDP extends PredicateHelper with Logging {
   * @param size Size in bytes.
   */
 
-case class Cost(card: BigInt, size: BigInt) {
-  def +(other: Cost): Cost = Cost(this.card + other.card, this.size + other.size)
+case class Cost(card: BigInt, size: BigInt, executeTime: Double, moneytary: BigInt) {
+  def +(other: Cost): Cost = Cost(this.card + other.card, this.size + other.size,
+    this.executeTime + other.executeTime, this.moneytary + other.moneytary)
+  def setExecuteTime(card: BigInt, size: BigInt, Time: Double, moneytary: BigInt): Unit = {
+    Cost(this.card,this.size,Time,this.moneytary)
+  }
 }
 
 

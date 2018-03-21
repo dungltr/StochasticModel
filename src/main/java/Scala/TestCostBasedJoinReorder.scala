@@ -1,11 +1,11 @@
 package Scala
 import java.io.File
 
-import Irisa.Enssat.Rennes1.thesis.sparkSQL.Pareto
+import Irisa.Enssat.Rennes1.thesis.sparkSQL.{Pareto, historicData}
+import org.apache.spark.sql.catalyst.analysis.EliminateSubqueryAliases
 
 //import Scala.TPCDSQueryBenchmark.spark
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.catalyst.analysis.EliminateSubqueryAliases
 import org.apache.spark.sql.catalyst.plans.logical.LogicalPlan
 import org.apache.spark.sql.catalyst.rules.RuleExecutor
 import org.apache.spark.sql.catalyst.util.fileToString
@@ -28,21 +28,29 @@ object TestCostBasedJoinReorder {
       .set(JOIN_REORDER_ENABLED.key, "true")
       .set("spark.sql.autoBroadcastJoinThreshold", (20 * 1024 * 1024).toString)
 
-  
-  val tables = Seq("catalog_page", "catalog_returns",
-    "customer", "customer_address", "customer_demographics",
-    "date_dim", "household_demographics", "inventory", "item",
-    "promotion", "store", "store_returns", "catalog_sales",
-    "web_sales", "store_sales", "web_returns", "web_site",
-    "reason", "call_center", "warehouse", "ship_mode",
+
+  val tables = Seq("catalog_page", "catalog_returns", "customer",
+    "customer_address", "customer_demographics", "date_dim",
+    "household_demographics", "inventory", "item",
+    "promotion", "store", "store_returns",
+    "catalog_sales", "web_sales", "store_sales",
+    "web_returns", "web_site", "reason",
+    "call_center", "warehouse", "ship_mode",
     "income_band", "time_dim", "web_page")
-  
+  val clouds = Seq("amazon","amazon","amazon",
+    "amazon","amazon","amazon",
+    "amazon","amazon","amazon",
+    "amazon","amazon","amazon",
+    "amazon","amazon","amazon",
+    "amazon","amazon","amazon",
+    "amazon","amazon","amazon",
+    "amazon","amazon","amazon")
   def setupTables(dataLocation: String): Map[String, Long] = {
     val spark = SparkSession.builder.config(conf).getOrCreate()
     tables.map { tableName =>
       spark.read.parquet(s"$dataLocation/$tableName").createOrReplaceTempView(tableName)
       tableName -> spark.table(tableName).count()
-    }.toMap    
+    }.toMap
   }
   def tpcdsAll(dataLocation: String, queries: Seq[String]): Unit = {
     val spark = SparkSession.builder.config(conf).getOrCreate()
@@ -145,6 +153,7 @@ object TestCostBasedJoinReorder {
 
     val spark = SparkSession.builder.config(conf).getOrCreate()
     val confSQL = spark.sessionState.conf
+    println("The id Query is:= " + confSQL.getConfString("idQuery"))
     val batches =
       Batch("EliminateSubqueryAliases", Once, EliminateSubqueryAliases) ::
         //Batch("RewriteSubquery", Once,
@@ -317,7 +326,6 @@ object TestCostBasedJoinReorder {
     spark.range(10).write.saveAsTable("t1")//404L
     spark.range(10).write.saveAsTable("t2")//408L
     spark.range(10).write.saveAsTable("tiny") // 412L
-
     val person = Person("Andy", 32)
 
     // Encoders are created for Java beans
@@ -514,7 +522,7 @@ object TestCostBasedJoinReorder {
     require(dataLocation.nonEmpty,
       "please modify the value of dataLocation to point to your local TPCDS data")
     //val tableSizes = setupTables(dataLocation)
-
+    val tableSizes = setupTables(dataLocation)
     tableNames.foreach { name =>
       spark.read.parquet(s"$dataLocation/$name").write.saveAsTable(s"frame$name")
       spark.sql(s"ANALYZE TABLE frame$name COMPUTE STATISTICS")
@@ -529,37 +537,82 @@ object TestCostBasedJoinReorder {
 
     // Queries can then join DataFrame data with data stored in Hive.
     // Example: Inner join with join condition
-    //val queryString = fileToString(new File(s"$dataLocation/query25.sql"))
+    val queryString = fileToString(new File(s"$dataLocation/query25.sql"))
     //println(queryString)
     //val queryplan = spark.sql(queryString).queryExecution.analyzed
-    val q = Store_sales
+
+    val q1 = Store_sales
       .join(Store_returns,Store_sales("ss_item_sk")===Store_returns("sr_item_sk"))
       .join(Catalog_sales,Store_sales("ss_item_sk")===Catalog_sales("cs_item_sk"))
-      //.join(Catalog_returns,Catalog_sales("cs_item_sk")===Catalog_returns("cr_item_sk"))
       .join(Item,Item("i_item_sk")===Catalog_sales("cs_item_sk"))
+
+    val q2 = Store_sales
+      .join(Store_returns,Store_sales("ss_item_sk")===Store_returns("sr_item_sk"))
+      .join(Catalog_sales,Store_sales("ss_item_sk")===Catalog_sales("cs_item_sk"))
+      .join(Catalog_returns,Catalog_sales("cs_item_sk")===Catalog_returns("cr_item_sk"))
+    val q3 = Store_sales
+      .join(Store_returns,Store_sales("ss_item_sk")===Store_returns("sr_item_sk"))
+      .join(Catalog_returns,Store_sales("ss_item_sk")===Catalog_returns("cr_item_sk"))
+      .join(Item,Item("i_item_sk")===Catalog_returns("cr_item_sk"))
+
+    val q4 = Store_sales
+      .join(Catalog_sales,Store_sales("ss_item_sk")===Catalog_sales("cs_item_sk"))
+      .join(Catalog_returns,Catalog_sales("cs_item_sk")===Catalog_returns("cr_item_sk"))
+      .join(Item,Item("i_item_sk")===Catalog_sales("cs_item_sk"))
+    val Q = Seq(q1,q2,q3,q4)
+    val r = scala.util.Random
+    val randomInt = r.nextInt(Q.size)
+    val q = Q.apply(randomInt)
       //.join(Store,Store("s_store_sk")===Store_sales("ss_store_sk"))
       //.join(Store_returns,Store_returns("sr_item_sk")===Catalog_sales("cs_item_sk"))
-    val plan = q.queryExecution.logical
+
+    val queryRelations = scala.collection.mutable.HashSet[String]()
+    val  lines = q.queryExecution.logical.numberedTreeString.split("\n").toSeq
+    lines.foreach(line =>
+      if(line.contains("SubqueryAlias")) {
+        queryRelations.add(line.substring(line.indexOf("SubqueryAlias")).replace("SubqueryAlias",""))
+      }
+    )
+    val listRelations = queryRelations.toSet
+    val folder = listRelations.toString().replace("Set","").replace(" ","").replace(",","_").replace("(","").replace(")","")
+    println("List of tables in the query: q" + randomInt)
+    listRelations.foreach(relation=>println(relation))
+    historicData.setupFolder(folder,"")
+    val confSQL = spark.sessionState.conf
+    confSQL.setConfString("idQuery",folder)
+    println("---------------" )
+    //val listTables = q.queryExecution.listTables("default")
+    //listTables.foreach(name=>println(name.table))
+    //val plan = q.queryExecution.logical
+    val sparkQ = q
+    //val sparkQ = spark.sql(queryString)
+    val plan = sparkQ.queryExecution.logical
+    println("The original logical plan -----------------------------------------------")
+    println(plan.numberedTreeString)
+    println("-------------------------------------------------------------------------")
     println("The optimized plan of Spark-----------------------------------------------")
-    val optimizedPlan = q.queryExecution.optimizedPlan
+    val optimizedPlan = sparkQ.queryExecution.optimizedPlan
     println(optimizedPlan.numberedTreeString)
-    println("End of showing optimization plan------------------------------------------")
+    println("--------------------------------------------------------------------------")
     val joinsReordered = OptimizeS.execute(plan)
     val plans = Pareto.finaParetoPlans()
     val costs = Pareto.finaCostPlans()
+    val sets = Pareto.finaSetPlans()
     for (i<-0 until (plans.size())){
       println("")
-      println("Begin running logical plan " + i + " with plans.size()= "+plans.size())
+      println("Begin running logical plan " + i + " in Pareto plan set with Pareto.size: "+plans.size())
       val startTime = System.nanoTime()
       val runPlan = plans.get(i)
       val costPlan = costs.get(i)
+      val setPlan = sets.get(i)
       println(runPlan.numberedTreeString)
-      println(costPlan)
+      println("Cost value of logical plan is: " + costPlan)
+      println("setID of logical plan is: " + setPlan)
       for (k<-0 until 10){
         spark.sessionState.executePlan(runPlan)
       }
       val listPhysicalPlan = spark.sessionState.planner.plan(runPlan).toSeq
-      println(" ")
+      println("The physical plan of logical plan: " + i + " in Pareto plan set with Pareto.size " + plans.size())
       listPhysicalPlan.foreach(element => println(element))
       val durationInMs = System.nanoTime() - startTime
       println("End of running physical plan: " + "-------"  + durationInMs+" nano  seconds")
@@ -589,7 +642,7 @@ object TestCostBasedJoinReorder {
     Dataset.ofRows(Sqlctx, Plan)
   }
   */
-  
+
   def testQuery():Unit={
     //val sc = new SparkContext(conf)
     //val sqlContext = new org.apache.spark.sql.SQLContext(sc)

@@ -1,8 +1,6 @@
 package Scala
 
-import Irisa.Enssat.Rennes1.thesis.sparkSQL.Pareto
-import Scala.JoinReorderDP.JoinPlanMap
-import Scala.MultipleJoinReorderDP.allPlanMap
+import Irisa.Enssat.Rennes1.thesis.sparkSQL.{Pareto, historicData}
 import org.apache.spark.internal.Logging
 import org.apache.spark.sql.catalyst.expressions.{And, Attribute, AttributeSet, Expression, PredicateHelper}
 import org.apache.spark.sql.catalyst.plans.logical.{BinaryNode, Join, LogicalPlan, Project}
@@ -150,13 +148,15 @@ object MultipleJoinReorderDP extends PredicateHelper with Logging {
     val itemIndex = items.zipWithIndex
     // found Plans is all the possible logic plans in Map for a plan //
     val foundPlans = mutable.Buffer[JoinPlanMap](itemIndex.map {
-      case (item, id) => Set(id) -> JoinPlan(Set(id), item, Set(), Cost(0, 0))
+      case (item, id) => Set(id) -> JoinPlan(Set(id), item, Set(), Cost(0, 0, 0, 0))
     }.toMap)
 
     // Build plans for next levels until the last level has only one plan. This plan contains
     // all items that can be joined, so there's no need to continue.
     val topOutputSet = AttributeSet(output)
     while (foundPlans.size <= items.length && foundPlans.last.size > 1) {
+      conf.setConfString("items.length",items.length.toString)
+      println("items.length.toString:=" + conf.getConfString("items.length").toInt)
       // Build plans for the next level.
       foundPlans += searchLevel(foundPlans, conf, conditions, topOutputSet)
     }
@@ -166,8 +166,8 @@ object MultipleJoinReorderDP extends PredicateHelper with Logging {
       s"${items.length}, number of plans in memo: ${foundPlans.map(_.size).sum}")
 
     //bestPlan(foundPlans, items.length)
-    //println(s"Join reordering finished. Duration: $durationInMs ms, number of items: " +
-    //  s"${items.length}, number of plans in memo: ${foundPlans.map(_.size).sum}")
+    println(s"Join reordering finished. Duration: $durationInMs ms, number of items: " +
+      s"${items.length}, number of plans in memo: ${foundPlans.map(_.size).sum}")
     // The last level must have one and only one plan, because all items are joinable.
     assert(foundPlans.size == items.length && foundPlans.last.size == 1)
     foundPlans.last.head._2.plan match {
@@ -233,14 +233,20 @@ object MultipleJoinReorderDP extends PredicateHelper with Logging {
               if (existingPlan.isEmpty || newJoinPlan.betterThan(existingPlan.get, conf)) {
                 nextLevel.update(newJoinPlan.itemIds, newJoinPlan)
                 dungLevel.update(newJoinPlan.itemIds.toList, newJoinPlan)
+                historicData.setupFolder(conf.getConfString("idQuery"),newJoinPlan.itemIds.toList.toString())
               }
               else {
                 if (existingPlan.get.betterThan(newJoinPlan, conf)) {
+                  if (conf.getConfString("items.length").toInt == newJoinPlan.itemIds.size){
+                    dungLevel.update(newJoinPlan.itemIds.toList, newJoinPlan)
+                    historicData.setupFolder(conf.getConfString("idQuery"),newJoinPlan.itemIds.toList.toString())
+                  }
 
                 }
                 else{
                   nextLevel.update(newJoinPlan.itemIds, newJoinPlan)
                   dungLevel.update(newJoinPlan.itemIds.toList, newJoinPlan)
+                  historicData.setupFolder(conf.getConfString("idQuery"),newJoinPlan.itemIds.toList.toString())
                 }
                 //dungLevel.update(newJoinPlan.itemIds.toList, newJoinPlan)
               }
@@ -253,6 +259,7 @@ object MultipleJoinReorderDP extends PredicateHelper with Logging {
     val listMapLogicalPlan = dungLevel.result().toList
     //TestCostBasedJoinReorder.
     takeListPlan(listMapLogicalPlan)
+    historicData.storeIdQuery(conf.getConfString("idQuery"))
     nextLevel.toMap
   }
 
@@ -355,12 +362,18 @@ object MultipleJoinReorderDP extends PredicateHelper with Logging {
 
     /** Get the cost of the root node of this plan tree. */
     def rootCost(conf: SQLConf): Cost = {
+      //val allConfs = conf.getConfString("spark.master")
+      //println(allConfs)
       if (itemIds.size > 1) {
         val rootStats = plan.stats(conf)
-        Cost(rootStats.rowCount.get, rootStats.sizeInBytes)
+        println(conf.getConfString("items.length").toInt + " and "+ itemIds.size)
+          Cost(rootStats.rowCount.get,
+            rootStats.sizeInBytes,
+            0,
+            0)
       } else {
         // If the plan is a leaf item, it has zero cost.
-        Cost(0, 0)
+        Cost(0, 0, 0, 0)
       }
     }
 
