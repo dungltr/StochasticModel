@@ -365,7 +365,7 @@ object TestCostBasedJoinReorder {
     spark.range(10).write.saveAsTable("t1")//404L
     spark.range(10).write.saveAsTable("t2")//408L
     spark.range(10).write.saveAsTable("tiny") // 412L
-    spark.createDataFrame((1 to 100).map(i => Record(i, s"val_$i"))).write.saveAsTable("t4")
+    //spark.createDataFrame((1 to 100).map(i => Record(i, s"val_$i"))).write.saveAsTable("t4")
 
     val people = spark.read.json("src/main/resources/people.json")
     val job = spark.read.json("src/main/resources/job.json")
@@ -428,7 +428,7 @@ object TestCostBasedJoinReorder {
     spark.range(10).write.saveAsTable("t1")//404L
     spark.range(10).write.saveAsTable("t2")//408L
     spark.range(10).write.saveAsTable("tiny") // 412L
-    spark.createDataFrame((1 to 100).map(i => Record(i, s"val_$i"))).write.saveAsTable("t4")
+    //spark.createDataFrame((1 to 100).map(i => Record(i, s"val_$i"))).write.saveAsTable("t4")
 
 
     spark.read.json("src/main/resources/people.json").write.saveAsTable("framePeople")
