@@ -744,8 +744,4 @@ object TestCostBasedJoinReorder {
     }
   }
 }
-case class Record(stt: Long, value: String){
-}
-case class T(id: Long){
-}
 

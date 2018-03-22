@@ -48,12 +48,14 @@ public class historicData {
             System.out.println(temp);
             List.set(i,temp);
         }
+        /*
         for (int i = 0; i < tempList.size(); i++){
             System.out.println(tempList.get(i).card());
             System.out.println(tempList.get(i).size());
             System.out.println(tempList.get(i).executeTime());
             System.out.println("///////////////////////");
         }
+        */
         return List;
     }
     public static double dreamValue(String homeSetTable, String logicalId, String nameValue, double cardinality, double size){
