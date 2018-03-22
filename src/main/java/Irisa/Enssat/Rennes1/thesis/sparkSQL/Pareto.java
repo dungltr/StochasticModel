@@ -266,8 +266,13 @@ public class Pareto {
         java.util.List<LogicalPlan> finaLogicalPlansList = filterPlans(logicalPlansList);
         java.util.List<Cost> finalCostPlansList = filterCosts(costPlansList);
         java.util.List<List<Int>> finalSetPlansList = filterSets(setPlansList);
+
+        System.out.println("Before update cost Value");
         printAllLogicalPlans(finaLogicalPlansList,finalCostPlansList,finalSetPlansList);
-        updateCostValue(finalCostPlansList,finalSetPlansList);
+        finalCostPlansList = updateCostValue(finalCostPlansList,finalSetPlansList);
+
+        System.out.println("After update cost Value");
+        printAllLogicalPlans(finaLogicalPlansList,finalCostPlansList,finalSetPlansList);
 
         System.out.println("End of showing logical plans in Spark Optimize processing**************");
         java.util.List<Integer> currentFront = Front(finalCostPlansList);
@@ -286,9 +291,9 @@ public class Pareto {
         finalCostPlansList = tempList;
     }
     */
-    public static void updateCostValue(java.util.List<Cost> finalCostPlansList, java.util.List<List<Int>> finalSetPlansList){
+    public static java.util.List<Cost> updateCostValue(java.util.List<Cost> finalCostPlansList, java.util.List<List<Int>> finalSetPlansList){
         java.util.List<Cost> tempList = historicData.dreamValue(finalCostPlansList, finalSetPlansList);
-        finalCostPlansList = tempList;
+        return tempList;
     }
     public static void main(String[] args){
         /*
@@ -340,6 +345,15 @@ public class Pareto {
         //printAllLogicalPlans(finaParetoPlans,finalParetoCost,finalParetoSet);
         //System.out.println("End of showing logical plans in Pareto set ****************************");
         return finalParetoCost;
+    }
+    public static java.util.List<LogicalPlan> setLogicalPlans() {
+        return filterPlans(logicalPlansList);
+    }
+    public static  java.util.List<Cost> setCosts() {
+        return filterCosts(costPlansList);
+    }
+    public static  java.util.List<List<Int>> setList() {
+        return filterSets(setPlansList);
     }
     public static java.util.List<List<Int>> finaSetPlans(){
         //System.out.println("These are logical plans in Spark Optimize processing set --------------");

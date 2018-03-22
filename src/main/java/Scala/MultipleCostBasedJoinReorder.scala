@@ -156,7 +156,7 @@ object MultipleJoinReorderDP extends PredicateHelper with Logging {
     val topOutputSet = AttributeSet(output)
     while (foundPlans.size <= items.length && foundPlans.last.size > 1) {
       conf.setConfString("items.length",items.length.toString)
-      println("items.length.toString:=" + conf.getConfString("items.length").toInt)
+      //println("items.length.toString:=" + conf.getConfString("items.length").toInt)
       // Build plans for the next level.
       foundPlans += searchLevel(foundPlans, conf, conditions, topOutputSet)
     }
@@ -366,7 +366,7 @@ object MultipleJoinReorderDP extends PredicateHelper with Logging {
       //println(allConfs)
       if (itemIds.size > 1) {
         val rootStats = plan.stats(conf)
-        println(conf.getConfString("items.length").toInt + " and "+ itemIds.size)
+        //println(conf.getConfString("items.length").toInt + " and "+ itemIds.size)
           Cost(rootStats.rowCount.get,
             rootStats.sizeInBytes,
             0,

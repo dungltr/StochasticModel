@@ -413,8 +413,8 @@ public class Algorithms {
         for (int i = 0; i < d.length; i++)
             {
                 d[i] = 0;
-                for (int j = 0; j < a[0].length; j++)
-                    d[i] = d[i]+a[i][j]*b[j]; 
+                for (int j = 1; j < a[0].length; j++)
+                    d[i] = d[i]+a[i][j]*b[j];
 //                System.out.println("d["+i+"] in "+d.length+":"+d[i]);
             }
         for (int j = 0; j < c.length; j++)

@@ -1,7 +1,9 @@
 package Scala
-import java.io.File
+import java.io.{File, IOException}
+import java.nio.file.{Files, Paths}
 
 import Irisa.Enssat.Rennes1.thesis.sparkSQL.{Pareto, historicData}
+import WriteReadData.CsvFileReader
 import org.apache.spark.sql.catalyst.analysis.EliminateSubqueryAliases
 
 //import Scala.TPCDSQueryBenchmark.spark
@@ -595,28 +597,61 @@ object TestCostBasedJoinReorder {
     println(optimizedPlan.numberedTreeString)
     println("--------------------------------------------------------------------------")
     val joinsReordered = OptimizeS.execute(plan)
-    val plans = Pareto.finaParetoPlans()
-    val costs = Pareto.finaCostPlans()
-    val sets = Pareto.finaSetPlans()
-    for (i<-0 until (plans.size())){
+
+    val plans = Pareto.setLogicalPlans()
+    val costs = Pareto.setCosts()
+    val sets = Pareto.setList()
+    for (i <- 0 until sets.size()){
+      val folder_home = "data/dream/" + folder + "/" + sets.get(i).toString()
+      val nameValue = "executeTime"
+      val file = folder_home + "/" + nameValue + ".csv"
+      val numberVariables = 2
+      val filePath = Paths.get(file)
+      if (!Files.exists(filePath)) try
+        Files.createFile(filePath)
+      catch {
+        case e: IOException =>
+          e.printStackTrace()
+      }
+      if (CsvFileReader.count(file) == 0) {
+        historicData.setupFile(file, numberVariables)
+      }
+    }
+    val ran = r.nextInt(plans.size())
       println("")
-      println("Begin running logical plan " + i + " in Pareto plan set with Pareto.size: "+plans.size())
+      println("Begin running logical plan " + ran + " in Pareto plan set with Pareto.size: "+plans.size())
       val startTime = System.nanoTime()
-      val runPlan = plans.get(i)
-      val costPlan = costs.get(i)
-      val setPlan = sets.get(i)
+      val runPlan = plans.get(ran)
+      val costPlan = costs.get(ran)
+      val setPlan = sets.get(ran)
+      val nameValue = "executeTime"
+    /*
+    val folder_home = "data/dream/" + folder + "/" + setPlan.toString()
+    val nameValue = "executeTime"
+    val file = folder_home + "/" + nameValue + ".csv"
+    val numberVariables = 2
+    val filePath = Paths.get(file)
+    if (!Files.exists(filePath)) try
+      Files.createFile(filePath)
+    catch {
+      case e: IOException =>
+        e.printStackTrace()
+    }
+    if (CsvFileReader.count(file) == 0) {
+      historicData.setupFile(file, numberVariables)
+    }
+    */
+    historicData.estimateAndStore(folder,setPlan.toString(), nameValue, costPlan.card.toDouble, costPlan.size.toDouble)
       println(runPlan.numberedTreeString)
       println("Cost value of logical plan is: " + costPlan)
       println("setID of logical plan is: " + setPlan)
-      for (k<-0 until 10){
-        spark.sessionState.executePlan(runPlan)
-      }
+      spark.sessionState.executePlan(runPlan)
       val listPhysicalPlan = spark.sessionState.planner.plan(runPlan).toSeq
-      println("The physical plan of logical plan: " + i + " in Pareto plan set with Pareto.size " + plans.size())
+      println("The physical plan of logical plan: " + ran + " in Pareto plan set with Pareto.size " + plans.size())
       listPhysicalPlan.foreach(element => println(element))
       val durationInMs = System.nanoTime() - startTime
       println("End of running physical plan: " + "-------"  + durationInMs+" nano  seconds")
-    }
+    historicData.updateValue(folder,setPlan.toString(),costPlan,durationInMs.toDouble,"executeTime")
     //println(joinsReordered.numberedTreeString)
     /*
     var logicalQuery: LogicalPlan = plan
