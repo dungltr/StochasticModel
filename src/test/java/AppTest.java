@@ -1,4 +1,5 @@
 
+import Irisa.Enssat.Rennes1.thesis.sparkSQL.Pareto;
 import com.sparkexample.App;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -66,6 +67,7 @@ public class AppTest{
     @Test
     public void testConvert_IRES() throws Exception {
         createProperties();
+        Pareto.main(new String[] {"arg1", "arg2", "arg3"});
 //        DPccpExperiment.main(new String[] {"arg1", "arg2", "arg3"});
 //        String file_test = test;
 //        String training_file = training;
