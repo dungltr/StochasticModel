@@ -518,9 +518,10 @@ object TestCostBasedJoinReorder {
     }
     //val belowBroadcastJoinThreshold = spark.sessionState.conf.autoBroadcastJoinThreshold - 1
     //println("spark.sessionState.conf.autoBroadcastJoinThreshold:=" + spark.sessionState.conf.autoBroadcastJoinThreshold)
-    val homeDataDesktop = "/Users/letrung/"
-    val homeDataLaptop = "/Volumes/DATAHD/"
-    val dataLocation = homeDataLaptop + "/Downloads/spark-tpc-ds-performance-test-master/spark-warehouse/tpcds.db/"
+    val homeDataDesktop = "/Users/letrung/Downloads"
+    val homeDataLaptop = "/Volumes/DATAHD/Downloads"
+    val homeUbuntu = "/home/ubuntu/Documents"
+    val dataLocation = homeUbuntu + "/spark-tpc-ds-performance-test-master/spark-warehouse/tpcds.db/"
     require(dataLocation.nonEmpty,
       "please modify the value of dataLocation to point to your local TPCDS data")
     //val tableSizes = setupTables(dataLocation)
