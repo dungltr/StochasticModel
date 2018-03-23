@@ -4,6 +4,7 @@ import java.nio.file.{Files, Paths}
 
 import Irisa.Enssat.Rennes1.thesis.sparkSQL.{Pareto, historicData}
 import WriteReadData.CsvFileReader
+import com.sparkexample.App
 import org.apache.spark.sql.catalyst.analysis.EliminateSubqueryAliases
 
 //import Scala.TPCDSQueryBenchmark.spark
@@ -521,7 +522,8 @@ object TestCostBasedJoinReorder {
     val homeDataDesktop = "/Users/letrung/Downloads"
     val homeDataLaptop = "/Volumes/DATAHD/Downloads"
     val homeUbuntu = "/home/ubuntu/Documents"
-    val dataLocation = homeDataDesktop + "/spark-tpc-ds-performance-test-master/spark-warehouse/tpcds.db/"
+    val tpcdsHome = new App().readhome("tpcds");
+    val dataLocation = tpcdsHome
     require(dataLocation.nonEmpty,
       "please modify the value of dataLocation to point to your local TPCDS data")
     //val tableSizes = setupTables(dataLocation)
