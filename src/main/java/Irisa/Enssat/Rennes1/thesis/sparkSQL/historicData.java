@@ -30,9 +30,10 @@ public class historicData {
     private static final String COMMA_DELIMITER = ",";
     static String sparkHome = new App().readhome("SPARK_HOME");
     static String idQuery = "";
+
     public static void storeIdQuery(String IdQuery){
         idQuery = IdQuery;
-        System.out.println(idQuery);
+        System.out.println("this is the function storeIdQuery: " + idQuery);
     }
 
     public static java.util.List<Cost> dreamValue(java.util.List<Cost> tempList,
@@ -61,7 +62,7 @@ public class historicData {
     public static double dreamValue(String homeSetTable, String logicalId, String nameValue, double cardinality, double size){
         //String folder = "data/dream/" +homeSetTable + "/" + logicalId;
         int numberVariables = 2;
-        String folder = "data/dream/" +idQuery + "/" + logicalId;
+        String folder = "data/dream/" +homeSetTable + "/" + logicalId;
         String file = folder + "/" + nameValue + ".csv";
         String fileEstimate = fileEstimateValue(file);
         File Dir = new File(folder);
@@ -95,8 +96,8 @@ public class historicData {
             return 0;
         }
     }
-    public static void estimateAndStore(String homeSetTable, String logicalId, String nameValue, double cardinality, double size) throws IOException {
-        String folder = "data/dream/" +idQuery + "/" + logicalId;
+    public static double estimateAndStore(String homeSetTable, String logicalId, String nameValue, double cardinality, double size) throws IOException {
+        String folder = "data/dream/" +homeSetTable + "/" + logicalId;
         String file = folder + "/" + nameValue + ".csv";
         String fileEstimate = fileEstimateValue(file);
         List<Double> variables = new ArrayList<>();
@@ -105,6 +106,18 @@ public class historicData {
         double estimateValue = estimate(file, variables);
         double[] valueArray = setupValue(variables, estimateValue);
         Writematrix2CSV.addArray2Csv(fileEstimate, valueArray);
+        return estimateValue;
+    }
+    public static void saveError(String homeSetTable, String logicalId, String nameValue, double realValue, double estimateValue, double R_2_limit) throws IOException {
+        String folder = "data/dream/" +homeSetTable + "/" + logicalId;
+        String file = folder + "/" + nameValue + ".csv";
+        String fileError = fileErrorValue(file);
+        double[] valueArray = new double[3];
+        valueArray[0] = realValue;
+        valueArray[1] = estimateValue;
+        if (Math.abs(estimateValue-realValue)/realValue < (1-R_2_limit)) valueArray[2] = 1;
+        else valueArray[2] = 0;
+        Writematrix2CSV.addArray2Csv(fileError, valueArray);
     }
     public static double[] convertListToArray(List<Double> variables){
         double[] doubleArray = new double[variables.size()];
@@ -132,6 +145,9 @@ public class historicData {
     }
     public static String fileEstimateValue (String file){
         return file.replace(".csv","_") + "EstimateValue" + ".csv";
+    }
+    public static String fileErrorValue (String file){
+        return file.replace(".csv","_") + "Error" + ".csv";
     }
     public static int estimateSizeOfMatrix(int Max_Line, int numberOfVariable, String file, double R_2_limit) throws IOException {
         String fileParameter = fileParameter(file);

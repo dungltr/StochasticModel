@@ -7,13 +7,13 @@ import WriteReadData.CsvFileReader
 import org.apache.spark.sql.catalyst.analysis.EliminateSubqueryAliases
 
 //import Scala.TPCDSQueryBenchmark.spark
+import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.catalyst.plans.logical.LogicalPlan
 import org.apache.spark.sql.catalyst.rules.RuleExecutor
 import org.apache.spark.sql.catalyst.util.fileToString
 import org.apache.spark.sql.internal.SQLConf
 import org.apache.spark.sql.internal.SQLConf.{CBO_ENABLED, JOIN_REORDER_ENABLED}
-import org.apache.spark.{SparkConf, SparkContext}
 /**
   * Created by letrungdung on 01/03/2018.
   */
@@ -521,7 +521,7 @@ object TestCostBasedJoinReorder {
     val homeDataDesktop = "/Users/letrung/Downloads"
     val homeDataLaptop = "/Volumes/DATAHD/Downloads"
     val homeUbuntu = "/home/ubuntu/Documents"
-    val dataLocation = homeUbuntu + "/spark-tpc-ds-performance-test-master/spark-warehouse/tpcds.db/"
+    val dataLocation = homeDataDesktop + "/spark-tpc-ds-performance-test-master/spark-warehouse/tpcds.db/"
     require(dataLocation.nonEmpty,
       "please modify the value of dataLocation to point to your local TPCDS data")
     //val tableSizes = setupTables(dataLocation)
@@ -581,6 +581,7 @@ object TestCostBasedJoinReorder {
     println("List of tables in the query: q" + randomInt)
     listRelations.foreach(relation=>println(relation))
     historicData.setupFolder(folder,"")
+    historicData.storeIdQuery(folder)
     val confSQL = spark.sessionState.conf
     confSQL.setConfString("idQuery",folder)
     println("---------------" )
@@ -642,7 +643,7 @@ object TestCostBasedJoinReorder {
       historicData.setupFile(file, numberVariables)
     }
     */
-    historicData.estimateAndStore(folder,setPlan.toString(), nameValue, costPlan.card.toDouble, costPlan.size.toDouble)
+    val estimateValue = historicData.estimateAndStore(folder,setPlan.toString(), nameValue, costPlan.card.toDouble, costPlan.size.toDouble)
       println(runPlan.numberedTreeString)
       println("Cost value of logical plan is: " + costPlan)
       println("setID of logical plan is: " + setPlan)
@@ -653,6 +654,7 @@ object TestCostBasedJoinReorder {
       val durationInMs = System.nanoTime() - startTime
       println("End of running physical plan: " + "-------"  + durationInMs+" nano  seconds")
     historicData.updateValue(folder,setPlan.toString(),costPlan,durationInMs.toDouble,"executeTime")
+    historicData.saveError(folder,setPlan.toString(),nameValue, durationInMs.toDouble, estimateValue, 0.8)
     //println(joinsReordered.numberedTreeString)
     /*
     var logicalQuery: LogicalPlan = plan
