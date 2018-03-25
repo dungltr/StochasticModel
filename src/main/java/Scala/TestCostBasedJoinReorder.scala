@@ -666,8 +666,8 @@ object TestCostBasedJoinReorder {
       println("End of running physical plan: " + "-------"  + durationInMs+" nano  seconds")
     historicData.updateValue(folder,setPlan.toString(),costPlan,durationInMs.toDouble,"executeTime")
     historicData.saveError(folder,setPlan.toString(),nameValue, durationInMs.toDouble, estimateValue, 0.8)
-    val MOEA = "executeTimeMOEA"
-    historicData.saveError(folder,setPlan.toString(), MOEA, durationInMs.toDouble, estimateValueMOEA, 0.8)
+    val WEKA = "executeTimeWEKA"
+    historicData.saveError(folder,setPlan.toString(), WEKA, durationInMs.toDouble, estimateValueMOEA, 0.8)
     //println(joinsReordered.numberedTreeString)
     /*
     var logicalQuery: LogicalPlan = plan
