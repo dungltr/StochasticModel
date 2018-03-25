@@ -8,12 +8,15 @@ import com.sparkexample.App;
 import scala.Int;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import static Algorithms.Algorithms.*;
@@ -27,7 +30,9 @@ import static org.apache.commons.math.util.MathUtils.round;
  * Created by letrungdung on 20/03/2018.
  */
 public class historicData {
+
     private static final String COMMA_DELIMITER = ",";
+    private static final String NEW_LINE_SEPARATOR = "\n";
     static String sparkHome = new App().readhome("SPARK_HOME");
     static String idQuery = "";
 
@@ -78,7 +83,7 @@ public class historicData {
             }
         }
         try {
-            if (CsvFileReader.count(file)==0){
+            if (CsvFileReader.count(file)==1){
                 setupFile(file, numberVariables);
                 return 0;
             }
@@ -129,7 +134,7 @@ public class historicData {
     public static double estimate(String file, List<Double> variables){
         try {
             double R_2_limit = 0.8;
-            int Max_line_estimate = estimateSizeOfMatrix(CsvFileReader.count(file),variables.size(),file,R_2_limit);
+            int Max_line_estimate = estimateSizeOfMatrix(CsvFileReader.count(file)-1,variables.size(),file,R_2_limit);
             double value = estimateCostValue(Max_line_estimate,file,convertListToArray(variables),R_2_limit);
             return value;
         } catch (IOException e) {
@@ -153,7 +158,7 @@ public class historicData {
         String fileParameter = fileParameter(file);
         String fileRealValue = fileRealValue(file);
         String fileEstimate = fileEstimateValue(file);
-        int Max_Estimate = CsvFileReader.count(file);
+        int Max_Estimate = CsvFileReader.count(file)-1;
         int MaxOfLine;
         if (Max_Estimate < Max_Line)
             MaxOfLine = Max_Estimate;
@@ -363,10 +368,29 @@ public class historicData {
         updateParameter(fileParameter,B);
         return estimateCurrentCostValue(X, B);
     }
+    public static void addtitle(String file, int numberVariables) {
+        String title = "";
+        for (int i = 0; i < numberVariables; i++){
+            title = title + "Feature " + i + COMMA_DELIMITER;
+        }
+        title = title + "Class" + NEW_LINE_SEPARATOR;
+        Path filePath = Paths.get(file);
+        try {
+            if(!Files.exists(filePath))
+            Files.createFile(filePath);
+            Files.write(filePath, title.getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("CSV file was created successfully !!!");
+    }
     public static void setupFile(String file, int numberVariables){
         String fileRealValue = fileRealValue(file);
         String fileParameter = fileParameter(file);
         String fileEstimate = fileEstimateValue(file);
+        addtitle(fileRealValue,numberVariables);
+        addtitle(fileEstimate,numberVariables);
+        addtitle(file,numberVariables);
         List<Double> variables = new ArrayList<>();
         int numberParameter = numberVariables + 1;
         double[] parameters = new double[numberParameter];

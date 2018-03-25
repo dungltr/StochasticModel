@@ -2,11 +2,10 @@ package Scala
 import java.io.{File, IOException}
 import java.nio.file.{Files, Paths}
 
+import Algorithms.LinearRegressionManual
 import Irisa.Enssat.Rennes1.thesis.sparkSQL.{Pareto, historicData}
-import WriteReadData.CsvFileReader
 import com.sparkexample.App
 import org.apache.spark.sql.catalyst.analysis.EliminateSubqueryAliases
-
 //import Scala.TPCDSQueryBenchmark.spark
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
@@ -611,15 +610,20 @@ object TestCostBasedJoinReorder {
       val file = folder_home + "/" + nameValue + ".csv"
       val numberVariables = 2
       val filePath = Paths.get(file)
-      if (!Files.exists(filePath)) try
+      if (!Files.exists(filePath)) try {
         Files.createFile(filePath)
+        historicData.setupFile(file, numberVariables)
+        //historicData.addtitle(file,numberVariables)
+      }
       catch {
         case e: IOException =>
           e.printStackTrace()
       }
+      /*
       if (CsvFileReader.count(file) == 0) {
-        historicData.setupFile(file, numberVariables)
+
       }
+      */
     }
     val ran = r.nextInt(plans.size())
       println("")
@@ -646,7 +650,12 @@ object TestCostBasedJoinReorder {
     }
     */
     val estimateValue = historicData.estimateAndStore(folder,setPlan.toString(), nameValue, costPlan.card.toDouble, costPlan.size.toDouble)
-      println(runPlan.numberedTreeString)
+    val fileExecute = "data/dream/" + folder + "/" + setPlan.toString() + "/executeTime.csv"
+    println(fileExecute)
+    val estimateValueMOEA = LinearRegressionManual.guessValue(fileExecute,fileExecute,costPlan.card.toDouble, costPlan.size.toDouble)
+    println("The predict Value of Dream is: " + estimateValue)
+    println("The predict Value of MOEA is: " + estimateValueMOEA)
+    println(runPlan.numberedTreeString)
       println("Cost value of logical plan is: " + costPlan)
       println("setID of logical plan is: " + setPlan)
       spark.sessionState.executePlan(runPlan)
@@ -657,6 +666,8 @@ object TestCostBasedJoinReorder {
       println("End of running physical plan: " + "-------"  + durationInMs+" nano  seconds")
     historicData.updateValue(folder,setPlan.toString(),costPlan,durationInMs.toDouble,"executeTime")
     historicData.saveError(folder,setPlan.toString(),nameValue, durationInMs.toDouble, estimateValue, 0.8)
+    val MOEA = "executeTimeMOEA"
+    historicData.saveError(folder,setPlan.toString(), MOEA, durationInMs.toDouble, estimateValueMOEA, 0.8)
     //println(joinsReordered.numberedTreeString)
     /*
     var logicalQuery: LogicalPlan = plan

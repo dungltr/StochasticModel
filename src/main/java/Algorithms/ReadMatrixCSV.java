@@ -5,16 +5,8 @@
  */
 package Algorithms;
 
-import static WriteReadData.CsvFileReader.printstudent;
-import static WriteReadData.CsvFileReader.readstudent;
-import WriteReadData.Student;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -24,7 +16,7 @@ import java.util.List;
 public class ReadMatrixCSV {
         //Delimiter used in CSV file
 	private static final String COMMA_DELIMITER = ",";
-        private static final String NEW_LINE_SEPARATOR = "\n";
+    private static final String NEW_LINE_SEPARATOR = "\n";
         
     public static void readMatrixCsvFile(String fileName) throws FileNotFoundException, IOException {
 	BufferedReader reader = new BufferedReader(new FileReader(fileName));

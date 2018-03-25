@@ -1,44 +1,40 @@
 package Algorithms;
 
-import static Algorithms.Algorithms.estimateSizeOfMatrix;
-import static Algorithms.Algorithms.fileName;
-import static Algorithms.Algorithms.fillone;
-import static Algorithms.Algorithms.initParameterValue;
-import static Algorithms.Algorithms.lookingOtherParameter;
-import static Algorithms.Algorithms.setupMatrixA;
-import static Algorithms.Algorithms.setupMatrixC;
-import static Algorithms.Algorithms.setupMatrixX;
-import static Algorithms.Algorithms.setupParameterB;
-import static Algorithms.Algorithms.setupParameterBindex;
-import static Algorithms.ReadMatrixCSV.readMatrix;
-import static Algorithms.testScilab.invert;
-import static Algorithms.testScilab.multiply;
-import static Algorithms.testScilab.transpose;
-import static IRES.TPCHQuery.Schema;
-import static IRES.testQueryPlan.createRandomQuery;
 import LibraryIres.Move_Data;
 import WriteReadData.CsvFileReader;
 import com.sparkexample.App;
-import java.io.IOException;
+import weka.classifiers.functions.LinearRegression;
+import weka.core.Attribute;
+import weka.core.Instances;
+import weka.core.converters.ArffSaver;
+import weka.core.converters.CSVLoader;
+import weka.core.converters.ConverterUtils.DataSource;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import weka.core.converters.*;
-//import weka.core.Instances;
-import weka.core.converters.CSVLoader;
-import weka.core.converters.ArffSaver;
-
 import java.util.ArrayList;
 
-import weka.classifiers.functions.LinearRegression;
-import weka.core.Attribute;
+//import static Algorithms.Algorithms.*;
+//import static Algorithms.Algorithms.*;
+//import static Algorithms.ReadMatrixCSV.readMatrix;
+//import static Algorithms.testScilab.invert;
+//import static Algorithms.testScilab.multiply;
+//import static Algorithms.testScilab.transpose;
+
+//import static Algorithms.Algorithms.*;
+//import static Algorithms.ReadMatrixCSV.readMatrix;
+//import static Algorithms.testScilab.*;
+
+//import WriteReadData.CsvFileReader;
+
+//import weka.core.Instances;
 //import weka.core.DenseInstance;
-import weka.core.FastVector;
-import weka.core.Instance;
-import weka.core.Instances;
-import weka.core.converters.ConverterUtils.DataSource;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -61,6 +57,8 @@ public class LinearRegressionManual {
     String HIVE_HOME = new App().readhome("HIVE_HOME");
     String IRES_HOME = new App().readhome("IRES_HOME");
     String HDFS = new App().readhome("HDFS");
+    static String training = new App().readhome("TRAINING");
+    static String testing = new App().readhome("TESTING");
     String ASAP_HOME = IRES_HOME;
     String IRES_library = ASAP_HOME+"/asap-platform/asap-server";
     String directory_library = IRES_library+"/target/asapLibrary/";
@@ -70,14 +68,29 @@ public class LinearRegressionManual {
     
     String[] start = new String[]{"/bin/sh", ASAP_HOME+"/start-ires.sh"};
     String[] stop = new String[]{"/bin/sh", ASAP_HOME+"/stop-ires.sh"};
-    public static void testLinearRegression (String file_name) throws IOException{
+
+    public static void main(String[] args) throws Exception {
+        //testLinearRegression("data/dream/framestore_sales_framecatalog_sales_frameitem_framecatalog_returns/List(3, 0, 1, 2)/executeTime.csv");
+        //small_test(training,testing); // not good
+        //main_test(training,testing); // not good
+        //test_minDataset(training,testing,0.8);
+        //testLinearRegression(training);
+        String training ="data/dream/framestore_sales_framestore_returns_frameitem_framecatalog_returns/List(3, 1, 0, 2)/executeTime.csv";
+        double[] realValue = {1,1};
+        double value = guessValue(training,testing,1,1);
+        System.out.println("The predict Value is: "+ value);
+
+    }
+    public static void testLinearRegression (String file_name) throws Exception {
         CSVLoader loader = new CSVLoader();
-//        loader.setFile(new java.io.File(file_name));
+        loader.setFile(new File(file_name));
+        //DataSource source = new DataSource(file_name);
+        //Instances instances = source.getDataSet();
 //        Instances insts = loader.getDataSet();
 //        System.out.println(insts.toString());
-        loader.setSource(new File(file_name));
+        //loader.setSource(new java.io.File(file_name));
         Instances data = loader.getDataSet();
-        System.out.println(data.toString());
+        //System.out.println(data.toString());
     }
     public static void small_test(String training, String testing) throws IOException, Exception {
         DataSource source = new DataSource(training);              
@@ -220,12 +233,36 @@ public class LinearRegressionManual {
 		}
 		
 	}
+	public static double guessValue(String training, String testing, double card, double size) throws Exception {
+	    double[] Value = new double[2];
+        Value[0] = card;
+        Value[1] = size;
+        convertCsvToArff(training);
+        System.out.println(training);
+        //convertCsvToArff(testing);
+        BufferedReader reader = new BufferedReader(
+                new FileReader(training.replace("csv","arff")));
+        //DataSource source = new DataSource(training.replace("csv","arff"));
+        Instances data= new Instances(reader);
+        data.setClassIndex(data.numAttributes() - 1);
+        LinearRegression train = new LinearRegression();
+        train.buildClassifier(data);
+        double[] coefficient = train.coefficients();
+        System.out.println("\n Array of coefficient training: ");
+        testScilab.printArray(coefficient);
+        double initValue = coefficient[coefficient.length-1];
+	    System.out.println();
+	    for(int i = 0; i < Value.length; i ++){
+            initValue = initValue + coefficient[i]*Value[i];
+        }
+        return initValue;
+    }
     public static void test_minDataset(String training, String testing, double R_2) throws IOException, Exception {
         int set_training = CsvFileReader.count(training)-1;
         int set_testing = CsvFileReader.count(testing)-1;       
-        double [][] matrix_training = readMatrix(training, set_training);
-        double [][] matrix_originTesting = readMatrix(testing, set_testing);     
-        double [][] matrix_minsetTesting = readMatrix(testing, set_testing);
+        double [][] matrix_training = ReadMatrixCSV.readMatrix(training, set_training);
+        double [][] matrix_originTesting = ReadMatrixCSV.readMatrix(testing, set_testing);     
+        double [][] matrix_minsetTesting = ReadMatrixCSV.readMatrix(testing, set_testing);
            
         CSVLoader loader = new CSVLoader();               
         loader.setSource(new File(training));     
@@ -233,10 +270,10 @@ public class LinearRegressionManual {
         System.out.println(data.toString());
         Instances trainingSet = new Instances(data);
 	/*Prepare for the temp file of training*/	
-	int numFeatures = matrix_training[0].length - 1;
+	    int numFeatures = matrix_training[0].length - 1;
         double R_2_limit = R_2;
         int sizeOfValue = estimateSizeOfMatrix(set_training, numFeatures, training, R_2_limit);
-        double[][] real_matrix_training = readMatrix(training, sizeOfValue);      
+        double[][] real_matrix_training = ReadMatrixCSV.readMatrix(training, sizeOfValue);
         storeMatrix(real_matrix_training,training.replace(".csv", "_temp.csv"));
         System.out.println("\nMatrix of training temp: \n");
         CSVLoader loadertrainingtemp = new CSVLoader();             
@@ -323,14 +360,14 @@ public class LinearRegressionManual {
         String delay_ys = "";
         double R2 = 0.8;
         ////////////////////////////////////////////
-        String Operator = "TPCH_"+ Size;   
+        String Operator = "TPCH_"+ Size;
         String DataIn = "";
-        String DataInSize = "";       
+        String DataInSize = "";
         String DatabaseIn = "";
         String Schema = "";
         String DataOut = "";
         String DataOutSize = "";
-        String DatabaseOut = "";  
+        String DatabaseOut = "";
         Move_Data Data = new Move_Data(Operator, DataIn, DataInSize, DatabaseIn, Schema, from, to, DataOut, DataOutSize, DatabaseOut);
         Data.set_Operator(Operator);
         Data.set_DataIn(DataIn);
@@ -344,11 +381,9 @@ public class LinearRegressionManual {
         String directory = testWriteMatrix2CSV.getDirectory(Data);
         //////////////////////////////////////////
         if (TimeOfDay<1) delay_ys = "no_delay";
-        String training = fileName(directory,delay_ys,"realValue","training");
-        String testing = fileName(directory,delay_ys,"realValue","testing");
-        
+        String training = Algorithms.fileName(directory,delay_ys,"realValue","training");
+        String testing = Algorithms.fileName(directory,delay_ys,"realValue","testing");
         test_minDataset(training, testing, R2);
-		
     }
     public static int estimateSizeOfMatrix(int Max_Line, int numberOfVariable, String fileLink, double R_2_limit) throws IOException {
         String fileRealValue = fileLink;
@@ -370,7 +405,7 @@ public class LinearRegressionManual {
         boolean check = false;
         while(((Math.abs(R_2_2)< R_2_limit)||(Math.abs(R_2_2)> 1)||check)&&(M < MaxOfLine))
         {            
-            realValue = readMatrix(fileRealValue, M);
+            realValue = ReadMatrixCSV.readMatrix(fileRealValue, M);
             x = new double[realValue.length][realValue[0].length - 1];
             a = new double[realValue.length][realValue[0].length];
             B = new double[realValue[0].length];
@@ -378,13 +413,18 @@ public class LinearRegressionManual {
             c = new double[realValue.length];
             d = new double[realValue.length];
 
-            x = setupMatrixX(realValue);
-            a = setupMatrixA(x);
+            x = Algorithms.setupMatrixX(realValue);
+            a = Algorithms.setupMatrixA(x);
 
-            c = setupMatrixC(realValue);
-            d = setupMatrixC(realValue);
+            c = Algorithms.setupMatrixC(realValue);
+            d = Algorithms.setupMatrixC(realValue);
             //System.out.println("length of C: "+c.length);
-            B = multiply(multiply(invert(multiply(transpose(a),a)),transpose(a)),c);
+            B = testScilab.multiply(testScilab
+                    .multiply(testScilab
+                            .invert(testScilab
+                                    .multiply(testScilab.
+                                            transpose(a),a)),testScilab
+                            .transpose(a)),c);
     
             for (int i = 0; i < d.length; i++)
             {
@@ -464,6 +504,18 @@ public class LinearRegressionManual {
         add = add + Matrix[0][i] + NEW_LINE_SEPARATOR;
         Files.write(filePath, add.getBytes(), StandardOpenOption.APPEND);
         }
-    }    
+    }
+    public static void convertCsvToArff (String fileCsv) throws IOException {
+        // load CSV
+        CSVLoader loader = new CSVLoader();
+        loader.setSource(new File(fileCsv));
+        Instances data = loader.getDataSet();
+        // save ARFF
+        ArffSaver saver = new ArffSaver();
+        saver.setInstances(data);
+        saver.setFile(new File(fileCsv.replace("csv","arff")));
+        saver.writeBatch();
+        // .arff file will be created in the output location
+    }
 }    
 

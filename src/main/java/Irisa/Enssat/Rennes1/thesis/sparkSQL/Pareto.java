@@ -17,8 +17,6 @@ public class Pareto {
     static  java.util.List<Cost> costPlansList = new ArrayList<>();
     static  java.util.List<List<Int>> setPlansList = new ArrayList<>();
 
-
-
     public static void addLogicalPlan (LogicalPlan LogicalPlan) {
         logicalPlansList.add(LogicalPlan);
     }
