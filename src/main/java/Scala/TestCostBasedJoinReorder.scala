@@ -528,42 +528,71 @@ object TestCostBasedJoinReorder {
     //val tableSizes = setupTables(dataLocation)
     val tableSizes = setupTables(dataLocation)
     tableNames.foreach { name =>
-      spark.read.parquet(s"$dataLocation/$name").write.saveAsTable(s"frame$name")
-      spark.sql(s"ANALYZE TABLE frame$name COMPUTE STATISTICS")
+      spark.read.parquet(s"$dataLocation/$name").write.saveAsTable(s"t$name")
+      spark.sql(s"ANALYZE TABLE t$name COMPUTE STATISTICS")
     }
 
-    val Store_sales = spark.table("framestore_sales")
-    val Store_returns = spark.table("framestore_returns")
-    val Catalog_sales = spark.table("framecatalog_sales")
-    val Catalog_returns = spark.table("framecatalog_returns")
-    val Store = spark.table("framestore")
-    val Item = spark.table("frameitem")
+    val Store_sales = spark.table("tstore_sales")
+    val Store_returns = spark.table("tstore_returns")
+    val Catalog_sales = spark.table("tcatalog_sales")
+    val Catalog_returns = spark.table("tcatalog_returns")
+    val Store = spark.table("tstore")
+    val Item = spark.table("titem")
 
     // Queries can then join DataFrame data with data stored in Hive.
     // Example: Inner join with join condition
-    val queryString = fileToString(new File(s"$dataLocation/query25.sql"))
+    //val queryString = fileToString(new File(s"$dataLocation/query25.sql"))
     //println(queryString)
     //val queryplan = spark.sql(queryString).queryExecution.analyzed
 
-    val q1 = Store_sales
+    val q11 = Store_sales
       .join(Store_returns,Store_sales("ss_item_sk")===Store_returns("sr_item_sk"))
       .join(Catalog_sales,Store_sales("ss_item_sk")===Catalog_sales("cs_item_sk"))
       .join(Item,Item("i_item_sk")===Catalog_sales("cs_item_sk"))
 
-    val q2 = Store_sales
+    val q12 = Store_sales
+      .join(Catalog_sales,Store_sales("ss_item_sk")===Catalog_sales("cs_item_sk"))
+      .join(Store_returns,Catalog_sales("cs_item_sk")===Store_returns("sr_item_sk"))
+      .join(Item,Item("i_item_sk")===Store_returns("sr_item_sk"))
+
+
+    val q21 = Store_sales
       .join(Store_returns,Store_sales("ss_item_sk")===Store_returns("sr_item_sk"))
       .join(Catalog_sales,Store_sales("ss_item_sk")===Catalog_sales("cs_item_sk"))
       .join(Catalog_returns,Catalog_sales("cs_item_sk")===Catalog_returns("cr_item_sk"))
-    val q3 = Store_sales
+
+    val q22 = Store_sales
+      .join(Catalog_sales,Store_sales("ss_item_sk")===Catalog_sales("cs_item_sk"))
+      .join(Store_returns,Store_sales("ss_item_sk")===Store_returns("sr_item_sk"))
+      .join(Catalog_returns,Catalog_sales("cs_item_sk")===Catalog_returns("cr_item_sk"))
+
+    val q23 = Catalog_sales
+      .join(Catalog_returns,Catalog_sales("cs_item_sk")===Catalog_returns("cr_item_sk"))
+      .join(Store_sales,Store_sales("ss_item_sk")===Catalog_sales("cs_item_sk"))
+      .join(Store_returns,Store_sales("ss_item_sk")===Store_returns("sr_item_sk"))
+    /*
+    val q31 = Store_sales
       .join(Store_returns,Store_sales("ss_item_sk")===Store_returns("sr_item_sk"))
       .join(Catalog_returns,Store_sales("ss_item_sk")===Catalog_returns("cr_item_sk"))
       .join(Item,Item("i_item_sk")===Catalog_returns("cr_item_sk"))
 
-    val q4 = Store_sales
+    val q32 = Store_sales
+      .join(Catalog_returns,Store_sales("ss_item_sk")===Catalog_returns("cr_item_sk"))
+      .join(Store_returns,Store_sales("ss_item_sk")===Store_returns("sr_item_sk"))
+      .join(Item,Item("i_item_sk")===Catalog_returns("cr_item_sk"))
+
+    val q33 = Item
+      .join(Catalog_returns,Item("i_item_sk")===Catalog_returns("cr_item_sk"))
+      .join(Store_sales,Store_sales("ss_item_sk")===Catalog_returns("cr_item_sk"))
+      .join(Store_returns,Store_sales("ss_item_sk")===Store_returns("sr_item_sk"))
+
+    val q41 = Store_sales
       .join(Catalog_sales,Store_sales("ss_item_sk")===Catalog_sales("cs_item_sk"))
       .join(Catalog_returns,Catalog_sales("cs_item_sk")===Catalog_returns("cr_item_sk"))
       .join(Item,Item("i_item_sk")===Catalog_sales("cs_item_sk"))
-    val Q = Seq(q1,q2,q3,q4)
+  */
+    //q1: catalog_sales-store_returns-catalog_returns-store_sales
+    val Q = Seq(q11,q21,q12,q22,q23)//,q32, q31,q41,q33
     val r = scala.util.Random
     val randomInt = r.nextInt(Q.size)
     val q = Q.apply(randomInt)
@@ -649,10 +678,14 @@ object TestCostBasedJoinReorder {
       historicData.setupFile(file, numberVariables)
     }
     */
-    val estimateValue = historicData.estimateAndStore(folder,setPlan.toString(), nameValue, costPlan.card.toDouble, costPlan.size.toDouble)
+
+    val card = costPlan.card.toDouble// + r.nextInt(100)*costPlan.card.toDouble/1000
+    val size = costPlan.size.toDouble// + r.nextInt(100)*costPlan.size.toDouble/1000
+
+    val estimateValue = historicData.estimateAndStore(folder,setPlan.toString(), nameValue, card, size)
     val fileExecute = "data/dream/" + folder + "/" + setPlan.toString() + "/executeTime.csv"
     println(fileExecute)
-    val estimateValueMOEA = LinearRegressionManual.guessValue(fileExecute,fileExecute,costPlan.card.toDouble, costPlan.size.toDouble)
+    val estimateValueMOEA = LinearRegressionManual.guessValue(fileExecute,fileExecute, card, size)
     println("The predict Value of Dream is: " + estimateValue)
     println("The predict Value of MOEA is: " + estimateValueMOEA)
     println(runPlan.numberedTreeString)
