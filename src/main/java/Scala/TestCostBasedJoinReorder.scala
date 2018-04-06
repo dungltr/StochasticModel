@@ -544,7 +544,10 @@ object TestCostBasedJoinReorder {
     //val queryString = fileToString(new File(s"$dataLocation/query25.sql"))
     //println(queryString)
     //val queryplan = spark.sql(queryString).queryExecution.analyzed
-
+    val q0 = Store_sales
+      .join(Store_returns,Store_sales("ss_item_sk")===Store_returns("sr_item_sk"))
+      .join(Catalog_sales,Store_sales("ss_item_sk")===Catalog_sales("cs_item_sk"))
+      .join(Item,Store_sales("ss_item_sk")===Item("i_item_sk"))
     val q11 = Store_sales
       .join(Store_returns,Store_sales("ss_item_sk")===Store_returns("sr_item_sk"))
       .join(Catalog_sales,Store_sales("ss_item_sk")===Catalog_sales("cs_item_sk"))
@@ -554,7 +557,6 @@ object TestCostBasedJoinReorder {
       .join(Catalog_sales,Store_sales("ss_item_sk")===Catalog_sales("cs_item_sk"))
       .join(Store_returns,Catalog_sales("cs_item_sk")===Store_returns("sr_item_sk"))
       .join(Item,Item("i_item_sk")===Store_returns("sr_item_sk"))
-
 
     val q21 = Store_sales
       .join(Store_returns,Store_sales("ss_item_sk")===Store_returns("sr_item_sk"))
@@ -592,7 +594,7 @@ object TestCostBasedJoinReorder {
       .join(Item,Item("i_item_sk")===Catalog_sales("cs_item_sk"))
   */
     //q1: catalog_sales-store_returns-catalog_returns-store_sales
-    val Q = Seq(q11,q21,q12,q22,q23)//,q32, q31,q41,q33
+    val Q = Seq(q0)//q11,q21,q12,q22,q23)//,q32, q31,q41,q33
     val r = scala.util.Random
     val randomInt = r.nextInt(Q.size)
     val q = Q.apply(randomInt)

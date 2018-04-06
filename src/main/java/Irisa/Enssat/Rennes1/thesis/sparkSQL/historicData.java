@@ -2,7 +2,8 @@ package Irisa.Enssat.Rennes1.thesis.sparkSQL;
 
 import Algorithms.Writematrix2CSV;
 import Algorithms.testScilab;
-import Scala.Cost;
+import Scala.MultipleCost;
+//import Scala.MultipleCost;
 import WriteReadData.CsvFileReader;
 import com.sparkexample.App;
 import scala.Int;
@@ -41,6 +42,7 @@ public class historicData {
         System.out.println("this is the function storeIdQuery: " + idQuery);
     }
 
+    /*
     public static java.util.List<Cost> dreamValue(java.util.List<Cost> tempList,
                                                   java.util.List<scala.collection.immutable.List<Int>> finalSetPlansList){
         java.util.List<Cost> List = tempList;
@@ -54,14 +56,22 @@ public class historicData {
             System.out.println(temp);
             List.set(i,temp);
         }
-        /*
-        for (int i = 0; i < tempList.size(); i++){
-            System.out.println(tempList.get(i).card());
-            System.out.println(tempList.get(i).size());
-            System.out.println(tempList.get(i).executeTime());
-            System.out.println("///////////////////////");
+        return List;
+    }
+    */
+    public static java.util.List<MultipleCost> dreamValue(java.util.List<MultipleCost> tempList,
+                                                  java.util.List<scala.collection.immutable.List<Int>> finalSetPlansList){
+        java.util.List<MultipleCost> List = tempList;
+        for (int i = 0; i < finalSetPlansList.size(); i++){
+            Scala.MultipleCost temp = List.get(i);
+            double executeTime = dreamValue(idQuery,
+                    finalSetPlansList.get(i).toString(), "executeTime",
+                    tempList.get(i).card().toDouble(),
+                    tempList.get(i).size().toDouble());
+            temp = new MultipleCost(temp.card(),temp.size(),executeTime,temp.moneytary());
+            System.out.println(temp);
+            List.set(i,temp);
         }
-        */
         return List;
     }
     public static double dreamValue(String homeSetTable, String logicalId, String nameValue, double cardinality, double size){
@@ -430,7 +440,7 @@ public class historicData {
         Value[size.length] = value;
         return Value;
     }
-    public static void updateValue(String homeFolder, String logicalId, Scala.Cost cost, double durationInMs, String name) throws IOException {
+    public static void updateValue(String homeFolder, String logicalId, Scala.MultipleCost cost, double durationInMs, String name) throws IOException {
         String file = "data/dream/" + homeFolder + "/" + logicalId + "/" + name + ".csv";
         String fileRealValue = fileRealValue(file);
         List<Double> variables = new ArrayList<>();
@@ -451,5 +461,13 @@ public class historicData {
         if (!Dir.exists()) {
             Dir.mkdirs();
         }
+    }
+    public static String setupFolderOriginal(String homeSetTable, String logicalId){
+        String folder = "data/dream/original/" +homeSetTable + "/" + logicalId;
+        File Dir = new File(folder);
+        if (!Dir.exists()) {
+            Dir.mkdirs();
+        }
+        return folder;
     }
 }

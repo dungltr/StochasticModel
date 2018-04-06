@@ -213,6 +213,6 @@ object TPCDSQueryBenchmark {
         //Batch("RewriteSubquery", Once,
         //  RewritePredicateSubquery,
         //  CollapseProject) ::
-        Batch("Join Reorder", Once, CostBasedJoinReorder(confSQL)) :: Nil
+        Batch("Join Reorder", Once, OriginalCostBasedJoinReorder(confSQL)) :: Nil
   }
 }

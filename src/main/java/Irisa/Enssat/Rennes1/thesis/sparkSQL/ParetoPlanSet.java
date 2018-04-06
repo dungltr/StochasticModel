@@ -1,7 +1,7 @@
 package Irisa.Enssat.Rennes1.thesis.sparkSQL;
 
 
-import Scala.Cost;
+import Scala.MultipleCost;
 import org.apache.spark.sql.catalyst.plans.logical.LogicalPlan;
 import scala.Int;
 import scala.collection.immutable.List;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class ParetoPlanSet {
     static  java.util.List<LogicalPlan> logicalPlansList = new ArrayList<>();
-    static  java.util.List<Cost> costPlansList = new ArrayList<>();
+    static  java.util.List<MultipleCost> costPlansList = new ArrayList<>();
     static  java.util.List<List<Int>> setPlansList = new ArrayList<>();
 
 
@@ -22,7 +22,7 @@ public class ParetoPlanSet {
     public static void addLogicalPlan (LogicalPlan LogicalPlan) {
         logicalPlansList.add(LogicalPlan);
     }
-    public static void addCostPlan (Cost cost) {
+    public static void addCostPlan (MultipleCost cost) {
         costPlansList.add(cost);
     }
     public static void addSetPlan (List<Int> list) {
@@ -30,7 +30,7 @@ public class ParetoPlanSet {
     }
     public static void filterPlans (){
         java.util.List<LogicalPlan> finaLogicalPlansList = new ArrayList<>();
-        java.util.List<Cost> finalCostPlansList = new ArrayList<>();
+        java.util.List<MultipleCost> finalCostPlansList = new ArrayList<>();
         java.util.List<List<Int>> finalSetPlansList = new ArrayList<>();
         int max = 0;
         for (int i = 0; i < logicalPlansList.size(); i++){

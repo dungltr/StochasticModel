@@ -1,6 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package Scala
-
-import Irisa.Enssat.Rennes1.thesis.sparkSQL.{Pareto, historicData}
+import Irisa.Enssat.Rennes1.thesis.sparkSQL.{OriginalPareto, historicData, utilities}
 import org.apache.spark.internal.Logging
 import org.apache.spark.sql.catalyst.expressions.{And, Attribute, AttributeSet, Expression, PredicateHelper}
 import org.apache.spark.sql.catalyst.plans.logical.{BinaryNode, Join, LogicalPlan, Project}
@@ -9,13 +24,16 @@ import org.apache.spark.sql.catalyst.rules.Rule
 import org.apache.spark.sql.internal.SQLConf
 
 import scala.collection.mutable
-/**
-  * Created by letrungdung on 07/03/2018.
-  */
-case class MultipleCostBasedJoinReorder(confSQL: SQLConf) extends Rule[LogicalPlan] with PredicateHelper {
 
+
+/**
+  * Cost-based join reorder.
+  * We may have several join reorder algorithms in the future. This class is the entry of these
+  * algorithms, and chooses which one to use.
+  */
+case class OriginalCostBasedJoinReorder(conf: SQLConf) extends Rule[LogicalPlan] with PredicateHelper {
   def apply(plan: LogicalPlan): LogicalPlan = {
-    if (!confSQL.cboEnabled || !confSQL.joinReorderEnabled) {
+    if (!conf.cboEnabled || !conf.joinReorderEnabled) {
       plan
     } else {
       val result = plan transformDown {
@@ -25,7 +43,6 @@ case class MultipleCostBasedJoinReorder(confSQL: SQLConf) extends Rule[LogicalPl
         case p @ Project(projectList, Join(_, _, _: InnerLike, Some(cond)))
           if projectList.forall(_.isInstanceOf[Attribute]) =>
           reorder(p, p.output)
-        //case f @ Pro
       }
       // After reordering is finished, convert OrderedJoin back to Join
       result transformDown {
@@ -36,32 +53,14 @@ case class MultipleCostBasedJoinReorder(confSQL: SQLConf) extends Rule[LogicalPl
 
   private def reorder(plan: LogicalPlan, output: Seq[Attribute]): LogicalPlan = {
     val (items, conditions) = extractInnerJoins(plan)
-    val test = items.forall(_.stats(confSQL).rowCount.isDefined)
-    //println("----------------test: " + test)
-    /*
-    if(test){
-      items.foreach(plan =>
-        //println("yes"+plan.numberedTreeString)
-      )
-    }
-    else{
-      items.foreach(plan =>
-        //println("no+"+plan.numberedTreeString)
-      )
-    }
-    */
-    //println("-------end of print item---------test: ")
     // TODO: Compute the set of star-joins and use them in the join enumeration
     // algorithm to prune un-optimal plan choices.
     val result =
     // Do reordering if the number of items is appropriate and join conditions exist.
     // We also need to check if costs of all items can be evaluated.
-    if (items.size > 2
-      && items.size <= confSQL.joinReorderDPThreshold
-      && conditions.nonEmpty
-      && items.forall(_.stats(confSQL).rowCount.isDefined)
-    ) {
-      MultipleJoinReorderDP.search(confSQL, items, conditions, output)
+    if (items.size > 2 && items.size <= conf.joinReorderDPThreshold && conditions.nonEmpty &&
+      items.forall(_.stats(conf).rowCount.isDefined)) {
+      OriginalJoinReorderDP.search(conf, items, conditions, output)
     } else {
       plan
     }
@@ -134,7 +133,7 @@ case class MultipleCostBasedJoinReorder(confSQL: SQLConf) extends Rule[LogicalPl
   * For cost evaluation, since physical costs for operators are not available currently, we use
   * cardinalities and sizes to compute costs.
   */
-object MultipleJoinReorderDP extends PredicateHelper with Logging {
+object OriginalJoinReorderDP extends PredicateHelper with Logging {
 
   def search(
               conf: SQLConf,
@@ -146,17 +145,14 @@ object MultipleJoinReorderDP extends PredicateHelper with Logging {
     // Level i maintains all found plans for i + 1 items.
     // Create the initial plans: each plan is a single item with zero cost.
     val itemIndex = items.zipWithIndex
-    // found Plans is all the possible logic plans in Map for a plan //
     val foundPlans = mutable.Buffer[JoinPlanMap](itemIndex.map {
-      case (item, id) => Set(id) -> JoinPlan(Set(id), item, Set(), MultipleCost(0, 0, 0, 0))
+      case (item, id) => Set(id) -> JoinPlan(Set(id), item, Set(),  OriginalCost(0, 0))
     }.toMap)
 
     // Build plans for next levels until the last level has only one plan. This plan contains
     // all items that can be joined, so there's no need to continue.
     val topOutputSet = AttributeSet(output)
-    while (foundPlans.size <= items.length && foundPlans.last.size > 1) {
-      conf.setConfString("items.length",items.length.toString)
-      //println("items.length.toString:=" + conf.getConfString("items.length").toInt)
+    while (foundPlans.size < items.length && foundPlans.last.size > 1) {
       // Build plans for the next level.
       foundPlans += searchLevel(foundPlans, conf, conditions, topOutputSet)
     }
@@ -165,9 +161,6 @@ object MultipleJoinReorderDP extends PredicateHelper with Logging {
     logDebug(s"Join reordering finished. Duration: $durationInMs ms, number of items: " +
       s"${items.length}, number of plans in memo: ${foundPlans.map(_.size).sum}")
 
-    //bestPlan(foundPlans, items.length)
-    println(s"Join reordering finished. Duration: $durationInMs ms, number of items: " +
-      s"${items.length}, number of plans in memo: ${foundPlans.map(_.size).sum}")
     // The last level must have one and only one plan, because all items are joinable.
     assert(foundPlans.size == items.length && foundPlans.last.size == 1)
     foundPlans.last.head._2.plan match {
@@ -179,25 +172,7 @@ object MultipleJoinReorderDP extends PredicateHelper with Logging {
         finalPlan
     }
   }
-  def bestPlan (foundPlan: mutable.Buffer[JoinPlanMap], length: Int): Unit ={
-    println("**********************************************************")
-    val mapPlan = foundPlan.last
-    val values = mapPlan.values
-    val keys = mapPlan.keys
-    for (key <- keys){
-      println(key)
-    }
-    for (value <- values){
-      val plan = value.plan
-      val cost = value.planCost
-      val card = cost.card
-      val size = cost.size
-      println(plan)
-      println(card)
-      println(size)
-    }
-    println("**********************************************************")
-  }
+
   /** Find all possible plans at the next level, based on existing levels. */
   private def searchLevel(
                            existingLevels: Seq[JoinPlanMap],
@@ -232,29 +207,35 @@ object MultipleJoinReorderDP extends PredicateHelper with Logging {
               val existingPlan = nextLevel.get(newJoinPlan.itemIds)
               if (existingPlan.isEmpty || newJoinPlan.betterThan(existingPlan.get, conf)) {
                 nextLevel.update(newJoinPlan.itemIds, newJoinPlan)
-                dungLevel.update(newJoinPlan.itemIds.toList, newJoinPlan)
-                historicData.setupFolder(conf.getConfString("idQuery"),newJoinPlan.itemIds.toList.toString())
-              }
-              else {
-                if (existingPlan.get.betterThan(newJoinPlan, conf)) {
-                  if (conf.getConfString("items.length").toInt == newJoinPlan.itemIds.size){
-                    nextLevel.update(newJoinPlan.itemIds, newJoinPlan)
-                    dungLevel.update(newJoinPlan.itemIds.toList, newJoinPlan)
-                    historicData.setupFolder(conf.getConfString("idQuery"),newJoinPlan.itemIds.toList.toString())
-                  }
+                val MasterFolder = historicData.setupFolderOriginal(conf.getConfString("idQuery"),newJoinPlan.itemIds.toList.toString())
+                val left_right = newJoinPlan.joinConds.toList
+                //val MasterFolder = utilities.ListName(conf.getConfString("idQuery"),newJoinPlan.itemIds.toList.toString())
+                left_right.foreach(name => {
+                  //utilities.setupFile(MasterFolder, name.numberedTreeString)
+
+                  val queryRelations = scala.collection.mutable.HashSet[String]()
+                  val lines = name.numberedTreeString.split("\n").toSeq
+                  lines.foreach(line =>
+                    if (line.contains("-")&&line.contains("#")) {
+                      queryRelations.add(line.substring(line.indexOf("-")+2,line.indexOf("#")))
+                    }
+                  )
+                  val listRelations = queryRelations.toSet
+                  utilities.setupFile(MasterFolder, listRelations.toString())
                 }
-                else{
-                  nextLevel.update(newJoinPlan.itemIds, newJoinPlan)
-                  dungLevel.update(newJoinPlan.itemIds.toList, newJoinPlan)
-                  historicData.setupFolder(conf.getConfString("idQuery"),newJoinPlan.itemIds.toList.toString())
-                }
+                )
+                //utilities.setupFile(MasterFolder, left_right)
                 dungLevel.update(newJoinPlan.itemIds.toList, newJoinPlan)
               }
+
             case None =>
           }
         }
       }
       k += 1
+    }
+    def storeLeftRight(list: List[Expression]):Unit={
+
     }
     val listMapLogicalPlan = dungLevel.result().toList
     //TestCostBasedJoinReorder.
@@ -262,7 +243,6 @@ object MultipleJoinReorderDP extends PredicateHelper with Logging {
     historicData.storeIdQuery(conf.getConfString("idQuery"))
     nextLevel.toMap
   }
-
   val allPlanMap = mutable.Map.empty[List[Int], JoinPlan]
   def takeListPlan(listMapLogicalPlan: List[(List[Int], JoinPlan)]):Unit = {
     for (temp <- listMapLogicalPlan){
@@ -276,11 +256,11 @@ object MultipleJoinReorderDP extends PredicateHelper with Logging {
 
   def takeLogicalPlan(): Unit ={
     for(temp<-allPlanMap){
-      Pareto.addLogicalPlan(temp._2.plan)
-      Pareto.addCostPlan(temp._2.planCost)
-      Pareto.addSetPlan(temp._1)
+      OriginalPareto.addLogicalPlan(temp._2.plan)
+      OriginalPareto.addCostPlan(temp._2.planCost)
+      OriginalPareto.addSetPlan(temp._1)
     }
-    Pareto.filterPlans()
+    OriginalPareto.filterPlans()
   }
   /**
     * Builds a new JoinPlan when both conditions hold:
@@ -338,10 +318,8 @@ object MultipleJoinReorderDP extends PredicateHelper with Logging {
     val itemIds = oneJoinPlan.itemIds.union(otherJoinPlan.itemIds)
     // Now the root node of onePlan/otherPlan becomes an intermediate join (if it's a non-leaf
     // item), so the cost of the new join should also include its own cost.
-    val newPlanCost = oneJoinPlan.planCost +
-      oneJoinPlan.rootCost(conf) +
-      otherJoinPlan.planCost +
-      otherJoinPlan.rootCost(conf)
+    val newPlanCost = oneJoinPlan.planCost + oneJoinPlan.rootCost(conf) +
+      otherJoinPlan.planCost + otherJoinPlan.rootCost(conf)
     Some(JoinPlan(itemIds, newPlan, collectedJoinConds, newPlanCost))
   }
 
@@ -360,23 +338,16 @@ object MultipleJoinReorderDP extends PredicateHelper with Logging {
                        itemIds: Set[Int],
                        plan: LogicalPlan,
                        joinConds: Set[Expression],
-                       planCost: MultipleCost) {
+                       planCost: OriginalCost) {
 
     /** Get the cost of the root node of this plan tree. */
-    def rootCost(conf: SQLConf): MultipleCost = {
-      //val allConfs = conf.getConfString("spark.master")
-      //println(allConfs)
+    def rootCost(conf: SQLConf): OriginalCost = {
       if (itemIds.size > 1) {
         val rootStats = plan.stats(conf)
-        println(conf.getConfString("items.length").toInt + " and "+ itemIds.size)
-        println("rootStats.sizeInBytes" + rootStats.rowCount.get + " and "+ "rootStats.sizeInBytes" +rootStats.sizeInBytes)
-        MultipleCost(rootStats.rowCount.get,
-            rootStats.sizeInBytes,
-            0,
-            0)
+        OriginalCost(rootStats.rowCount.get, rootStats.sizeInBytes)
       } else {
         // If the plan is a leaf item, it has zero cost.
-        MultipleCost(0, 0, 0, 0)
+        OriginalCost(0, 0)
       }
     }
 
@@ -386,38 +357,20 @@ object MultipleJoinReorderDP extends PredicateHelper with Logging {
       } else {
         val relativeRows = BigDecimal(this.planCost.card) / BigDecimal(other.planCost.card)
         val relativeSize = BigDecimal(this.planCost.size) / BigDecimal(other.planCost.size)
-        //////////////
-
-        if ((this.planCost.card < other.planCost.card)&&(this.planCost.size < other.planCost.size)){
-          true
-        }
-        else {
-          false
-        }
-        /*
         relativeRows * conf.joinReorderCardWeight +
-        relativeSize * (1 - conf.joinReorderCardWeight) < 1
-        */
+          relativeSize * (1 - conf.joinReorderCardWeight) < 1
       }
     }
-
   }
 }
 
-  /*
+/**
   * This class defines the cost model for a plan.
   * @param card Cardinality (number of rows).
   * @param size Size in bytes.
   */
 
-/*
-case class MultipleCost(card: BigInt, size: BigInt) {
-  def +(other: MultipleCost): MultipleCost = MultipleCost(this.card + other.card, this.size + other.size)
-}*/
-case class MultipleCost(card: BigInt, size: BigInt, executeTime: Double, moneytary: BigInt) {
-  def +(other: MultipleCost): MultipleCost = MultipleCost(this.card + other.card, this.size + other.size,
-    this.executeTime + other.executeTime, this.moneytary + other.moneytary)
+case class OriginalCost(card: BigInt, size: BigInt) {
+  def +(other: OriginalCost): OriginalCost = OriginalCost(this.card + other.card, this.size + other.size)
 }
-
-
 
