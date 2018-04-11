@@ -15,10 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import static Algorithms.Algorithms.*;
 import static Algorithms.ReadMatrixCSV.readMatrix;
@@ -459,8 +456,10 @@ public class historicData {
         String file = "data/dream/" + homeFolder + "/" + logicalId + "/" + name + ".csv";
         String fileRealValue = fileRealValue(file);
         List<Double> variables = new ArrayList<>();
-        variables.add(cost.card().toDouble());
-        variables.add(cost.size().toDouble());
+        Random r = new Random();
+        variables.add(cost.card().toDouble() + r.nextInt(50)*cost.card().toDouble()/1000);
+        variables.add(cost.size().toDouble() + r.nextInt(50)*cost.size().toDouble()/1000);
+
         double value = durationInMs;
         double[] valueArray = setupValue(variables, value);
         Writematrix2CSV.addArray2Csv(file, valueArray);
