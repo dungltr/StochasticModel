@@ -455,6 +455,21 @@ public class historicData {
                 durationInMs + " cost.card:= " + cost.card().toDouble()+
                 "cost.size:=" + cost.size().toDouble());
     }
+    public static void updateValueSecond(String homeFolder, String logicalId, Scala.SecondCost cost, double durationInMs, String name) throws IOException {
+        String file = "data/dream/" + homeFolder + "/" + logicalId + "/" + name + ".csv";
+        String fileRealValue = fileRealValue(file);
+        List<Double> variables = new ArrayList<>();
+        variables.add(cost.card().toDouble());
+        variables.add(cost.size().toDouble());
+        double value = durationInMs;
+        double[] valueArray = setupValue(variables, value);
+        Writematrix2CSV.addArray2Csv(file, valueArray);
+        Writematrix2CSV.addArray2Csv(fileRealValue, valueArray);
+        System.out.println("Here is the execute time of: "+
+                logicalId + " in "+ homeFolder + " := " +
+                durationInMs + " cost.card:= " + cost.card().toDouble()+
+                "cost.size:=" + cost.size().toDouble());
+    }
     public static void setupFolder(String homeSetTable, String logicalId){
         String folder = "data/dream/" +homeSetTable + "/" + logicalId;
         File Dir = new File(folder);

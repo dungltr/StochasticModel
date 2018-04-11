@@ -156,6 +156,7 @@ object FirstJoinReorderDP extends PredicateHelper with Logging {
       // Build plans for the next level.
       foundPlans += searchLevel(foundPlans, conf, conditions, topOutputSet)
     }
+    //storeNewJoinPlan(foundPlans.last.get(0).get.itemIds,foundPlans.last.get(0).get,conf)
     def optimize(foundPlans: mutable.Buffer[JoinPlanMap]): JoinPlanMap = {
       foundPlans.head
     }
@@ -238,7 +239,8 @@ object FirstJoinReorderDP extends PredicateHelper with Logging {
           //Dung edit more//
           // Take for the left deep search, add chang left and right at only level 0
           //if((otherSidePlan.itemIds.size==1)&&(oneSidePlan.itemIds.size==1)){
-            buildJoin(otherSidePlan, oneSidePlan, conf, conditions, topOutput) match {
+          /*
+            buildJoinInvert(otherSidePlan, oneSidePlan, conf, conditions, topOutput) match {
               case Some(newJoinPlan) =>
                 // Check if it's the first plan for the item set, or it's a better plan than
                 // the existing one due to lower cost.
@@ -254,6 +256,7 @@ object FirstJoinReorderDP extends PredicateHelper with Logging {
               case None =>
             }
           //}
+          */
           //Dung edit finish//
         }
       }
@@ -283,6 +286,8 @@ object FirstJoinReorderDP extends PredicateHelper with Logging {
       val logicalText = newJoinPlan.plan
       val costText = newJoinPlan.planCost
       val condText = newJoinPlan.joinConds
+      val setText = newJoinPlan.itemIds
+      utilities.setupFile(MasterFolder, setText.toString)
       utilities.setupFile(MasterFolder, condText.toString)
       utilities.setupFile(MasterFolder, logicalText.toString())
       utilities.setupFile(MasterFolder, costText.toString)
@@ -348,11 +353,65 @@ object FirstJoinReorderDP extends PredicateHelper with Logging {
       return None
     }
     // Put the deeper side on the left, tend to build a left-deep tree.
+
     val (left, right) = if (oneJoinPlan.itemIds.size >= otherJoinPlan.itemIds.size) {
       (onePlan, otherPlan)
     } else {
       (otherPlan, onePlan)
     }
+
+    //val (left, right) = (onePlan, otherPlan)
+    val newJoin = Join(left, right, Inner, joinConds.reduceOption(And))
+    val collectedJoinConds = joinConds ++ oneJoinPlan.joinConds ++ otherJoinPlan.joinConds
+    val remainingConds = conditions -- collectedJoinConds
+    val neededAttr = AttributeSet(remainingConds.flatMap(_.references)) ++ topOutput
+    val neededFromNewJoin = newJoin.output.filter(neededAttr.contains)
+    val newPlan =
+      if ((newJoin.outputSet -- neededFromNewJoin).nonEmpty) {
+        Project(neededFromNewJoin, newJoin)
+      } else {
+        newJoin
+      }
+    val itemIds = oneJoinPlan.itemIds.union(otherJoinPlan.itemIds)
+    // Now the root node of onePlan/otherPlan becomes an intermediate join (if it's a non-leaf
+    // item), so the cost of the new join should also include its own cost.
+    val newPlanCost = oneJoinPlan.planCost + otherJoinPlan.planCost +
+      oneJoinPlan.rootCost(conf) + otherJoinPlan.rootCost(conf)
+    //////Dung edit///////////
+    Some(JoinPlan(itemIds, newPlan, collectedJoinConds, newPlanCost))
+  }
+  private def buildJoinInvert(
+                         oneJoinPlan: JoinPlan,
+                         otherJoinPlan: JoinPlan,
+                         conf: SQLConf,
+                         conditions: Set[Expression],
+                         topOutput: AttributeSet): Option[JoinPlan] = {
+
+    if (oneJoinPlan.itemIds.intersect(otherJoinPlan.itemIds).nonEmpty) {
+      // Should not join two overlapping item sets.
+      return None
+    }
+
+    val onePlan = oneJoinPlan.plan
+    val otherPlan = otherJoinPlan.plan
+    val joinConds = conditions
+      .filterNot(l => canEvaluate(l, onePlan))
+      .filterNot(r => canEvaluate(r, otherPlan))
+      .filter(e => e.references.subsetOf(onePlan.outputSet ++ otherPlan.outputSet))
+    if (joinConds.isEmpty) {
+      // Cartesian product is very expensive, so we exclude them from candidate plans.
+      // This also significantly reduces the search space.
+      return None
+    }
+    // Put the deeper side on the left, tend to build a left-deep tree.
+    /*
+    val (left, right) = if (oneJoinPlan.itemIds.size >= otherJoinPlan.itemIds.size) {
+      (onePlan, otherPlan)
+    } else {
+      (otherPlan, onePlan)
+    }
+    */
+    val (left, right) = (onePlan, otherPlan)
     val newJoin = Join(left, right, Inner, joinConds.reduceOption(And))
     val collectedJoinConds = joinConds ++ oneJoinPlan.joinConds ++ otherJoinPlan.joinConds
     val remainingConds = conditions -- collectedJoinConds
