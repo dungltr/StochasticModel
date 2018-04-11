@@ -222,8 +222,8 @@ object  TestOriginalCostBasedJoinReorder {
     //println( "there is sets of runPlan" + setPlan + "--------------------------------------")
     val nameValue = "executeTime"
 
-    val card = costPlan.card.toDouble// + r.nextInt(100)*costPlan.card.toDouble/1000
-    val size = costPlan.size.toDouble// + r.nextInt(100)*costPlan.size.toDouble/1000
+    val card = costPlan.card.toDouble + r.nextInt(100)*costPlan.card.toDouble/1000
+    val size = costPlan.size.toDouble + r.nextInt(100)*costPlan.size.toDouble/1000
 
     val folderExecute = "original/" + folder
     val folderTotal = "data/dream/original/" + folder
