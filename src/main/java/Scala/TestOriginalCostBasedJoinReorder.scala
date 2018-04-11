@@ -165,7 +165,16 @@ object  TestOriginalCostBasedJoinReorder {
     println("---------------" )
 
     val sparkQ = q
-
+    val kindOftest = "original"
+    val folder_home = "data/dream/"+ kindOftest + "/" + folder
+    val executeTime = "executeTime"
+    val file = folder_home + "/" + executeTime + ".csv"
+    val numberVariables = 2
+    val filePath = Paths.get(file)
+    if (!Files.exists(filePath)){
+      Files.createFile(filePath)
+      historicData.setupFile(file, numberVariables)
+    }
     val plan = sparkQ.queryExecution.logical
     println("The original logical plan -----------------------------------------------")
     println(plan.numberedTreeString)
@@ -178,7 +187,7 @@ object  TestOriginalCostBasedJoinReorder {
     val plans = SecondPareto.setLogicalPlans(listRelations.size)
     val costs = SecondPareto.setCosts(listRelations.size)
     val sets = SecondPareto.setList(listRelations.size)
-    val kindOftest = "original"
+
     for (i <- 0 until sets.size()){
       val folder_home = "data/dream/"+ kindOftest + "/" + folder + "/" + sets.get(i).toString()
       val folderPath = Paths.get(folder_home)
@@ -198,13 +207,6 @@ object  TestOriginalCostBasedJoinReorder {
       }
     }
 
-    val folder_home = "data/dream/"+ kindOftest + "/" + folder
-    val executeTime = "executeTime"
-    val file = folder_home + "/" + executeTime + ".csv"
-    val numberVariables = 2
-    val filePath = Paths.get(file)
-    if (!Files.exists(filePath))
-    historicData.setupFile(file, numberVariables)
 
     val ran = r.nextInt(plans.size())
     println("")

@@ -377,7 +377,8 @@ object SecondJoinReorderDP extends PredicateHelper with Logging {
     def rootCost(conf: SQLConf): SecondCost = {
       if (itemIds.size > 1) {
         val rootStats = plan.stats(conf)
-        val MasterFolder = historicData.setupFolderOriginal(conf.getConfString("idQuery"),"") + "/executeTime_Parameter.csv"
+        val MasterFolder = historicData.setupFolderOriginal(conf.getConfString("idQuery"),"") + "executeTime_Parameter.csv"
+        println(MasterFolder)
         val B = Algorithms.ReadMatrixCSV.readMatrix(MasterFolder,1)
         val Parameter = B(0)
         val X = Array (rootStats.rowCount.get.toDouble, rootStats.sizeInBytes.toDouble)
