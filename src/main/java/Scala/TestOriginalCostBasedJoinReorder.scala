@@ -158,7 +158,7 @@ object  TestOriginalCostBasedJoinReorder {
       .replace(")","")
     println("List of tables in the query: q" + randomInt)
     listRelations.foreach(relation=>println(relation))
-    historicData.setupFolder(folder,"")
+    historicData.setupFolderOriginal(folder,"original")
     historicData.storeIdQuery(folder)
     val confSQL = spark.sessionState.conf
     confSQL.setConfString("idQuery",folder)
@@ -222,8 +222,8 @@ object  TestOriginalCostBasedJoinReorder {
     //println( "there is sets of runPlan" + setPlan + "--------------------------------------")
     val nameValue = "executeTime"
 
-    val card = costPlan.card.toDouble + r.nextInt(50)*costPlan.card.toDouble/1000
-    val size = costPlan.size.toDouble + r.nextInt(50)*costPlan.size.toDouble/1000
+    val card = costPlan.card.toDouble //+ r.nextInt(50)*costPlan.card.toDouble/1000
+    val size = costPlan.size.toDouble //+ r.nextInt(50)*costPlan.size.toDouble/1000
 
     val folderExecute = "original/" + folder
     val folderTotal = "data/dream/original/" + folder
@@ -246,7 +246,7 @@ object  TestOriginalCostBasedJoinReorder {
     historicData.saveError(folderExecute,setPlan.toString(),nameValue, durationInMs.toDouble, estimateValue, 0.8)
     val Parameter = readMatrix("data/dream/"+folderExecute+"/"+setPlan.toString()+"/executeTime_Parameter.csv",1)
     val B = Parameter(0)
-    println("Parameter"+B+"+---------")
+    println("Parameter"+B.toString+"+---------")
     Writematrix2CSV.addArray2Csv("data/dream/"+folderExecute + "/executeTime_Parameter.csv", B)
     val WEKA = "executeTimeWEKA"
     //historicData.saveError(folder,setPlan.toString(), WEKA, durationInMs.toDouble, estimateValueMOEA, 0.8)

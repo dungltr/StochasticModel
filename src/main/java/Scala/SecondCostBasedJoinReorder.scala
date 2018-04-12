@@ -248,7 +248,7 @@ object SecondJoinReorderDP extends PredicateHelper with Logging {
     nextLevel.toMap
   }
   def storeNewJoinPlan(itemIds: List[Int], newJoinPlan: JoinPlan, conf: SQLConf):Unit={
-    val MasterFolder = historicData.setupFolderOriginal(conf.getConfString("idQuery"),itemIds.toString())
+    val MasterFolder = historicData.setupFolderNewJoinPlan(conf.getConfString("idQuery"),itemIds.toString())
     val left_right = newJoinPlan.joinConds.toList
     //val MasterFolder = utilities.ListName(conf.getConfString("idQuery"),newJoinPlan.itemIds.toList.toString())
     left_right.foreach(name => {
@@ -377,7 +377,7 @@ object SecondJoinReorderDP extends PredicateHelper with Logging {
     def rootCost(conf: SQLConf): SecondCost = {
       if (itemIds.size > 1) {
         val rootStats = plan.stats(conf)
-        val MasterFolder = historicData.setupFolderOriginal(conf.getConfString("idQuery"),"") + "executeTime_Parameter.csv"
+        val MasterFolder = historicData.setupFolderOriginal(conf.getConfString("idQuery"),"original") + "executeTime_Parameter.csv"
         println(MasterFolder)
         val B = Algorithms.ReadMatrixCSV.readMatrix(MasterFolder,1)
         val Parameter = B(0)

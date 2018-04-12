@@ -457,8 +457,8 @@ public class historicData {
         String fileRealValue = fileRealValue(file);
         List<Double> variables = new ArrayList<>();
         Random r = new Random();
-        variables.add(cost.card().toDouble() + r.nextInt(50)*cost.card().toDouble()/1000);
-        variables.add(cost.size().toDouble() + r.nextInt(50)*cost.size().toDouble()/1000);
+        variables.add(cost.card().toDouble() + r.nextInt(10)*cost.card().toDouble()/1000);
+        variables.add(cost.size().toDouble() + r.nextInt(10)*cost.size().toDouble()/1000);
 
         double value = durationInMs;
         double[] valueArray = setupValue(variables, value);
@@ -476,8 +476,16 @@ public class historicData {
             Dir.mkdirs();
         }
     }
-    public static String setupFolderOriginal(String homeSetTable, String logicalId){
-        String folder = "data/dream/original/" +homeSetTable + "/" + logicalId;
+    public static String setupFolderOriginal(String homeSetTable, String original){
+        String folder = "data/dream/" + original +"/" + homeSetTable + "/";
+        File Dir = new File(folder);
+        if (!Dir.exists()) {
+            Dir.mkdirs();
+        }
+        return folder;
+    }
+    public static String setupFolderNewJoinPlan(String homeSetTable, String itemIds){
+        String folder = "data/dream/original/" + homeSetTable + "/"+itemIds;
         File Dir = new File(folder);
         if (!Dir.exists()) {
             Dir.mkdirs();
