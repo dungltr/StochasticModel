@@ -71,6 +71,7 @@ object  TestOriginalCostBasedJoinReorder {
         Batch("Join Reorder", Once, SecondCostBasedJoinReorder(confSQL)) :: Nil
   }
   def testBigTable():Unit={
+    val startTime = System.nanoTime()
     val spark = SparkSession.builder.config(conf).getOrCreate()
     val tableNames = tables
     import org.apache.spark.sql.catalyst.TableIdentifier
@@ -79,6 +80,7 @@ object  TestOriginalCostBasedJoinReorder {
     tableIds.foreach { tableId =>
       sessionCatalog.dropTable(tableId, ignoreIfNotExists = true, purge = true)
     }
+
     //val belowBroadcastJoinThreshold = spark.sessionState.conf.autoBroadcastJoinThreshold - 1
     //println("spark.sessionState.conf.autoBroadcastJoinThreshold:=" + spark.sessionState.conf.autoBroadcastJoinThreshold)
     val homeDataDesktop = "/Users/letrung/Downloads"
@@ -105,16 +107,18 @@ object  TestOriginalCostBasedJoinReorder {
     val qExample = Store_sales
       .join(Store_returns,Store_sales("ss_item_sk")===Store_returns("sr_item_sk"))
       .join(Catalog_sales,Store_sales("ss_item_sk")===Catalog_sales("cs_item_sk"))
+
     val q0 = Store_sales
       .join(Store_returns,Store_sales("ss_item_sk")===Store_returns("sr_item_sk"))
       .join(Catalog_sales,Store_sales("ss_item_sk")===Catalog_sales("cs_item_sk"))
       .join(Item,Store_sales("ss_item_sk")===Item("i_item_sk"))
       .join(Store,Store("s_store_sk")===Store_returns("sr_store_sk"))
+
     val q11 = Store_sales
       .join(Store_returns,Store_sales("ss_item_sk")===Store_returns("sr_item_sk"))
       .join(Catalog_sales,Store_sales("ss_item_sk")===Catalog_sales("cs_item_sk"))
       .join(Item,Item("i_item_sk")===Catalog_sales("cs_item_sk"))
-
+    /*
     val q12 = Store_sales
       .join(Catalog_sales,Store_sales("ss_item_sk")===Catalog_sales("cs_item_sk"))
       .join(Store_returns,Catalog_sales("cs_item_sk")===Store_returns("sr_item_sk"))
@@ -134,8 +138,8 @@ object  TestOriginalCostBasedJoinReorder {
       .join(Catalog_returns,Catalog_sales("cs_item_sk")===Catalog_returns("cr_item_sk"))
       .join(Store_sales,Store_sales("ss_item_sk")===Catalog_sales("cs_item_sk"))
       .join(Store_returns,Store_sales("ss_item_sk")===Store_returns("sr_item_sk"))
-
-    val Q = Seq(qExample)//q11,q21,q12,q22,q23)//,q32, q31,q41,q33
+    */
+    val Q = Seq(q0)//q11,q21,q12,q22,q23)//,q32, q31,q41,q33
     val r = scala.util.Random
     val randomInt = r.nextInt(Q.size)
     val q = Q.apply(randomInt)
@@ -175,6 +179,7 @@ object  TestOriginalCostBasedJoinReorder {
       Files.createFile(filePath)
       historicData.setupFile(file, numberVariables)
     }
+
     val plan = sparkQ.queryExecution.logical
     println("The original logical plan -----------------------------------------------")
     println(plan.numberedTreeString)
@@ -211,7 +216,7 @@ object  TestOriginalCostBasedJoinReorder {
     val ran = r.nextInt(plans.size())
     println("")
     println("Begin running logical plan " + ran + " in Pareto plan set with Pareto.size: "+plans.size())
-    val startTime = System.nanoTime()
+
     val runPlan = plans.get(ran)
     //val planCost = runPlan.stats(confSQL)
     //println( "there are the statistic of runPlan" + planCost.sizeInBytes + "--------------------------------------")
@@ -222,8 +227,8 @@ object  TestOriginalCostBasedJoinReorder {
     //println( "there is sets of runPlan" + setPlan + "--------------------------------------")
     val nameValue = "executeTime"
 
-    val card = costPlan.card.toDouble //+ r.nextInt(50)*costPlan.card.toDouble/1000
-    val size = costPlan.size.toDouble //+ r.nextInt(50)*costPlan.size.toDouble/1000
+    val card = costPlan.card.toDouble //+ r.nextInt(10)*costPlan.card.toDouble/10000
+    val size = costPlan.size.toDouble //+ r.nextInt(10)*costPlan.size.toDouble/10000
 
     val folderExecute = "original/" + folder
     val folderTotal = "data/dream/original/" + folder
@@ -246,7 +251,7 @@ object  TestOriginalCostBasedJoinReorder {
     historicData.saveError(folderExecute,setPlan.toString(),nameValue, durationInMs.toDouble, estimateValue, 0.8)
     val Parameter = readMatrix("data/dream/"+folderExecute+"/"+setPlan.toString()+"/executeTime_Parameter.csv",1)
     val B = Parameter(0)
-    println("Parameter"+B.toString+"+---------")
+    println("Parameter"+B(0).toString+" +---------"+B(1).toString)
     Writematrix2CSV.addArray2Csv("data/dream/"+folderExecute + "/executeTime_Parameter.csv", B)
     val WEKA = "executeTimeWEKA"
     //historicData.saveError(folder,setPlan.toString(), WEKA, durationInMs.toDouble, estimateValueMOEA, 0.8)
