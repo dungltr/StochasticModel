@@ -152,7 +152,7 @@ object SecondJoinReorderDP extends PredicateHelper with Logging {
     // Build plans for next levels until the last level has only one plan. This plan contains
     // all items that can be joined, so there's no need to continue.
     val topOutputSet = AttributeSet(output)
-    while (foundPlans.size <= items.length && foundPlans.last.size >= 1) {
+    while (foundPlans.size < items.length && foundPlans.last.size >= 1) {
       // Build plans for the next level.
       foundPlans += searchLevel(foundPlans, conf, conditions, topOutputSet)
     }
