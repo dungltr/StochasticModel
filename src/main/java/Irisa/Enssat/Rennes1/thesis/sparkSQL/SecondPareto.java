@@ -373,10 +373,10 @@ public class SecondPareto {
         }
         return finalSetPlansList;
     }
-    public static void preparingForMO() throws IOException {
-        java.util.List<List<Int>> filterSets = filterSets(setPlansList);
-        java.util.List<SecondCost> filterCosts = filterCosts(costPlansList);
-        java.util.List<LogicalPlan> filterPlans = filterPlans(logicalPlansList);
+    public static void preparingForMO(int sizeItems) throws IOException {
+        java.util.List<List<Int>> filterSets = filterSets(setPlansList,sizeItems);
+        java.util.List<SecondCost> filterCosts = filterCosts(costPlansList,sizeItems);
+        java.util.List<LogicalPlan> filterPlans = filterPlans(logicalPlansList,sizeItems);
 
         preparingForMO(filterPlans, filterCosts, filterSets);
 

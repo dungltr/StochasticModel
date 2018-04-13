@@ -71,7 +71,7 @@ object  TestOriginalCostBasedJoinReorder {
         Batch("Join Reorder", Once, SecondCostBasedJoinReorder(confSQL)) :: Nil
   }
   def testBigTable():Unit={
-    val startTime = System.nanoTime()
+    //val startTime = System.nanoTime()
     val spark = SparkSession.builder.config(conf).getOrCreate()
     val tableNames = tables
     import org.apache.spark.sql.catalyst.TableIdentifier
@@ -96,7 +96,7 @@ object  TestOriginalCostBasedJoinReorder {
       spark.read.parquet(s"$dataLocation/$name").write.saveAsTable(s"t$name")
       spark.sql(s"ANALYZE TABLE t$name COMPUTE STATISTICS")
     }
-
+    val startTime = System.nanoTime()
     val Store_sales = spark.table("tstore_sales")
     val Store_returns = spark.table("tstore_returns")
     val Catalog_sales = spark.table("tcatalog_sales")

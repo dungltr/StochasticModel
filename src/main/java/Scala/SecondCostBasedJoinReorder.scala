@@ -152,7 +152,7 @@ object SecondJoinReorderDP extends PredicateHelper with Logging {
     // Build plans for next levels until the last level has only one plan. This plan contains
     // all items that can be joined, so there's no need to continue.
     val topOutputSet = AttributeSet(output)
-    while (foundPlans.size < items.length && foundPlans.last.size > 1) {
+    while (foundPlans.size <= items.length && foundPlans.last.size >= 1) {
       // Build plans for the next level.
       foundPlans += searchLevel(foundPlans, conf, conditions, topOutputSet)
     }
@@ -311,7 +311,7 @@ object SecondJoinReorderDP extends PredicateHelper with Logging {
       SecondPareto.addCostPlan(temp._2.planCost)
       SecondPareto.addSetPlan(temp._1)
     }
-    if (sizeItems >= 3) SecondPareto.preparingForMO()
+    if (sizeItems >= 3) SecondPareto.preparingForMO(sizeItems)
     OriginalPareto.filterPlans(sizeItems)
   }
   val smallPlanMap = mutable.Map.empty[List[Int], JoinPlan]
@@ -325,7 +325,7 @@ object SecondJoinReorderDP extends PredicateHelper with Logging {
   }
   def smallLogicalPlan(sizeItems: Int): Unit ={
     for(temp<-smallPlanMap){
-      if (temp._1.size == sizeItems){
+      if (temp._1.size >= sizeItems){
         SecondPareto.addParetoLogicalPlan(temp._2.plan)
         SecondPareto.addParetoCostPlan(temp._2.planCost)
         SecondPareto.addParetoSetPlan(temp._1)
