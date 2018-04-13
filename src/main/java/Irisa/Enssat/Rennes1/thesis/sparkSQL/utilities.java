@@ -4,6 +4,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Created by letrungdung on 04/04/2018.
@@ -23,5 +26,11 @@ public class utilities {
         BufferedWriter writer = new BufferedWriter(new FileWriter(Masterfoler + "/" + "tree.txt", true));
         writer.write(listCond+"\n"); // for the new line
         writer.close();
+    }
+    public static void renewFile (String file) throws IOException {
+        Path filePath = Paths.get(file);
+        if (Files.exists(filePath))
+            Files.delete(filePath);
+        else Files.createFile(filePath);
     }
 }

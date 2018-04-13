@@ -191,8 +191,9 @@ object SecondJoinReorderDP extends PredicateHelper with Logging {
                            conditions: Set[Expression],
                            topOutput: AttributeSet): JoinPlanMap = {
 
-    val nextLevel = mutable.Map.empty[List[Int], JoinPlan]
+    var nextLevel = mutable.Map.empty[List[Int], JoinPlan]
     val dungLevel = mutable.Map.empty[List[Int], JoinPlan]
+    val smallLevel = mutable.Map.empty[List[Int], JoinPlan]
     var k = 0
     val lev = existingLevels.length - 1
     // Build plans for the next level from plans at level k (one side of the join) and level
@@ -216,22 +217,27 @@ object SecondJoinReorderDP extends PredicateHelper with Logging {
               // Check if it's the first plan for the item set, or it's a better plan than
               // the existing one due to lower cost.
               val existingPlan = nextLevel.get(newJoinPlan.itemIds)
-              if (existingPlan.isEmpty || newJoinPlan.betterThan(existingPlan.get, conf)) {
+              //if (existingPlan.isEmpty || newJoinPlan.betterThan(existingPlan.get, conf)) {
+              if (existingPlan.isEmpty || newJoinPlan.IsNotDominatedBy(existingPlan.get, conf)) {
                 nextLevel.update(newJoinPlan.itemIds, newJoinPlan)
-
                 //utilities.setupFile(MasterFolder, left_right)
                 if (existingPlan.isEmpty){
                   dungLevel.update(newJoinPlan.itemIds.toList, newJoinPlan)
                   storeNewJoinPlan(newJoinPlan.itemIds,newJoinPlan,conf)
                 }
-
                 else {
-                  var itemId = newJoinPlan.itemIds.union(Set(-1).toList)
-                  while(nextLevel.get(itemId).isDefined) {
-                    itemId = itemId.union(Set(-1).toList)
+                  if (newJoinPlan.Dominated(existingPlan.get, conf)){
+                    dungLevel.update(newJoinPlan.itemIds.toList, newJoinPlan)
+                    storeNewJoinPlan(newJoinPlan.itemIds,newJoinPlan,conf)
                   }
-                  dungLevel.update(itemId,newJoinPlan)
-                  storeNewJoinPlan(itemId,newJoinPlan,conf)
+                  else{
+                    var itemId = newJoinPlan.itemIds.union(Set(-1).toList)
+                    while(nextLevel.get(itemId).isDefined) {
+                      itemId = itemId.union(Set(-1).toList)
+                    }
+                    dungLevel.update(itemId,newJoinPlan)
+                    storeNewJoinPlan(itemId,newJoinPlan,conf)
+                  }
                 }
               }
             case None =>
@@ -244,6 +250,20 @@ object SecondJoinReorderDP extends PredicateHelper with Logging {
     //TestCostBasedJoinReorder.
     val sizeItems = nextLevel.last._1.size
     takeListPlan(listMapLogicalPlan,sizeItems)
+    val Plans = SecondPareto.currentSetLogicalPlans()
+    val Costs = SecondPareto.currentSetCosts()
+    val Sets = SecondPareto.currentSetList()
+    for (element  <- listMapLogicalPlan){
+      for (setTemp <- 0 until Sets.size()){
+        if (element._1==Sets.get(setTemp)) smallLevel.update(element._1,element._2)
+      }
+    }
+    if (sizeItems > 2) {
+      nextLevel = smallLevel
+      val smallMapLogicalPlan = smallLevel.result().toList
+      smallListPlan(smallMapLogicalPlan,sizeItems)
+    }
+
     historicData.storeIdQuery(conf.getConfString("idQuery"))
     nextLevel.toMap
   }
@@ -285,16 +305,36 @@ object SecondJoinReorderDP extends PredicateHelper with Logging {
     }
     takeLogicalPlan(sizeItems)
   }
-  val allPlanList = List.empty[LogicalPlan]
-
   def takeLogicalPlan(sizeItems: Int): Unit ={
     for(temp<-allPlanMap){
       SecondPareto.addLogicalPlan(temp._2.plan)
       SecondPareto.addCostPlan(temp._2.planCost)
       SecondPareto.addSetPlan(temp._1)
     }
+    if (sizeItems >= 3) SecondPareto.preparingForMO()
     OriginalPareto.filterPlans(sizeItems)
   }
+  val smallPlanMap = mutable.Map.empty[List[Int], JoinPlan]
+  def smallListPlan(listMapLogicalPlan: List[(List[Int], JoinPlan)], sizeItems: Int):Unit = {
+    for (temp <- listMapLogicalPlan){
+      val listInt = temp._1
+      val listJoin = temp._2
+      smallPlanMap.update(listInt,listJoin)
+    }
+    smallLogicalPlan(sizeItems)
+  }
+  def smallLogicalPlan(sizeItems: Int): Unit ={
+    for(temp<-smallPlanMap){
+      if (temp._1.size == sizeItems){
+        SecondPareto.addParetoLogicalPlan(temp._2.plan)
+        SecondPareto.addParetoCostPlan(temp._2.planCost)
+        SecondPareto.addParetoSetPlan(temp._1)
+      }
+    }
+  }
+  val allPlanList = List.empty[LogicalPlan]
+
+
   /**
     * Builds a new JoinPlan when both conditions hold:
     * - the sets of items contained in left and right sides do not overlap.
@@ -394,13 +434,50 @@ object SecondJoinReorderDP extends PredicateHelper with Logging {
       if (other.planCost.card == 0 || other.planCost.size == 0) {
         false
       } else {
+
+        val relativeRows = BigDecimal(this.planCost.card) / BigDecimal(other.planCost.card)
+        val relativeSize = BigDecimal(this.planCost.size) / BigDecimal(other.planCost.size)
+        relativeRows * conf.joinReorderCardWeight +
+          relativeSize * (1 - conf.joinReorderCardWeight) < 1
+        //true
+        //false
+      }
+    }
+    def IsNotDominatedBy(other: JoinPlan, conf: SQLConf): Boolean = {
+      if (other.planCost.card == 0 || other.planCost.size == 0) {
+        false
+      } else {
+        if((this.planCost.card<=other.planCost.card)||
+          (this.planCost.size<=other.planCost.size)||
+          (this.planCost.executeTime<=other.planCost.executeTime)){
+          true
+        }
+        else false
         //val relativeRows = BigDecimal(this.planCost.card) / BigDecimal(other.planCost.card)
         //val relativeSize = BigDecimal(this.planCost.size) / BigDecimal(other.planCost.size)
         //relativeRows * conf.joinReorderCardWeight +
         //  relativeSize * (1 - conf.joinReorderCardWeight) < 1
-        true
+        //true
       }
     }
+    def Dominated(other: JoinPlan, conf: SQLConf): Boolean = {
+      if (other.planCost.card == 0 || other.planCost.size == 0) {
+        false
+      } else {
+        if((this.planCost.card<=other.planCost.card)&&
+          (this.planCost.size<=other.planCost.size)&&
+          (this.planCost.executeTime<=other.planCost.executeTime)){
+          true
+        }
+        else false
+        //val relativeRows = BigDecimal(this.planCost.card) / BigDecimal(other.planCost.card)
+        //val relativeSize = BigDecimal(this.planCost.size) / BigDecimal(other.planCost.size)
+        //relativeRows * conf.joinReorderCardWeight +
+        //  relativeSize * (1 - conf.joinReorderCardWeight) < 1
+        //true
+      }
+    }
+
   }
 }
 

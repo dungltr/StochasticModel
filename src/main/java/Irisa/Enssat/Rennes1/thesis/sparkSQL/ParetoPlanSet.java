@@ -1,11 +1,16 @@
 package Irisa.Enssat.Rennes1.thesis.sparkSQL;
 
 
-import Scala.MultipleCost;
+import Algorithms.Algorithms;
+import Scala.SecondCost;
 import org.apache.spark.sql.catalyst.plans.logical.LogicalPlan;
 import scala.Int;
 import scala.collection.immutable.List;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 
@@ -14,15 +19,17 @@ import java.util.ArrayList;
  */
 public class ParetoPlanSet {
     static  java.util.List<LogicalPlan> logicalPlansList = new ArrayList<>();
-    static  java.util.List<MultipleCost> costPlansList = new ArrayList<>();
+    static  java.util.List<SecondCost> costPlansList = new ArrayList<>();
     static  java.util.List<List<Int>> setPlansList = new ArrayList<>();
 
-
+    static  java.util.List<LogicalPlan> ParetoLogicalPlansList = new ArrayList<>();
+    static  java.util.List<SecondCost> ParetorCostPlansList = new ArrayList<>();
+    static  java.util.List<List<Int>> ParetoSetPlansList = new ArrayList<>();
 
     public static void addLogicalPlan (LogicalPlan LogicalPlan) {
         logicalPlansList.add(LogicalPlan);
     }
-    public static void addCostPlan (MultipleCost cost) {
+    public static void addCostPlan (SecondCost cost) {
         costPlansList.add(cost);
     }
     public static void addSetPlan (List<Int> list) {
@@ -30,7 +37,7 @@ public class ParetoPlanSet {
     }
     public static void filterPlans (){
         java.util.List<LogicalPlan> finaLogicalPlansList = new ArrayList<>();
-        java.util.List<MultipleCost> finalCostPlansList = new ArrayList<>();
+        java.util.List<SecondCost> finalCostPlansList = new ArrayList<>();
         java.util.List<List<Int>> finalSetPlansList = new ArrayList<>();
         int max = 0;
         for (int i = 0; i < logicalPlansList.size(); i++){
@@ -52,4 +59,6 @@ public class ParetoPlanSet {
         }
         System.out.println("End of showing logical plans in Pareto set");
     }
+
+
 }

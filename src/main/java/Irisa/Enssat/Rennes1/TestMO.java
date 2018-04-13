@@ -4,13 +4,12 @@
  * and open the template in the editor.
  */
 package Irisa.Enssat.Rennes1;
-import static Algorithms.ReadMatrixCSV.readMatrix;
+
+import Algorithms.ReadMatrixCSV;
+import Irisa.Enssat.Rennes1.thesis.sparkSQL.Writematrix2CSV;
+import Irisa.Enssat.Rennes1.thesis.sparkSQL.utilities;
 import WriteReadData.CsvFileReader;
 import com.sparkexample.App;
-import static java.lang.Math.pow;
-
-import java.io.IOException;
-
 import org.moeaframework.Executor;
 import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.Solution;
@@ -18,19 +17,30 @@ import org.moeaframework.core.variable.EncodingUtils;
 import org.moeaframework.core.variable.RealVariable;
 import org.moeaframework.problem.AbstractProblem;
 import org.moeaframework.util.Vector;
+
+import java.io.IOException;
+
+import static Algorithms.ReadMatrixCSV.readMatrix;
+import static java.lang.Math.pow;
+
+//import scala.collection.immutable.List;
+//import scala.collection.immutable.Range;
 /**
  *
  * @author letrung
  */
-public class TestMO {
+public class TestMO{
     public static class MO extends AbstractProblem {
     private int numberOfVariables;
     private int numberOfObjectives;
     private int numberOfConstraints;
     static String MOEA_HOME = new App().readhome("MOEA_HOME");
-    String maxtrixFile = MOEA_HOME+"/matrix.csv";
-    int Max = CsvFileReader.count(maxtrixFile);
-    double[][] matrixMetrics = readMatrix(maxtrixFile, Max);
+    //static String matrix = "plan";
+    //String matrixFile = ReadFile.readhome(matrix)+".csv";
+    String matrixFile = MOEA_HOME+"/Matrix.csv";
+    String matrixResult = MOEA_HOME+ "/Matrix_result.csv";
+    int Max = CsvFileReader.count(matrixFile);
+    double[][] matrixMetrics = readMatrix(matrixFile, Max);
 
     public MO() throws IOException {
         super(1, 2, 1); // old is 2,3,1       
@@ -105,7 +115,7 @@ public class TestMO {
         return numberOfVariables;
     }
 }
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // 2.2.1 Create Excel workbook
         //XSSFWorkbook workBook = new XSSFWorkbook();
         // 2.2.2 Create Excel sheets by different iterations
@@ -118,22 +128,19 @@ public class TestMO {
                     .withProblemClass(MO.class)
                     .withAlgorithm("NSGAII")
                     .withMaxEvaluations(iteration)
-                    .withProperty("populationSize", 5000)
+                    .withProperty("populationSize", 50)
                     .run();
             System.out.println("Num of Solutions: "+ result.size());
+            double[][] matrixResult = new double [result.size()][result.get(0).getNumberOfObjectives()+1];
             // 2.2.4 Read solutions
             for (int m = 0; m < result.size(); m++) {
                 Solution solution = result.get(m);
                 int[] x = EncodingUtils.getInt(solution);
                 double[] objectives = solution.getObjectives();
-
                 //Negate objectives to return them to their maximized form.
                 objectives = Vector.negate(objectives);//.negate(objectives);
-
-                //2.2.5 Print results
-
-                
                 System.out.println("\n    Solution " + (m + 1) + ":");
+
                 for (int i=0; i < objectives.length; i++)
                 System.out.print("      Obj "+i+": " + -objectives[i]);
                 System.out.println("    Con 1: " + solution.getConstraint(0));
@@ -141,45 +148,34 @@ public class TestMO {
                 for(int j=0;j<x.length;j++){
                     System.out.print("      Var " + (j+1) + ":" + x[j]+"\n");
                 }
-                
-                    //2.2.6 Export results to Excel sheets by different iterations
-        /*
-                    if (k == 2) {
-        // Create Title Row in Excel
-        writeXLSX(false, sheet1, 0, 0, "Solution");
-        writeXLSX(false,sheet1, 0, 1, "Obj_1");
-        writeXLSX(false,sheet1, 0, 2, "Obj_2");
-        writeXLSX(false,sheet1, 0, 3, "Obj_3");
-        writeXLSX(false,sheet1, 0, 4, "Con_1");
-        for(int n=5; n<x.length+5; n++){
-        writeXLSX(false, sheet1, 0, n, "Var_"+(n-4));
-        }
-        // create data input row in excel
-        writeXLSX(true, sheet1, m+1, 0, m+1);
-        writeXLSX(true, sheet1, m+1, 1, objectives[0]);
-        writeXLSX(true, sheet1, m+1, 2, objectives[1]);
-        writeXLSX(true, sheet1, m+1, 3, objectives[2]);
-        writeXLSX(true, sheet1, m+1, 4,
-        solution.getConstraint(0));
-
-                        for(int n=0; n<x.length; n++){
-                        writeXLSX(true, sheet1, m+1, n+5, x[n]);
-                        }
-                    }
-                   try{
-                    FileOutputStream fileOut = new FileOutputStream("/Users/letrung/testMO.xlxs");
-        //workBook.write(fileOut);
-        fileOut.close();
-        } catch(FileNotFoundException e){
-        e.printStackTrace();
-        } catch(IOException e){
-        e.printStackTrace();
-        }
-        */
+                for (int j=0; j < objectives.length ;j++){
+                    matrixResult[m][j+1] = -objectives[j];
+                }
             }
+            String oldFile = new App().readhome("MOEA_HOME")+"/Matrix.csv";
+            double[][] oldMatrix = ReadMatrixCSV.readMatrix(oldFile,CsvFileReader.count(oldFile));
+            for (int i = 0; i < oldMatrix.length; i++){
+                for (int j = 0; j < matrixResult.length; j++){
+                    int check = 0;
+                    for (int l = 1; l < matrixResult[0].length; l++){
+                        if (oldMatrix[i][l]!=matrixResult[j][l]) check ++;
+                    }
+                    if (check == 0) matrixResult[j][0] = oldMatrix[i][0];
+                }
+            }
+            System.out.println("Matrix of result-------------------------");
+            for (int i = 0; i < matrixResult.length; i++){
+                for (int j = 0; j< matrixResult[0].length; j++){
+                    System.out.print(" " + matrixResult[i][j]);
+                }
+                System.out.println("\n");
+            }
+            utilities.renewFile(new App().readhome("MOEA_HOME")+"/Matrix_result.csv");
+            Writematrix2CSV.addMatrix2Csv(new App().readhome("MOEA_HOME")+"/Matrix_result.csv", matrixResult);
         System.out.println("-----------------------------------------");    
         }
     }
+
     // 2.1 Create a class for excel writing
 /*    private static void writeXLSX(boolean flag, Sheet sheet, int row, int cell, Object value){
         Row rowIn = sheet.getRow(row);

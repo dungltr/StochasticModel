@@ -175,8 +175,8 @@ object  TestOriginalCostBasedJoinReorder {
     val file = folder_home + "/" + executeTime + ".csv"
     val numberVariables = 2
     val filePath = Paths.get(file)
-    if (!Files.exists(filePath)){
-      Files.createFile(filePath)
+      if (!Files.exists(filePath)){
+        Files.createFile(filePath)
       historicData.setupFile(file, numberVariables)
     }
 
@@ -189,9 +189,9 @@ object  TestOriginalCostBasedJoinReorder {
     println(optimizedPlan.numberedTreeString)
     println("--------------------------------------------------------------------------")
     val joinsReordered = OptimizeOriginal.execute(plan)
-    val plans = SecondPareto.setLogicalPlans(listRelations.size)
-    val costs = SecondPareto.setCosts(listRelations.size)
-    val sets = SecondPareto.setList(listRelations.size)
+    val plans = SecondPareto.setParetoLogicalPlans(listRelations.size)
+    val costs = SecondPareto.setParetoCosts(listRelations.size)
+    val sets = SecondPareto.setParetoList(listRelations.size)
 
     for (i <- 0 until sets.size()){
       val folder_home = "data/dream/"+ kindOftest + "/" + folder + "/" + sets.get(i).toString()
