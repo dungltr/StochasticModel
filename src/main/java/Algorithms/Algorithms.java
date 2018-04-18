@@ -577,9 +577,11 @@ public class Algorithms {
         return OperatorFolder;
     }
     public static String getNameQuery(String SQL){
-        return SQL.substring(SQL.lastIndexOf("DROP TABLE IF EXISTS "),SQL.indexOf("_"))
+        if (SQL.equals("")) return "";
+        else return SQL.substring(SQL.lastIndexOf("DROP TABLE IF EXISTS "),SQL.indexOf("_"))
                 .replaceAll("DROP TABLE IF EXISTS ","")
                 .replaceAll(" ","");
+        
     }
     public static void mainIRES(Move_Data Data, String SQL, YarnValue yarnValue, double TimeOfDay, double[] size, String KindOfRunning ) throws Exception{      
         String OperatorFolder = operatorFolder();
