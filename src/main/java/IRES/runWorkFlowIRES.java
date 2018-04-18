@@ -556,7 +556,7 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         mop1.writeToPropertiesFile(directory_operator+mop1.opName);
     }
     public void createOperatorMove(Move_Data Data, String SQL, double costEstimateValue, double[] parameter) throws IOException, Exception {
-        String costExecution = Double.toString(parameter[0]) + "(In0.size)*" + Double.toString(parameter[1]);
+        String costExecution = "(In0.size)*" + Double.toString(parameter[1]);
         String node_pc = new App().getComputerName();
         String NameOp = Nameop(Data);
         String AbstractOp = "Abstract_"+NameOp;
@@ -603,8 +603,8 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         mop1.add("Constraints.Output0.type", "SQL");
 
         mop1.add("Optimization.Out0.size", "In0.size");// different in Hive-Spark or Postgres-Spark //Optimization.Out0.size=20
-        mop1.add("Optimization.cost", Double.toString(costEstimateValue/10));
-        //mop1.add("Optimization.cost", "0.0"costExecution);
+        //mop1.add("Optimization.cost", Double.toString(costEstimateValue/10));
+        mop1.add("Optimization.cost", costExecution);
         mop1.add("Optimization.execTime", Double.toString(costEstimateValue));//"1.0"); // different in Hive-Spark or in Postgres-Spark// Optimization.execTime=In0.size/1.2
 
         mop1.add("Optimization.inputSpace.In0.size", "Double,1E8,1E10,l");
