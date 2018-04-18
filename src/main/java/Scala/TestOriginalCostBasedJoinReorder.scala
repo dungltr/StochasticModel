@@ -91,11 +91,14 @@ object  TestOriginalCostBasedJoinReorder {
     require(dataLocation.nonEmpty,
       "please modify the value of dataLocation to point to your local TPCDS data")
     //val tableSizes = setupTables(dataLocation)
+
     val tableSizes = setupTables(dataLocation)
+
     tableNames.foreach { name =>
       spark.read.parquet(s"$dataLocation/$name").write.saveAsTable(s"t$name")
       spark.sql(s"ANALYZE TABLE t$name COMPUTE STATISTICS")
     }
+
     //val startTime = System.nanoTime()
     val Store_sales = spark.table("tstore_sales")
     val Store_returns = spark.table("tstore_returns")

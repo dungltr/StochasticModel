@@ -660,9 +660,10 @@ public class Algorithms {
 //	double costEstimateValue2 = batchgradientdescent.estimateGradient(sizeOfValue, realValue, parameter, StochasticValue, R_2_limit);
 //        System.out.println("\n Estimate Value of Batch Gradient Descent is: " + costEstimateValue2);
 	costEstimateValue = estimateCostValue(sizeOfValue, realValue, parameter, StochasticValue, R_2_limit);
+	double[] B = setupParameterB(readMatrix(parameter, 1));
         if (Data.get_Operator().toLowerCase().contains("move")){
             IRES.createDatasetMove_Hive_Postgres(Data, size, SQL, TimeOfDay);//createDatasetMove(Data, SQL);
-            IRES.createOperatorMove(Data, SQL, costEstimateValue);
+            IRES.createOperatorMove(Data, SQL, costEstimateValue, B);
             IRES.createDataMove2(Data, SQL, yarnValue);
         }
         if (Data.get_Operator().toLowerCase().contains("join")) {
@@ -802,7 +803,7 @@ public class Algorithms {
         String delay_ys = "";
 	if (TimeOfDay<1) delay_ys = "no_delay";
         String NameOfRealValue = NameOfFileName(delay_ys,"realValue",KindOfRunning);
-	String NameOfParameter = NameOfFileName(delay_ys,"parameter",KindOfRunning);
+	    String NameOfParameter = NameOfFileName(delay_ys,"parameter",KindOfRunning);
         String NameOfEstimateValue = NameOfFileName(delay_ys,"estimate",KindOfRunning);
         
         String execTime = directory + "/data/execTime.csv";

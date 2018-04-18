@@ -5,15 +5,9 @@
  */
 package IRES;
 ////////////////////////////////////////////////////////////////////////////////
-import static Algorithms.Algorithms.estimateCostValue;
-import static Algorithms.Algorithms.setupStochasticValue;
-import static Algorithms.Algorithms.setupValue;
 import Algorithms.testWriteMatrix2CSV;
 import LibraryIres.Move_Data;
 import LibraryIres.YarnValue;
-import LibraryIres.createWorkflow;
-import LibraryIres.runWorkflow;
-import Irisa.Enssat.Rennes1.TestScript;
 import com.sparkexample.App;
 import gr.ntua.cslab.asap.client.ClientConfiguration;
 import gr.ntua.cslab.asap.client.OperatorClient;
@@ -22,26 +16,20 @@ import gr.ntua.cslab.asap.operators.AbstractOperator;
 import gr.ntua.cslab.asap.operators.Dataset;
 import gr.ntua.cslab.asap.operators.MaterializedOperators;
 import gr.ntua.cslab.asap.operators.Operator;
-import gr.ntua.cslab.asap.rest.beans.OperatorDictionary;
-import gr.ntua.cslab.asap.staticLibraries.MaterializedWorkflowLibrary;
-//import gr.ntua.cslab.asap.daemon.RunningWorkflowLibrary;
 import gr.ntua.cslab.asap.workflow.AbstractWorkflow;
 import gr.ntua.cslab.asap.workflow.AbstractWorkflow1;
 import gr.ntua.cslab.asap.workflow.Workflow;
 import gr.ntua.cslab.asap.workflow.WorkflowNode;
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import org.apache.commons.io.FileUtils;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import org.apache.commons.io.FileUtils;
+
+import static Algorithms.Algorithms.setupStochasticValue;
+import static Algorithms.Algorithms.setupValue;
+
+//import gr.ntua.cslab.asap.daemon.RunningWorkflowLibrary;
 /**
  *
  * @author letrung
@@ -565,6 +553,135 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         mop1.add("Execution.Output0.schema", "In0.schema");
 
         cli.addOperator(mop1); 
+        mop1.writeToPropertiesFile(directory_operator+mop1.opName);
+    }
+    public void createOperatorMove(Move_Data Data, String SQL, double costEstimateValue, double[] parameter) throws IOException, Exception {
+        String costExecution = Double.toString(parameter[0]) + "(In0.size)*" + Double.toString(parameter[1]);
+        String node_pc = new App().getComputerName();
+        String NameOp = Nameop(Data);
+        String AbstractOp = "Abstract_"+NameOp;
+        String AlgorithmsName = "move";
+        String numberArgument = "3";
+        ClientConfiguration conf = new ClientConfiguration(name_host,int_localhost);
+        OperatorClient cli = new OperatorClient();
+        cli.setConfiguration(conf);
+        Operator mop1 = new Operator(NameOp,"");
+
+        mop1.add("Constraints.Engine",Data.get_To());
+        String To = Data.get_To();
+        switch (To) {
+            case "HIVE": case "hive": case "Hive":
+            {
+                mop1.add("Constraints.EngineSpecification.Distributed.HIVE.masterLocation", node_pc);
+            }
+            break;
+            case "POSTGRES": case "postgres": case "Postgres":
+            {
+                mop1.add("Constraints.EngineSpecification.Distributed.Spark.masterLocation", node_pc);
+            }
+            break;
+            case "SPARK": case "spark": case "Spark":
+            {
+                mop1.add("Constraints.EngineSpecification.Distributed.Spark.masterLocation", node_pc);
+            }
+            break;
+            default:
+                mop1.add("Constraints.EngineSpecification.Centralized.PostgreSQL.location", node_pc);
+                mop1.add("Constraints.EngineSpecification.Distributed.HIVE.masterLocation", node_pc);
+                mop1.add("Constraints.EngineSpecification.Distributed.Spark.masterLocation", node_pc);
+                break;
+        }
+
+        mop1.add("Constraints.Input.number","1");
+        mop1.add("Constraints.Input0.Engine.SQL", Data.get_From());
+        mop1.add("Constraints.Input0.Engine.location", node_pc);
+        mop1.add("Constraints.Input0.type", "SQL");
+        mop1.add("Constraints.OpSpecification.Algorithm.name", AlgorithmsName);
+        mop1.add("Constraints.Output.number","1");
+        mop1.add("Constraints.Output0.Engine.SQL", Data.get_To());
+        mop1.add("Constraints.Output0.Engine.location", node_pc);
+        mop1.add("Constraints.Output0.type", "SQL");
+
+        mop1.add("Optimization.Out0.size", "In0.size");// different in Hive-Spark or Postgres-Spark //Optimization.Out0.size=20
+        mop1.add("Optimization.cost", costExecution);
+        mop1.add("Optimization.execTime", Double.toString(costEstimateValue));//"1.0"); // different in Hive-Spark or in Postgres-Spark// Optimization.execTime=In0.size/1.2
+
+        mop1.add("Optimization.inputSpace.In0.size", "Double,1E8,1E10,l");
+        if (!SQL.equals("")){
+            if (Data.get_To().toLowerCase().equals("postgres")){
+                mop1.add("Optimization.inputSpace.In0.page", "Double,1E8,1E10,l");
+                mop1.add("Optimization.inputSpace.In0.tuple", "Double,1E8,1E10,l");
+                mop1.add("Optimization.inputSpace.In0.page1", "Double,1E8,1E10,l");
+                mop1.add("Optimization.inputSpace.In0.tuple1", "Double,1E8,1E10,l");
+            }
+            if (Data.get_To().toLowerCase().equals("hive")&&
+                    Data.get_From().toLowerCase().equals("postgres")){
+                mop1.add("Optimization.inputSpace.In0.page", "Double,1E8,1E10,l");
+                mop1.add("Optimization.inputSpace.In0.tuple", "Double,1E8,1E10,l");
+                mop1.add("Optimization.inputSpace.In0.size1", "Double,1E8,1E10,l");
+            }
+            if (Data.get_To().toLowerCase().equals("hive")&&
+                    Data.get_From().toLowerCase().equals("hive")){
+                mop1.add("Optimization.inputSpace.In0.size1", "Double,1E8,1E10,l");
+            }
+        }
+        if ((!Data.get_To().toLowerCase().equals("hive")||
+                !Data.get_From().toLowerCase().equals("hive"))&&SQL.equals("")){
+            mop1.add("Optimization.inputSpace.In0.page", "Double,1E8,1E10,l");
+            mop1.add("Optimization.inputSpace.In0.tuple", "Double,1E8,1E10,l");
+        }
+
+/*        if ((Data.get_To().toLowerCase().equals("postgres")||
+                Data.get_From().toLowerCase().equals("postgres"))&&(SQL.equals(""))){
+            mop1.add("Optimization.inputSpace.In0.page", "Double,1E8,1E10,l");
+            mop1.add("Optimization.inputSpace.In0.tuple", "Double,1E8,1E10,l");
+            mop1.add("Execution.Argument3", "In0.page");
+            mop1.add("Execution.Argument4", "In0.tuple");
+            mop1.add("Execution.Argument5", "In0.random");
+            numberArgument = "6";
+        }
+*/
+        mop1.add("Optimization.inputSpace.In0.random", "Double,1E8,1E10,l");
+
+        mop1.add("Optimization.model.Out0.size", "gr.ntua.ece.cslab.panic.core.models.UserFunction");
+        mop1.add("Optimization.model.cost",      "gr.ntua.ece.cslab.panic.core.models.UserFunction");//AbstractWekaModel");//UserFunction");//UserFunction");
+        mop1.add("Optimization.model.execTime",  "gr.ntua.ece.cslab.panic.core.models.AbstractWekaModel");//LinearRegression");//UserFunction");//UserFunction");//AbstractWekaModel");//UserFunction");
+
+        mop1.add("Optimization.outputSpace.Out0.size", "Double");
+        mop1.add("Optimization.outputSpace.cost", "Double");
+        mop1.add("Optimization.outputSpace.execTime", "Double");
+
+        mop1.add("Optimization.inputSource.type","csv");//"mongodb");//"csv");
+        mop1.add("Optimization.inputSource.host",node_pc);
+        mop1.add("Optimization.inputSource.db","metrics");
+
+        mop1.add("Execution.LuaScript",NameOp+".lua");
+        if ("SPARK".equals(Data.get_From())||
+                "Spark".equals(Data.get_From())||
+                "spark".equals(Data.get_From()))
+            mop1.add("Execution.Argument0", Data.get_DatabaseOut());
+        else
+            mop1.add("Execution.Argument0", Data.get_DatabaseIn());
+        mop1.add("Execution.Argument1", "In0.name");
+        mop1.add("Execution.Argument2", "In0.schema");
+
+        if ("SPARK".equals(Data.get_To())||
+                "Spark".equals(Data.get_To())||
+                "spark".equals(Data.get_To())||
+                "SPARK".equals(Data.get_From())||
+                "Spark".equals(Data.get_From())||
+                "spark".equals(Data.get_From()))
+        {
+            numberArgument = "4";
+            mop1.add("Execution.Argument3", "local[*]");//Execution.Argument2=spark://master:7077
+        }
+
+
+        mop1.add("Execution.Arguments.number", numberArgument);
+        mop1.add("Execution.Output0.name", "In0.name");
+        mop1.add("Execution.Output0.schema", "In0.schema");
+
+        cli.addOperator(mop1);
         mop1.writeToPropertiesFile(directory_operator+mop1.opName);
     }
     public void createOperatorJoin(Move_Data Data, String SQL, double costEstimateValue) throws IOException, Exception {
