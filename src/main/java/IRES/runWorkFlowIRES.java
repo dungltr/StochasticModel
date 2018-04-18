@@ -556,7 +556,11 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         mop1.writeToPropertiesFile(directory_operator+mop1.opName);
     }
     public void createOperatorMove(Move_Data Data, String SQL, double costEstimateValue, double[] parameter) throws IOException, Exception {
-        String costExecution = Double.toString(parameter[0]) + "+ (In0.size)*" + Double.toString(parameter[1]);
+        String costExecution = Double.toString(parameter[0])
+                                + " + (In0.size) * " + Double.toString(parameter[1])
+                                + " + (In0.page) * " + Double.toString(parameter[2])
+                                + " + (In0.tuple) * " + Double.toString(parameter[3])
+                                + " + (In0.random) * " + Double.toString(parameter[4]);
         String node_pc = new App().getComputerName();
         String NameOp = Nameop(Data);
         String AbstractOp = "Abstract_"+NameOp;
