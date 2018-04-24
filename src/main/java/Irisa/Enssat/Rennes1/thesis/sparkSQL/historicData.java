@@ -142,6 +142,8 @@ public class historicData {
         try {
             double R_2_limit = 0.8;
             int Max_line_estimate = estimateSizeOfMatrix(CsvFileReader.count(file)-1,variables.size(),file,R_2_limit);
+            double [] M = {Max_line_estimate};
+            updateParameter(file.replace(".csv","")+"_maxDream.csv",M);
             double value = estimateCostValue(Max_line_estimate,file,convertListToArray(variables),R_2_limit);
             return value;
         } catch (IOException e) {
