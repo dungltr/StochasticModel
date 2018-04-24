@@ -1,4 +1,4 @@
-import IRES.TPCHQuery;
+import Irisa.Enssat.Rennes1.thesis.sparkSQL.OriginalPareto;
 import com.sparkexample.App;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -66,7 +66,7 @@ public class AppTest{
     @Test
     public void testConvert_IRES() throws Exception {
         createProperties();
-        //Pareto.main(new String[] {"arg1", "arg2", "arg3"});
+        OriginalPareto.main(new String[] {"arg1", "arg2", "arg3"});
 //        DPccpExperiment.main(new String[] {"arg1", "arg2", "arg3"});
 //        String file_test = test;
 //        String training_file = training;
@@ -101,7 +101,7 @@ public class AppTest{
         { 
 //            Irisa.Enssat.Rennes1.TestMO.main(new String[] {"arg"});
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Hive","Move","training");
-          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training");
+//          TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training");
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
 //          TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Postgres","Move","training");
 //            TPCHQuery.SQL(Math.random(),"tpch","100m","Hive","Postgres","SQL","training");
