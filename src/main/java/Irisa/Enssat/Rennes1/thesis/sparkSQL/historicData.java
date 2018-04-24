@@ -457,8 +457,8 @@ public class historicData {
         String fileRealValue = fileRealValue(file);
         List<Double> variables = new ArrayList<>();
         Random r = new Random();
-        variables.add(cost.card().toDouble() + r.nextInt(10)*cost.card().toDouble()/10000);
-        variables.add(cost.size().toDouble() + r.nextInt(10)*cost.size().toDouble()/10000);
+        variables.add(cost.card().toDouble() + r.nextInt(50)*cost.card().toDouble()/1000);
+        variables.add(cost.size().toDouble() + r.nextInt(50)*cost.size().toDouble()/1000);
 
         double value = durationInMs;
         double[] valueArray = setupValue(variables, value);

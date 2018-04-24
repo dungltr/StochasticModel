@@ -214,12 +214,9 @@ object  TestOriginalCostBasedJoinReorder {
           e.printStackTrace()
       }
     }
-
-
     val ran = r.nextInt(plans.size())
     println("")
     println("Begin running logical plan " + ran + " in Pareto plan set with Pareto.size: "+plans.size())
-
     val runPlan = plans.get(ran)
     //val planCost = runPlan.stats(confSQL)
     //println( "there are the statistic of runPlan" + planCost.sizeInBytes + "--------------------------------------")
@@ -228,20 +225,6 @@ object  TestOriginalCostBasedJoinReorder {
     //println( "there is costplan of runPlan" + costPlan + "--------------------------------------")
     val setPlan = sets.get(ran)
     //println( "there is sets of runPlan" + setPlan + "--------------------------------------")
-    val nameValue = "executeTime"
-
-    val card = costPlan.card.toDouble //+ r.nextInt(10)*costPlan.card.toDouble/10000
-    val size = costPlan.size.toDouble //+ r.nextInt(10)*costPlan.size.toDouble/10000
-
-    val folderExecute = "original/" + folder
-    val folderTotal = "data/dream/original/" + folder
-    val estimateValue = historicData.estimateAndStore(folderExecute,setPlan.toString(), nameValue, card, size)
-
-    val fileExecute = "data/dream/original/" + folder + "/" + setPlan.toString() + "/executeTime.csv"
-    println(fileExecute)
-    val estimateValueMOEA = LinearRegressionManual.guessValue(fileExecute,fileExecute, card, size)
-    println("The predict Value of Dream is: " + estimateValue)
-    println("The predict Value of MOEA is: " + estimateValueMOEA)
     println(runPlan.numberedTreeString)
     println("Cost value of logical plan is: " + costPlan)
     println("setID of logical plan is: " + setPlan)
@@ -250,7 +233,15 @@ object  TestOriginalCostBasedJoinReorder {
     println("The physical plan of logical plan: " + ran + " in Pareto plan set with Pareto.size " + plans.size())
     listPhysicalPlan.foreach(element => println(element))
     val durationInMs = System.nanoTime() - startTime
+    val nameValue = "executeTime"
+    val card = costPlan.card.toDouble //+ r.nextInt(10)*costPlan.card.toDouble/10000
+    val size = costPlan.size.toDouble //+ r.nextInt(10)*costPlan.size.toDouble/10000
+    val folderExecute = "original/" + folder
+    val folderTotal = "data/dream/original/" + folder
+    val fileExecute = "data/dream/original/" + folder + "/" + setPlan.toString() + "/executeTime.csv"
     println("End of running physical plan: " + "-------"  + durationInMs+" nano  seconds")
+    val estimateValue = historicData.estimateAndStore(folderExecute,setPlan.toString(), nameValue, card, size)
+    println("The predict Value of Dream is: " + estimateValue)
     historicData.updateValueSecond(folderExecute,setPlan.toString(),costPlan,durationInMs.toDouble,"executeTime")
     historicData.saveError(folderExecute,setPlan.toString(),nameValue, durationInMs.toDouble, estimateValue, 0.8)
     val Parameter = readMatrix("data/dream/"+folderExecute+"/"+setPlan.toString()+"/executeTime_Parameter.csv",1)
@@ -258,6 +249,9 @@ object  TestOriginalCostBasedJoinReorder {
     println("Parameter"+B(0).toString+" +---------"+B(1).toString)
     Writematrix2CSV.addArray2Csv("data/dream/"+folderExecute + "/executeTime_Parameter.csv", B)
     val WEKA = "executeTimeWEKA"
+    println(fileExecute)
+    val estimateValueMOEA = LinearRegressionManual.guessValue(fileExecute,fileExecute, card, size)
+    println("The predict Value of MOEA is: " + estimateValueMOEA)
     historicData.saveError(folderExecute,setPlan.toString(), WEKA, durationInMs.toDouble, estimateValueMOEA, 0.8)
   }
 
