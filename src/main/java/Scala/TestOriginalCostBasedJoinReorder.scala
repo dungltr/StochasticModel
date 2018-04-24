@@ -4,7 +4,7 @@ import java.io.IOException
 import java.nio.file.{Files, Paths}
 
 import Algorithms.ReadMatrixCSV.readMatrix
-import Algorithms.Writematrix2CSV
+import Algorithms.{LinearRegressionManual, Writematrix2CSV}
 import Irisa.Enssat.Rennes1.thesis.sparkSQL.{SecondPareto, historicData}
 import Scala.TestCostBasedJoinReorder.tpcdsAll
 import com.sparkexample.App
@@ -237,10 +237,11 @@ object  TestOriginalCostBasedJoinReorder {
     val folderTotal = "data/dream/original/" + folder
     val estimateValue = historicData.estimateAndStore(folderExecute,setPlan.toString(), nameValue, card, size)
 
-    //println(fileExecute)
-    //val estimateValueMOEA = LinearRegressionManual.guessValue(fileExecute,fileExecute, card, size)
+    val fileExecute = "data/dream/original/" + folder + "/" + setPlan.toString() + "/executeTime.csv"
+    println(fileExecute)
+    val estimateValueMOEA = LinearRegressionManual.guessValue(fileExecute,fileExecute, card, size)
     println("The predict Value of Dream is: " + estimateValue)
-    //println("The predict Value of MOEA is: " + estimateValueMOEA)
+    println("The predict Value of MOEA is: " + estimateValueMOEA)
     println(runPlan.numberedTreeString)
     println("Cost value of logical plan is: " + costPlan)
     println("setID of logical plan is: " + setPlan)
@@ -257,7 +258,7 @@ object  TestOriginalCostBasedJoinReorder {
     println("Parameter"+B(0).toString+" +---------"+B(1).toString)
     Writematrix2CSV.addArray2Csv("data/dream/"+folderExecute + "/executeTime_Parameter.csv", B)
     val WEKA = "executeTimeWEKA"
-    //historicData.saveError(folder,setPlan.toString(), WEKA, durationInMs.toDouble, estimateValueMOEA, 0.8)
+    historicData.saveError(folderExecute,setPlan.toString(), WEKA, durationInMs.toDouble, estimateValueMOEA, 0.8)
   }
 
   def main(args: Array[String]): Unit = {
