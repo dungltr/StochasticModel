@@ -3,6 +3,7 @@ package Scala
 import java.io.IOException
 import java.nio.file.{Files, Paths}
 
+import Algorithms.Algorithms.updateParameter
 import Algorithms.ReadMatrixCSV.readMatrix
 import Algorithms.{LinearRegressionManual, Writematrix2CSV}
 import Irisa.Enssat.Rennes1.thesis.sparkSQL.{SecondPareto, historicData}
@@ -240,7 +241,9 @@ object  TestOriginalCostBasedJoinReorder {
     val folderTotal = "data/dream/original/" + folder
     val fileExecute = "data/dream/original/" + folder + "/" + setPlan.toString() + "/executeTime.csv"
     println("End of running physical plan: " + "-------"  + durationInMs+" nano  seconds")
+    val startEstimate = System.nanoTime()
     val estimateValue = historicData.estimateAndStore(folderExecute,setPlan.toString(), nameValue, card, size)
+    val timeDream = System.nanoTime() - startEstimate
     println("The predict Value of Dream is: " + estimateValue)
     historicData.updateValueSecond(folderExecute,setPlan.toString(),costPlan,durationInMs.toDouble,"executeTime")
     historicData.saveError(folderExecute,setPlan.toString(),nameValue, durationInMs.toDouble, estimateValue, 0.8)
@@ -250,9 +253,13 @@ object  TestOriginalCostBasedJoinReorder {
     Writematrix2CSV.addArray2Csv("data/dream/"+folderExecute + "/executeTime_Parameter.csv", B)
     val WEKA = "executeTimeWEKA"
     println(fileExecute)
+    val startWeka = System.nanoTime()
     val estimateValueMOEA = LinearRegressionManual.guessValue(fileExecute,fileExecute, card, size)
+    val timeWeka = System.nanoTime() - startEstimate
     println("The predict Value of MOEA is: " + estimateValueMOEA)
     historicData.saveError(folderExecute,setPlan.toString(), WEKA, durationInMs.toDouble, estimateValueMOEA, 0.8)
+    val M = Array(timeDream.toDouble,timeWeka.toDouble)
+    updateParameter("data/dream/"+folderExecute  + "/timeCompare.csv", M)
   }
 
   def main(args: Array[String]): Unit = {

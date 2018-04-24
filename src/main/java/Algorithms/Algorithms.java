@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 import static Algorithms.ReadMatrixCSV.readMatrix;
-import static Algorithms.testScilab.*;
+//import static Algorithms.testScilab.*;
 import static org.apache.commons.math.util.MathUtils.round;
 /**
  *
@@ -221,7 +221,7 @@ public class Algorithms {
             c = setupMatrixC(realValue);
             d = setupMatrixC(estimateValue);
             //System.out.println("length of C: "+c.length);
-            B = multiply(multiply(invert(multiply(transpose(a),a)),transpose(a)),c);
+            B = testScilab.multiply(testScilab.multiply(testScilab.invert(testScilab.multiply(testScilab.transpose(a),a)),testScilab.transpose(a)),c);
             for (int k = 0; k < B.length; k++){
                 if (Double.isNaN(B[k]))
                 {
@@ -478,7 +478,7 @@ public class Algorithms {
         testScilab.printArray(B);
         
         System.out.println("\nMatrix new B");
-        B = multiply(multiply(invert(multiply(transpose(a),a)),transpose(a)),c);
+        B = testScilab.multiply(testScilab.multiply(testScilab.invert(testScilab.multiply(testScilab.transpose(a),a)),testScilab.transpose(a)),c);
             if (Double.isNaN(B[0])){
                 System.out.println("New Parameter is infinity, use old Parameter");
                 B = setupParameterB(Parameter);
