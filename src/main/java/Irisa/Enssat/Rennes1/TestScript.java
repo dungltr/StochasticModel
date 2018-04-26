@@ -8,12 +8,13 @@ import Algorithms.LinearRegressionManual;
 import IRES.TPCHQuery;
 import Standalone.TPCHStandalone;
 import com.sparkexample.App;
-import java.io.IOException;
-import java.io.Console;
-import java.util.Scanner;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteException;
+
+import java.io.Console;
+import java.io.IOException;
+import java.util.Scanner;
 /**
  *
  * @author letrung
@@ -198,5 +199,4 @@ public class TestScript {
             else
                 return "no";
     }
-    
 }
