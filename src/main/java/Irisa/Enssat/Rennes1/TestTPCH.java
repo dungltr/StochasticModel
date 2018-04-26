@@ -22,7 +22,7 @@ public class TestTPCH {
         */
     }
     public static void test() throws Exception {
-        double TimeOfDay = 24.00*Math.random();
+        double TimeOfDay = 24.00*Math.random()/24;
         TPCHQuery.SQL(TimeOfDay, "tpch","100m","Hive","Postgres", "SQL", "training");
     }
 }
