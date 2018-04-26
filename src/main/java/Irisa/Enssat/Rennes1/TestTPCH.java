@@ -21,7 +21,7 @@ public class TestTPCH {
         TPCHQuery.WorkflowMove(Math.random(),"tpch","100m","Postgres","Hive","Move", "training");
         */
     }
-    public static void test(){
+    public static void test() throws Exception {
         double TimeOfDay = 24.00*Math.random();
         TPCHQuery.SQL(TimeOfDay, "tpch","100m","Hive","Postgres", "SQL", "training");
     }
