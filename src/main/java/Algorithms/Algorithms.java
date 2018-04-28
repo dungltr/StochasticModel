@@ -690,7 +690,7 @@ public class Algorithms {
         Time_Cost = Time_Cost + delay;        
         testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), NameOfRealValue);
         testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), "execTime_realValue");
-        int Max_train = 30;
+        int Max_train = 15;
         if (CsvFileReader.count(directory + "/execTime_realValue.csv")<Max_train)
         {
             //testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), "execTime_realValue");
