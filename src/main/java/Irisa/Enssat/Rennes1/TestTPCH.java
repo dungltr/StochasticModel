@@ -33,6 +33,6 @@ public class TestTPCH {
     }
     public static void testMove() throws Exception {
         double TimeOfDay = 24.00*Math.random()/24;
-        TPCHQuery.SQL(TimeOfDay, "tpch","100m","Hive","Postgres", "Move", "training");
+        TPCHQuery.Move(TimeOfDay, "tpch","100m","Hive","Postgres", "Move", "training");
     }
 }
