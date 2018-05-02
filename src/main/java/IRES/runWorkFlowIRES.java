@@ -607,8 +607,8 @@ public void createDatasetJoin2(Move_Data Data, double [] size, String SQL, doubl
         mop1.add("Constraints.Output0.type", "SQL");
 
         mop1.add("Optimization.Out0.size", "In0.size");// different in Hive-Spark or Postgres-Spark //Optimization.Out0.size=20
-        //mop1.add("Optimization.cost", Double.toString(costEstimateValue/10));
-        mop1.add("Optimization.cost", costExecution);
+        mop1.add("Optimization.cost", Double.toString(costEstimateValue/10));
+        //mop1.add("Optimization.cost", costExecution);
         mop1.add("Optimization.execTime", Double.toString(costEstimateValue));//"1.0"); // different in Hive-Spark or in Postgres-Spark// Optimization.execTime=In0.size/1.2
 
         mop1.add("Optimization.inputSpace.In0.size", "Double,1E8,1E10,l");
