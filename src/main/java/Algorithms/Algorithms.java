@@ -691,13 +691,14 @@ public class Algorithms {
         testWriteMatrix2CSV.storeValue(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), NameOfRealValue);
         testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), "execTime_realValue");
         String MaxTrain = new App().readhome("Max");
-        int Max_train = Integer.parseInt(MaxTrain);
+        int Max_train = Integer.parseInt(MaxTrain)*size.length;
         if (CsvFileReader.count(directory + "/execTime_realValue.csv")<Max_train)
         {
             //testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), "execTime_realValue");
             testWriteMatrix2CSV.storeValueServer(Data, SQL, setupStochasticValue(setupValue(size, Time_Cost)), "execTime");     
         }
         else fixExecTime(Data, Max_train);
+        String weka = "weka"+ Max_train;
 	    storeCost(Data,Time_Cost,"execTime_estimate","weka");
         storeCost(Data,Time_Cost,NameOfEstimateValue,"dream");
 

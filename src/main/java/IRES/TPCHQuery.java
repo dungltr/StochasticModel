@@ -597,7 +597,7 @@ public class TPCHQuery {
         double[] size = calculateSize(randomQuery, From, To, Size_tpch, Join);
 	    double[] Yarn = testQueryPlan.createRandomYarn();
         ////////////////////////////////////////////
-        size[size.length-1]=TimeOfDay;
+        //size[size.length-1]=TimeOfDay;
         ///////////////////////////////////////////       
         String Operator = Join+"_TPCH";// +"_"+ randomQuery[2];           
         //String DataIn = Table;      
@@ -876,7 +876,7 @@ public class TPCHQuery {
                 size[2] = testQueryPlan.tupleDataset(randomQuery[1],Size_tpch);
                 size[3] = testQueryPlan.pageDataset(randomQuery[3],Size_tpch);
                 size[4] = testQueryPlan.tupleDataset(randomQuery[3],Size_tpch);
-                size[5] = 0;
+                size[5] = size[2]*size[4];
                 return size;
             }
             if (KindOfMoving.toLowerCase().contains("sql")){   
