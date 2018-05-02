@@ -699,10 +699,11 @@ public class Algorithms {
         }
         else fixExecTime(Data, Max_train);
         String weka = "weka"+ Max_train;
+        System.out.println("----------"+weka+"-------------------");
 	    storeCost(Data,Time_Cost,"execTime_estimate",weka);
         storeCost(Data,Time_Cost,NameOfEstimateValue,"dream");
 
-        String wekaStore = "weka"+"_"+Data.get_DatabaseIn()+"_"+getNameQuery(SQL);
+        String wekaStore = weka+"_"+Data.get_DatabaseIn()+"_"+getNameQuery(SQL);
         String dreamStore = "dream"+"_"+Data.get_DatabaseIn()+"_"+getNameQuery(SQL);
 
         storeCost(Data,Time_Cost,"execTime_estimate",wekaStore);
@@ -742,9 +743,10 @@ public class Algorithms {
         double [][] estimateMatrix = readMatrix(directory + "/data/"+estimate+".csv",1);
         double [][] resultMatrix = new double [estimateMatrix.length][estimateMatrix[0].length+1];
         for (int i = 0; i < resultMatrix.length; i++){
-            for (int j = 0; j < estimateMatrix[0].length; j++)
+            for (int j = 0; j < estimateMatrix[0].length; j++){
                 resultMatrix[i][j] = estimateMatrix[i][j];
-                resultMatrix[i][estimateMatrix[0].length] = realValue;
+            }
+            resultMatrix[i][estimateMatrix[0].length] = realValue;
         }           
         String resultFile = directory + "/data/"+result+".csv";
         File file = new File(result);
