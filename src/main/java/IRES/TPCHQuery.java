@@ -870,15 +870,13 @@ public class TPCHQuery {
         double R1,R2;
         if ((From.toLowerCase().contains("hive"))&&(To.toLowerCase().contains("postgres"))) {
             if (KindOfMoving.toLowerCase().contains("join")){   
-                //double[] size = new double[numberOfSize_Hive_Postgres];
-                double[] size = new double[3];
+                double[] size = new double[numberOfSize_Hive_Postgres];
                 size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
-                //size[1] = testQueryPlan.pageDataset(randomQuery[1],Size_tpch);
-                //size[2] = testQueryPlan.tupleDataset(randomQuery[1],Size_tpch);
-                //size[3] = testQueryPlan.pageDataset(randomQuery[3],Size_tpch);
-                //size[4] = testQueryPlan.tupleDataset(randomQuery[3],Size_tpch);
-                size[1] = testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);
-                size[2] = size[0]*size[1];
+                size[1] = testQueryPlan.pageDataset(randomQuery[1],Size_tpch);
+                size[2] = testQueryPlan.tupleDataset(randomQuery[1],Size_tpch);
+                size[3] = testQueryPlan.pageDataset(randomQuery[3],Size_tpch);
+                size[4] = testQueryPlan.tupleDataset(randomQuery[3],Size_tpch);
+                size[5] = size[0]*testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);
                 return size;
             }
             if (KindOfMoving.toLowerCase().contains("sql")){   
