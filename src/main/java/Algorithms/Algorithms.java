@@ -699,7 +699,7 @@ public class Algorithms {
         }
         else fixExecTime(Data, Max_train);
         String weka = "weka"+ Max_train;
-	    storeCost(Data,Time_Cost,"execTime_estimate","weka");
+	    storeCost(Data,Time_Cost,"execTime_estimate",weka);
         storeCost(Data,Time_Cost,NameOfEstimateValue,"dream");
 
         String wekaStore = "weka"+"_"+Data.get_DatabaseIn()+"_"+getNameQuery(SQL);
