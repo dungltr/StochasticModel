@@ -28,6 +28,6 @@ public class TestTPCH {
     }
     public static void testJoin() throws Exception {
         double TimeOfDay = 24.00*Math.random()/24;
-        TPCHQuery.Join(TimeOfDay, "tpch","100m","Hive","Postgres", "Join", "training");
+        TPCHQuery.Join(TimeOfDay, "tpch","100m","Hive","Postgres", "SQL", "training");
     }
 }
