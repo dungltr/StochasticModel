@@ -14,7 +14,8 @@ import IRES.TPCHQuery;
 public class TestTPCH {
     public static void main(String[] args) throws Exception{
         //testSQL();
-        testJoin();
+        //testJoin();
+        testMove();
         /*
         TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
         TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training");
@@ -29,5 +30,9 @@ public class TestTPCH {
     public static void testJoin() throws Exception {
         double TimeOfDay = 24.00*Math.random()/24;
         TPCHQuery.Join(TimeOfDay, "tpch","100m","Hive","Postgres", "Join", "training");
+    }
+    public static void testMove() throws Exception {
+        double TimeOfDay = 24.00*Math.random()/24;
+        TPCHQuery.SQL(TimeOfDay, "tpch","100m","Hive","Postgres", "Move", "training");
     }
 }
