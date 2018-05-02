@@ -6,17 +6,17 @@
 package IRES;
 
 import Algorithms.Algorithms;
-import Algorithms.testScilab;
 import Algorithms.testWriteMatrix2CSV;
-import static IRES.TPCHQuery.calculateSize;
 import LibraryIres.Move_Data;
 import LibraryIres.YarnValue;
-import java.io.PrintWriter;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Random;
 import java.util.Arrays;
+import java.util.Random;
+
+import static IRES.TPCHQuery.calculateSize;
 /**
  *
  * @author letrung
@@ -201,8 +201,8 @@ public class testQueryPlan {
         int j,k;
 	int [] SQLJoin2Table = {12,13,14,15,16,17,19,22};
 	double size_multi = 0;
-	String[] tmp = new String[4];       
-        if (KindOfRunning.equals("testing")){
+	String[] tmp = new String[4];
+	if (KindOfRunning.equals("testing")){
             i = SQLJoin2Table[rand.nextInt(SQLJoin2Table.length)];
             tmp[1] = dataset_move(Integer.toString(i));
             //String [] SliceArray = Checkquery(Integer.toString(i));
@@ -218,7 +218,7 @@ public class testQueryPlan {
             System.out.println("Table 2" + tmp[3]);
 	}
 	else{
-	tmp[0] = Double.toString(size[i]);
+	    tmp[0] = Double.toString(size[i]);
         tmp[1] = dataset_move[i];
         tmp[2] = query[i];  
         tmp[3] = dataset_up[i];

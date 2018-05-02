@@ -18,8 +18,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static IRES.testQueryPlan.createRandomQuery;
-
 /**
  *
  * @author letrung
@@ -46,7 +44,7 @@ public class TPCHQuery {
         String database = "tpch";
         String SQL_folder = new App().readhome("SQL");
         runWorkFlowIRES IRES = new runWorkFlowIRES();
-        String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);
+        String[] randomQuery = testQueryPlan.createRandomQuery(KindOfRunning, Size_tpch);
         String From = "Hive";
         String To   = "Postgres";
         
@@ -118,7 +116,7 @@ public class TPCHQuery {
         String database = "tpch";
         String SQL_folder = new App().readhome("SQL");
         runWorkFlowIRES IRES = new runWorkFlowIRES();
-        String[] randomQuery = createRandomQuery(KindOfRunning,Size_tpch);
+        String[] randomQuery = testQueryPlan.createRandomQuery(KindOfRunning,Size_tpch);
         String From = "Hive";
         String To   = "Hive";
         double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfRunning);
@@ -184,7 +182,7 @@ public class TPCHQuery {
         String database = "tpch";
         String SQL_folder = new App().readhome("SQL");
         runWorkFlowIRES IRES = new runWorkFlowIRES();
-        String[] randomQuery = createRandomQuery(KindOfRunning,Size_tpch);
+        String[] randomQuery = testQueryPlan.createRandomQuery(KindOfRunning,Size_tpch);
         String From = "Postgres";
         String To   = "Postgres";
         double[] size = calculateSize(randomQuery, From, To, Size_tpch, KindOfRunning);
@@ -250,7 +248,7 @@ public class TPCHQuery {
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
         runWorkFlowIRES IRES = new runWorkFlowIRES();
-        String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);
+        String[] randomQuery = testQueryPlan.createRandomQuery(KindOfRunning, Size_tpch);
         String From = from;
         String To   = to;
 
@@ -315,7 +313,7 @@ public class TPCHQuery {
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
         runWorkFlowIRES IRES = new runWorkFlowIRES();
-        String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);// Running is training or testing
+        String[] randomQuery = testQueryPlan.createRandomQuery(KindOfRunning, Size_tpch);// Running is training or testing
         String From = from;
         String To   = to;
 
@@ -378,7 +376,7 @@ public class TPCHQuery {
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
         runWorkFlowIRES IRES = new runWorkFlowIRES();
-        String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);
+        String[] randomQuery = testQueryPlan.createRandomQuery(KindOfRunning, Size_tpch);
         String From = from;
         String To   = to;
 
@@ -441,13 +439,13 @@ public class TPCHQuery {
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
         runWorkFlowIRES IRES = new runWorkFlowIRES();
-        String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);
+        String[] randomQuery = testQueryPlan.createRandomQuery(KindOfRunning, Size_tpch);
         String From = from;
         String To   = to;
         
         double[] size = calculateSize(randomQuery, From, To, Size_tpch, "Join");
         if (KindOfRunning.equals("testing")&&(From.equals("hive"))&&(To.equals("hive"))) size[1] = Double.parseDouble(randomQuery[0]); 
-	double[] Yarn = testQueryPlan.createRandomYarn();
+	    double[] Yarn = testQueryPlan.createRandomYarn();
         ////////////////////////////////////////////
         size[size.length-1]=TimeOfDay;
         ///////////////////////////////////////////
@@ -466,12 +464,12 @@ public class TPCHQuery {
        
         String SQL_fileName = ""; 
         if (KindOfRunning.equals("training"))
-	SQL_fileName = SQL_folder + randomQuery[2];
+	        SQL_fileName = SQL_folder + randomQuery[2];
         else {
-		if (To.toLowerCase().equals("postgres")) SQL_fileName = SQL_folder + randomQuery[2];
-		else SQL_fileName = SQL_folder+randomQuery[2]; 
+		    if (To.toLowerCase().equals("postgres")) SQL_fileName = SQL_folder + randomQuery[2];
+		    else SQL_fileName = SQL_folder+randomQuery[2];
         }
-	String SQL = "DROP TABLE IF EXISTS "+ randomQuery[2]+"_"+From+"_"+To+"; "
+	    String SQL = "DROP TABLE IF EXISTS "+ randomQuery[2]+"_"+From+"_"+To+"; "
                 + "CREATE TABLE "+ randomQuery[2]+"_"+From+"_"+To+" "
                 + "AS " 
                 + readSQL(SQL_fileName);
@@ -500,7 +498,7 @@ public class TPCHQuery {
         String realValue, parameter, estimate, directory;
         directory = testWriteMatrix2CSV.getDirectory(Data);
         String delay_ys = "";
-	if (TimeOfDay<1) delay_ys = "no_delay_";
+	    if (TimeOfDay<1) delay_ys = "no_delay_";
         realValue = directory + "/data/"+delay_ys+KindOfRunning+"_realValue.csv";
 //        parameter = directory + "/"+delay_ys+"Parameter.csv";
 //        estimate = directory + "/"+delay_ys+"Estimate.csv";
@@ -519,7 +517,7 @@ public class TPCHQuery {
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
         runWorkFlowIRES IRES = new runWorkFlowIRES();
-        String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);
+        String[] randomQuery = testQueryPlan.createRandomQuery(KindOfRunning, Size_tpch);
         String From = from;
         String To   = to;
         
@@ -592,12 +590,12 @@ public class TPCHQuery {
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
         runWorkFlowIRES IRES = new runWorkFlowIRES();
-        String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);
+        String[] randomQuery = testQueryPlan.createRandomQuery(KindOfRunning, Size_tpch);
         String From = from;
         String To   = to;
         
         double[] size = calculateSize(randomQuery, From, To, Size_tpch, Join);
-	double[] Yarn = testQueryPlan.createRandomYarn();
+	    double[] Yarn = testQueryPlan.createRandomYarn();
         ////////////////////////////////////////////
         size[size.length-1]=TimeOfDay;
         ///////////////////////////////////////////       
@@ -616,12 +614,12 @@ public class TPCHQuery {
        
         String SQL_fileName = ""; 
         if (KindOfRunning.toLowerCase().equals("training"))
-	SQL_fileName = SQL_folder + randomQuery[2];
+	    SQL_fileName = SQL_folder + randomQuery[2];
         else {
 		if (To.toLowerCase().equals("postgres")) SQL_fileName = SQL_folder + randomQuery[2];
 		else SQL_fileName = SQL_folder+randomQuery[2]; 
         }
-	String SQL = "";
+	    String SQL = "";
         SQL = "DROP TABLE IF EXISTS "+ randomQuery[2]+"_"+From+"_"+To+"; "
                 + "CREATE TABLE "+ randomQuery[2]+"_"+From+"_"+To+" "
                 + "AS " 
@@ -667,7 +665,7 @@ public class TPCHQuery {
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
         runWorkFlowIRES IRES = new runWorkFlowIRES();
-        String[] randomQuery = createRandomQuery(KindOfRunning, Size_tpch);
+        String[] randomQuery = testQueryPlan.createRandomQuery(KindOfRunning, Size_tpch);
         String From = from;
         String To   = to;
         

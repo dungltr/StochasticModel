@@ -13,7 +13,8 @@ import IRES.TPCHQuery;
  */
 public class TestTPCH {
     public static void main(String args[]) throws Exception{
-        test();
+        testSQL();
+        testJoin();
         /*
         TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
         TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training");
@@ -21,8 +22,12 @@ public class TestTPCH {
         TPCHQuery.WorkflowMove(Math.random(),"tpch","100m","Postgres","Hive","Move", "training");
         */
     }
-    public static void test() throws Exception {
+    public static void testSQL() throws Exception {
         double TimeOfDay = 24.00*Math.random()/24;
         TPCHQuery.SQL(TimeOfDay, "tpch","100m","Hive","Postgres", "SQL", "training");
+    }
+    public static void testJoin() throws Exception {
+        double TimeOfDay = 24.00*Math.random()/24;
+        TPCHQuery.Join(TimeOfDay, "tpch","100m","Hive","Postgres", "Join", "training");
     }
 }
