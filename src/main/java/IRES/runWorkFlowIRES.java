@@ -158,7 +158,7 @@ public class runWorkFlowIRES {
         return Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataIn();
     }
     public static String datasetout (Move_Data Data){
-        return Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataOut();
+        return Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataOut().toUpperCase();
     }
     public static String datasetin2 (Move_Data Data){
         return Data.get_From()+"_"+Data.get_DatabaseIn()+"_"+Data.get_DataOut();
@@ -236,15 +236,15 @@ public class runWorkFlowIRES {
         d1.add("Optimization.random",Double.toString(TimeOfDay));
 	d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
         
-/*        Dataset d2 = new Dataset(datasetout(Data));
+        Dataset d2 = new Dataset(datasetout(Data));
         d2.add("Constraints.Engine.SQL",Data.get_To()+Data.get_Operator());
-	d2.add("Constraints.Engine.location",node_pc);
+	    d2.add("Constraints.Engine.location",node_pc);
         d2.add("Constraints.type","SQL");
-	d2.add("Execution.name",Data.get_DataOut());
+	    d2.add("Execution.name",Data.get_DataOut());
         d2.add("Execution.schema", Data.get_Schema());
-	d2.add("Optimization.size",Data.get_DataInSize());      
-	d2.writeToPropertiesFile(directory_datasets + d2.datasetName);
-*/    }
+	    d2.add("Optimization.size",Data.get_DataInSize());
+	    d2.writeToPropertiesFile(directory_datasets + d2.datasetName);
+    }
     public void createDatasetJoin(Move_Data Data, double [] size, String SQL, double TimeOfDay) throws Exception {
         String node_pc = new App().getComputerName();
         Dataset d1 = new Dataset(datasetin(Data));
