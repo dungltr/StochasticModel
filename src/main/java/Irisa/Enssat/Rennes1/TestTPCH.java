@@ -12,7 +12,7 @@ import IRES.TPCHQuery;
  * @author letrung
  */
 public class TestTPCH {
-    public void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception{
         //testSQL();
         testJoin();
         /*
