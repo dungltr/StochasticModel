@@ -237,7 +237,7 @@ public class runWorkFlowIRES {
 	d1.writeToPropertiesFile(directory_datasets + d1.datasetName);
         
         Dataset d2 = new Dataset(datasetout(Data));
-        d2.add("Constraints.Engine.SQL",Data.get_To()+Data.get_Operator());
+        d2.add("Constraints.Engine.SQL",Data.get_To());
 	    d2.add("Constraints.Engine.location",node_pc);
         d2.add("Constraints.type","SQL");
 	    d2.add("Execution.name",Data.get_DataOut());
