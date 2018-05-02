@@ -13,7 +13,7 @@ import IRES.TPCHQuery;
  */
 public class TestTPCH {
     public static void main(String args[]) throws Exception{
-        testSQL();
+        //testSQL();
         testJoin();
         /*
         TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
