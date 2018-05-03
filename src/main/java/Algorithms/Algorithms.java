@@ -540,7 +540,7 @@ public class Algorithms {
         updateParameter(fileParameter,B);
         System.out.println("\nThe sub of fileParameter:="+fileParameter.subSequence(0, fileParameter.lastIndexOf("/")));
         //fileParameter.subSequence(0, fileParameter.lastIndexOf("/"));
-        updateParameter(fileParameter.subSequence(0, fileParameter.lastIndexOf("/"))+"execTime_parameter.csv",B);
+        updateParameter(fileParameter.subSequence(0, fileParameter.lastIndexOf("/"))+"/execTime_parameter.csv",B);
         return estimateCurrentCostValue(X, B);
     }
     public static String preapreFile(String directory) throws IOException{
@@ -702,15 +702,16 @@ public class Algorithms {
         }
         else fixExecTime(Data, Max_train);
         String weka = "weka"+ Max_train;
+        String dream = "dream"+ Max_train;
         System.out.println("----------"+weka+"-------------------");
 	storeCost(Data,Time_Cost,"execTime_estimate",weka);
+        storeCost(Data,Time_Cost,"execTime_estimateValue",weka);
         storeCost(Data,Time_Cost,NameOfEstimateValue,"dream");
 
-        String wekaStore = weka+"_"+Data.get_DatabaseIn()+"_"+getNameQuery(SQL);
-        String dreamStore = "dream"+"_"+Data.get_DatabaseIn()+"_"+getNameQuery(SQL);
+        String wekaStore = weka + "_" + Data.get_DatabaseIn() + "_" + getNameQuery(SQL);
+        String dreamStore = dream + "_" + Data.get_DatabaseIn() + "_" + getNameQuery(SQL);
 
         storeCost(Data,Time_Cost,"execTime_estimate",wekaStore);
-        storeCost(Data,Time_Cost,"execTime_estimateValue",wekaStore);
         storeCost(Data,Time_Cost,NameOfEstimateValue,dreamStore);
 	/*
 	String modelDirPath = OperatorFolder+"/"+NameOp + "/models";
