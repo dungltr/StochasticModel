@@ -705,7 +705,7 @@ public class Algorithms {
         String dream = "dream"+ Max_train;
         System.out.println("----------"+weka+"-------------------");
 	storeCost(Data,Time_Cost,"execTime_estimate",weka);
-        storeCost(Data,Time_Cost,"execTime_estimateValue",weka);
+        //storeCost(Data,Time_Cost,"execTime_estimateValue",weka);
         storeCost(Data,Time_Cost,NameOfEstimateValue,"dream");
 
         String wekaStore = weka + "_" + Data.get_DatabaseIn() + "_" + getNameQuery(SQL);
