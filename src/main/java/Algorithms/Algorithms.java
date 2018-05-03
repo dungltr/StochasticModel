@@ -537,7 +537,10 @@ public class Algorithms {
                 index++;
             }
         System.out.println("\nThe newest Parameter is:"+ Arrays.toString(roundMaxtrix(B))+" and Error with R^2_2: " + round(R_2_2,2)+ " is " + round(estimateErrorSquare(x,c,B),2));    
-        updateParameter(fileParameter,B);    
+        updateParameter(fileParameter,B);
+        System.out.println("\nThe sub of fileParameter:="+fileParameter.subSequence(0, fileParameter.lastIndexOf("/")));
+        //fileParameter.subSequence(0, fileParameter.lastIndexOf("/"));
+        updateParameter(fileParameter.subSequence(0, fileParameter.lastIndexOf("/"))+"execTime_parameter.csv",B);
         return estimateCurrentCostValue(X, B);
     }
     public static String preapreFile(String directory) throws IOException{
@@ -700,7 +703,7 @@ public class Algorithms {
         else fixExecTime(Data, Max_train);
         String weka = "weka"+ Max_train;
         System.out.println("----------"+weka+"-------------------");
-	    storeCost(Data,Time_Cost,"execTime_estimate",weka);
+	storeCost(Data,Time_Cost,"execTime_estimate",weka);
         storeCost(Data,Time_Cost,NameOfEstimateValue,"dream");
 
         String wekaStore = weka+"_"+Data.get_DatabaseIn()+"_"+getNameQuery(SQL);
