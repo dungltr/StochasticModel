@@ -707,6 +707,7 @@ public class Algorithms {
         String dreamStore = "dream"+"_"+Data.get_DatabaseIn()+"_"+getNameQuery(SQL);
 
         storeCost(Data,Time_Cost,"execTime_estimate",wekaStore);
+        storeCost(Data,Time_Cost,"execTime_estimateValue",wekaStore);
         storeCost(Data,Time_Cost,NameOfEstimateValue,dreamStore);
 	/*
 	String modelDirPath = OperatorFolder+"/"+NameOp + "/models";
