@@ -1015,11 +1015,12 @@ public class TPCHQuery {
                 if (KindOfMoving.toLowerCase().contains("move")) {
                     double[] size = new double[numberOfSize_Move_Hive_Postgres];
                     double[][] matrix = testQueryPlan.sizeDatasetDicom(randomQuery[1],Size_tpch);
-                    size[0] = matrix[Integer.parseInt(randomQuery[0])][0];
-                    size[1] = matrix[Integer.parseInt(randomQuery[0])][1];
-                    size[2] = matrix[Integer.parseInt(randomQuery[0])][2];
-                    size[3] = 0;
                     testScilab.printMatrix(matrix);
+                    size[0] = matrix[(int) Double.parseDouble(randomQuery[0])][0];
+                    size[1] = matrix[(int) Double.parseDouble(randomQuery[0])][1];
+                    size[2] = matrix[(int) Double.parseDouble(randomQuery[0])][2];
+                    size[3] = 0;
+
                     testScilab.printArray(size);
                     return size;
                 }
