@@ -237,15 +237,15 @@ public class testQueryPlan {
         else {
             if (DB.toLowerCase().contains("dicom")){
                 String [] dataset_move  = {
-                        "sequenceattributes_text"
-                        , "generalinfotable_text"
-                        , "studyall_text"
-                        , "patientall_text"
-                        //};
-                        ,"clinicaltrial_text"
-                        ,"filemetaelement_text"
-                        ,"generalseries_text"
+                        "generalseries_text"//good
+                        , "studyall_text"//good
+                        , "patientall_text"//good
+                        , "clinicaltrial_text"//good
+                        , "filemetaelement_text"
                         };
+                        //,"sequenceattributes_text"
+                        //,"generalinfotable_text"
+                        //};
                 String [] query         = {
                         "query31"
                         ,"query32"
@@ -255,15 +255,15 @@ public class testQueryPlan {
                         ,"query36"
                         ,"query37"};
                 String [] dataset_up    = {
-                        "sequenceattributes_text"
-                        , "generalinfotable_text"
-                        , "studyall_text"
-                        , "patientall_text"
-                        //};
-                        ,"clinicaltrial_text"
-                        ,"filemetaelement_text"
-                        ,"generalseries_text"
+                        "generalseries_text"//good
+                        , "studyall_text"//good
+                        , "patientall_text"//good
+                        , "clinicaltrial_text"//good
+                        , "filemetaelement_text"
                         };
+                //,"sequenceattributes_text"
+                //,"generalinfotable_text"
+                //};
                 double [] size = new double [dataset_move.length];
                 int i = rand.nextInt(dataset_move.length);//rand.nextInt(4) + 6;//
                 int j,k;
