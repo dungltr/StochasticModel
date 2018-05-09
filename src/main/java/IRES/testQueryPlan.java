@@ -237,13 +237,15 @@ public class testQueryPlan {
         else {
             if (DB.toLowerCase().contains("dicom")){
                 String [] dataset_move  = {
-                        "clinicaltrial_text"
-                        ,"filemetaelement_text"
-                        ,"generalinfotable_text"
-                        ,"generalseries_text"
-                        ,"patientall_text"
-                        ,"sequenceattributes_text"
-                        ,"studyall_text"};
+                        "sequenceattributes_text"
+                        , "generalinfotable_text"
+                        , "studyall_text"
+                        , "patientall_text"
+                        };
+                        //"clinicaltrial_text"
+                        //,"filemetaelement_text"
+                        //,"generalseries_text"
+                        //};
                 String [] query         = {
                         "query31"
                         ,"query32"
@@ -253,13 +255,15 @@ public class testQueryPlan {
                         ,"query36"
                         ,"query37"};
                 String [] dataset_up    = {
-                        "clinicaltrial_text"
-                        ,"filemetaelement_text"
-                        ,"generalinfotable_text"
-                        ,"generalseries_text"
-                        ,"patientall_text"
-                        ,"sequenceattributes_text"
-                        ,"studyall_text"};
+                        "sequenceattributes_text"
+                        , "generalinfotable_text"
+                        , "studyall_text"
+                        , "patientall_text"
+                        };
+                        //"clinicaltrial_text"
+                        //,"filemetaelement_text"
+                        //,"generalseries_text"
+                        //};
                 double [] size = new double [dataset_move.length];
                 int i = rand.nextInt(dataset_move.length);//rand.nextInt(4) + 6;//
                 int j,k;
