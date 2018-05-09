@@ -522,7 +522,7 @@ public class TPCHQuery {
         String From = from;
         String To   = to;
         
-        double[] size = calculateSize(randomQuery, From, To, Size_tpch, Move);
+        double[] size = calculateSize(DB, randomQuery, From, To, Size_tpch, Move);
         if (KindOfRunning.equals("testing")&&(From.equals("hive"))&&(To.equals("hive"))) size[1] = Double.parseDouble(randomQuery[0]); 
 	double[] Yarn = testQueryPlan.createRandomYarn();
         ////////////////////////////////////////////
@@ -992,6 +992,7 @@ public class TPCHQuery {
             return calculateSize(randomQuery, From, To, Size_tpch, KindOfMoving);
         }
         else if (DB.toLowerCase().contains("dicom")){
+            System.out.println("hello from Dicom");
             double R1,R2;
             if ((From.toLowerCase().contains("hive"))&&(To.toLowerCase().contains("postgres"))) {
                 if (KindOfMoving.toLowerCase().contains("join")){
