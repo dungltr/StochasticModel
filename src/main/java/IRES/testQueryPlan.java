@@ -7,9 +7,13 @@ package IRES;
 
 import Algorithms.Algorithms;
 import Algorithms.testWriteMatrix2CSV;
+import Irisa.Enssat.Rennes1.thesis.sparkSQL.ReadMatrixCSV;
 import LibraryIres.Move_Data;
 import LibraryIres.YarnValue;
+import WriteReadData.CsvFileReader;
+import com.sparkexample.App;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -224,6 +228,69 @@ public class testQueryPlan {
         tmp[3] = dataset_up[i];
 	}
         return tmp;        
+    }
+    public static String[] createRandomQuery(String DB, String KindOfRunning, String Size_tpch) {
+        Random rand = new Random();
+      if (DB.toLowerCase().contains("tpch")){
+            return createRandomQuery(KindOfRunning,Size_tpch);
+        }
+        else {
+            if (DB.toLowerCase().contains("dicom")){
+                String [] dataset_move  = {
+                        "clinicaltrial_text"
+                        ,"filemetaelement_text"
+                        ,"generalinfotable_text"
+                        ,"generalseries_text"
+                        ,"patientall_text"
+                        ,"sequenceattributes_text"
+                        ,"studyall"};
+                String [] query         = {
+                        "query31"
+                        ,"query32"
+                        ,"query33"
+                        ,"query34"
+                        ,"query35"
+                        ,"query36"
+                        ,"query37"};
+                String [] dataset_up    = {
+                        "clinicaltrial_text"
+                        ,"filemetaelement_text"
+                        ,"generalinfotable_text"
+                        ,"generalseries_text"
+                        ,"patientall_text"
+                        ,"sequenceattributes_text"
+                        ,"studyall"};
+                double [] size = new double [dataset_move.length];
+                int i = rand.nextInt(dataset_move.length);//rand.nextInt(4) + 6;//
+                int j,k;
+                int [] SQLJoin2Table = {31,32,33,34,35,36,37};
+                double size_multi = 0;
+                String[] tmp = new String[4];
+                if (KindOfRunning.equals("testing")){
+                    i = SQLJoin2Table[rand.nextInt(SQLJoin2Table.length)];
+                    tmp[1] = dataset_move(Integer.toString(i));
+                    //String [] SliceArray = Checkquery(Integer.toString(i));
+                    String [] SliceArray = sliceArray(Checkquery(Integer.toString(i)),tmp[1]);
+                    for (k = 0; k < SliceArray.length; k++)
+                        size_multi = size_multi + testQueryPlan.sizeDataset(SliceArray[k],Size_tpch);
+                    tmp[0] = Double.toString(size_multi);
+                    System.out.println("Size of tables except:" + tmp[0]);
+                    //tmp[1] = dataset_move(Integer.toString(i));
+                    tmp[2] = "tpch_query"+Integer.toString(i);
+                    tmp[3] = SliceArray[0];
+                    System.out.println("Table 1" + tmp[1]);
+                    System.out.println("Table 2" + tmp[3]);
+                }
+                else{
+                    tmp[0] = Double.toString(size[i]);
+                    tmp[1] = dataset_move[i];
+                    tmp[2] = query[i];
+                    tmp[3] = dataset_up[i];
+                }
+                return tmp;
+            }
+            else return createRandomQuery(KindOfRunning,Size_tpch);
+        }
     }
     public static String[] sliceArray(String[] originArray, String object){
 	String [] newArray = new String [originArray.length];
@@ -585,6 +652,11 @@ public class testQueryPlan {
                     size = 70.8;
 		    break;
 	}
+        return size;
+    }
+    public static double[][] sizeDatasetDicom(String dataset, String Size_tpch) throws IOException {
+        String matrix = new new App().readhome("dicom");
+        double [][] size = ReadMatrixCSV.readMatrix(matrix, CsvFileReader.count(matrix));
         return size;
     }
     public static double sizeDataset10m(String dataset, String Size_tpch){
