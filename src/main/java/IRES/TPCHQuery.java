@@ -524,7 +524,7 @@ public class TPCHQuery {
         
         double[] size = calculateSize(DB, randomQuery, From, To, Size_tpch, Move);
         if (KindOfRunning.equals("testing")&&(From.equals("hive"))&&(To.equals("hive"))) size[1] = Double.parseDouble(randomQuery[0]); 
-	double[] Yarn = testQueryPlan.createRandomYarn();
+	    double[] Yarn = testQueryPlan.createRandomYarn();
         ////////////////////////////////////////////
         size[size.length-1]=TimeOfDay;
         ///////////////////////////////////////////       
@@ -534,7 +534,7 @@ public class TPCHQuery {
         String DataInSize = Double.toString(size[0]);
         
         String DatabaseIn = database + Size_tpch;
-        String Schema = Schema(DataIn);
+        String Schema = Schema(DB, DataIn);
         //String DataOut = Table.toUpperCase(); 
         String DataOut = randomQuery[1].toUpperCase();
         String DataOutSize = Double.toString(size[0]);
@@ -542,10 +542,10 @@ public class TPCHQuery {
        
         String SQL_fileName = ""; 
         if (KindOfRunning.equals("training"))
-	SQL_fileName = SQL_folder + randomQuery[2];
+	        SQL_fileName = SQL_folder + randomQuery[2];
         else {
-		if (To.toLowerCase().equals("postgres")) SQL_fileName = SQL_folder + randomQuery[2];
-		else SQL_fileName = SQL_folder+randomQuery[2]; 
+		    if (To.toLowerCase().equals("postgres")) SQL_fileName = SQL_folder + randomQuery[2];
+		    else SQL_fileName = SQL_folder+randomQuery[2];
         }
 	String SQL = "";
 /*        SQL = "DROP TABLE IF EXISTS "+ randomQuery[2]+"_"+From+"_"+To+"; "
@@ -735,6 +735,16 @@ public class TPCHQuery {
             IRES.createOperatorSQL(Data, SQL, 0);                       
         }
         Algorithms.mainIRES(Data, SQL, yarnValue, TimeOfDay, size, KindOfRunning);
+    }
+    public static String Schema(String DB, String Table){
+        if (DB.toLowerCase().contains("tpch")){
+            return Schema(Table);
+        }
+        else{
+            String schema= new App().readhome("schema/"+Table);
+            System.out.println("This is the schema"+ schema);
+            return schema;
+        }
     }
     public static String Schema(String Table) {
         String Schema = "";
