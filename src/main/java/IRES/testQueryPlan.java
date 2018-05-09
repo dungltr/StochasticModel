@@ -243,7 +243,7 @@ public class testQueryPlan {
                         ,"generalseries_text"
                         ,"patientall_text"
                         ,"sequenceattributes_text"
-                        ,"studyall"};
+                        ,"studyall_text"};
                 String [] query         = {
                         "query31"
                         ,"query32"
@@ -259,7 +259,7 @@ public class testQueryPlan {
                         ,"generalseries_text"
                         ,"patientall_text"
                         ,"sequenceattributes_text"
-                        ,"studyall"};
+                        ,"studyall_text"};
                 double [] size = new double [dataset_move.length];
                 int i = rand.nextInt(dataset_move.length);//rand.nextInt(4) + 6;//
                 int j,k;
