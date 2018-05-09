@@ -6,6 +6,7 @@
 package IRES;
 
 import Algorithms.Algorithms;
+import Algorithms.testScilab;
 import Algorithms.testWriteMatrix2CSV;
 import LibraryIres.Move_Data;
 import LibraryIres.YarnValue;
@@ -517,7 +518,7 @@ public class TPCHQuery {
         String database = DB;
         String SQL_folder = new App().readhome("SQL");
         runWorkFlowIRES IRES = new runWorkFlowIRES();
-        String[] randomQuery = testQueryPlan.createRandomQuery(KindOfRunning, Size_tpch);
+        String[] randomQuery = testQueryPlan.createRandomQuery(DB, KindOfRunning, Size_tpch);
         String From = from;
         String To   = to;
         
@@ -985,5 +986,134 @@ public class TPCHQuery {
         size[2] = R2;
         return size;
         }    
-    }   
+    }
+    public static double[] calculateSize(String DB, String[] randomQuery, String From, String To, String Size_tpch, String KindOfMoving) throws IOException {
+        if (DB.toLowerCase().contains("tpch")){
+            return calculateSize(String[] randomQuery, String From, String To, String Size_tpch, String KindOfMoving);
+        }
+        else if (DB.toLowerCase().contains("dicom")){
+            double R1,R2;
+            if ((From.toLowerCase().contains("hive"))&&(To.toLowerCase().contains("postgres"))) {
+                if (KindOfMoving.toLowerCase().contains("join")){
+                    double[] size = new double[numberOfSize_Hive_Postgres];
+                    size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
+                    size[1] = testQueryPlan.pageDataset(randomQuery[1],Size_tpch);
+                    size[2] = testQueryPlan.tupleDataset(randomQuery[1],Size_tpch);
+                    size[3] = testQueryPlan.pageDataset(randomQuery[3],Size_tpch);
+                    size[4] = testQueryPlan.tupleDataset(randomQuery[3],Size_tpch);
+                    size[5] = size[0]*testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);
+                    return size;
+                }
+                if (KindOfMoving.toLowerCase().contains("sql")){
+                    double[] size = new double[numberOfSize_SQL_Hive_Postgres];
+                    size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
+                    size[1] = size[0]*testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);
+                    //size[2] = size[0]*size[1];
+                    return size;
+                }
+                if (KindOfMoving.toLowerCase().contains("move")) {
+                    double[] size = new double[numberOfSize_Move_Hive_Postgres];
+                    double[][] matrix = testQueryPlan.sizeDatasetDicom(randomQuery[1],Size_tpch);
+                    size[0] = matrix[Integer.parseInt(randomQuery[0])][0];
+                    size[1] = matrix[Integer.parseInt(randomQuery[0])][1];
+                    size[2] = matrix[Integer.parseInt(randomQuery[0])][2];
+                    size[3] = 0;
+                    testScilab.printMatrix(matrix);
+                    testScilab.printArray(size);
+                    return size;
+                }
+
+            }
+
+            if ((From.toLowerCase().contains("postgres"))&&(To.toLowerCase().contains("hive"))) {
+                if (KindOfMoving.toLowerCase().contains("join")){
+                    double[] size = new double[numberOfSize_Postgres_Hive];
+                    size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
+                    size[1] = testQueryPlan.pageDataset(randomQuery[1],Size_tpch);
+                    size[2] = testQueryPlan.tupleDataset(randomQuery[1],Size_tpch);
+                    size[3] = testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);
+                    size[4] = 0;
+                    return size;
+                }
+                if (KindOfMoving.toLowerCase().contains("sql")){
+                    double[] size = new double[numberOfSize_SQL_Hive_Postgres];
+                    size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
+                    size[1] = size[0]*testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);
+                    //size[2] = size[0]*size[1];
+                    return size;
+                }
+                if (KindOfMoving.toLowerCase().contains("move")) {
+                    double[] size = new double[numberOfSize_Move_Postgres_Hive];
+                    size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
+                    size[1] = testQueryPlan.pageDataset(randomQuery[1],Size_tpch);
+                    size[2] = testQueryPlan.tupleDataset(randomQuery[1],Size_tpch);
+                    size[3] = 0;
+                    return size;
+                }
+
+            }
+
+            if ((From.toLowerCase().contains("hive"))&&(To.toLowerCase().contains("hive"))) {
+                if (!KindOfMoving.toLowerCase().equals("move")){
+                    double[] size = new double[numberOfSize_Hive_Hive];
+                    size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
+                    size[1] = testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);
+                    size[2] = 0;
+                    return size;
+                }
+                else {
+                    double[] size = new double[numberOfSize_Move_Hive_Hive];
+                    size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
+                    size[1] = 0;
+                    return size;
+                }
+            }
+
+            if ((From.toLowerCase().contains("postgres"))&&(To.toLowerCase().contains("postgres"))) {
+                if (!KindOfMoving.toLowerCase().equals("move")){
+                    if (KindOfMoving.toLowerCase().equals("join")){
+                        double[] size = new double[numberOfSize_Postgres_Postgres];
+                        size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
+                        size[1] = testQueryPlan.pageDataset(randomQuery[1],Size_tpch);
+                        size[2] = testQueryPlan.tupleDataset(randomQuery[1],Size_tpch);
+                        size[3] = testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);
+                        size[4] = testQueryPlan.pageDataset(randomQuery[3],Size_tpch);
+                        size[5] = testQueryPlan.tupleDataset(randomQuery[3],Size_tpch);
+                        size[numberOfSize_Postgres_Postgres-1] = 0;
+                        return size;
+                    }
+                    else
+                    {
+                        double[] size = new double[numberOfSize_TPCH_Postgres_Postgres];
+                        size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
+                        size[1] = testQueryPlan.pageDataset(randomQuery[1],Size_tpch);
+                        size[2] = testQueryPlan.tupleDataset(randomQuery[1],Size_tpch);
+                        size[3] = testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);
+                        size[4] = testQueryPlan.pageDataset(randomQuery[3],Size_tpch);
+                        size[5] = testQueryPlan.tupleDataset(randomQuery[3],Size_tpch);
+                        size[6] = 0;
+                        return size;
+                    }
+                }
+                else {
+                    double[] size = new double[numberOfSize_Move_Postgres_Postgres];
+                    size[0] = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);
+                    size[1] = testQueryPlan.pageDataset(randomQuery[1],Size_tpch);
+                    size[2] = testQueryPlan.tupleDataset(randomQuery[1],Size_tpch);
+                    size[3] = 0;
+                    return size;
+                }
+            }
+            else {
+                double[] size = new double[numberOfSize];
+                R1 = testQueryPlan.sizeDataset(randomQuery[1],Size_tpch);// Size of Data In R1
+                R2 = testQueryPlan.sizeDataset(randomQuery[3],Size_tpch);// Size of Data In R2
+                size[0] = R1;// + R2 + R1*Math.log(R1) + R2*Math.log(R2);
+                size[1] = R1*R2;
+                size[2] = R2;
+                return size;
+            }
+        }
+
+    }
 }

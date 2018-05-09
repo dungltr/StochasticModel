@@ -1,4 +1,3 @@
-import Irisa.Enssat.Rennes1.TestTPCH;
 import com.sparkexample.App;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -67,7 +66,7 @@ public class AppTest{
     public void testConvert_IRES() throws Exception {
         createProperties();
         //OriginalPareto.main(new String[] {"arg1", "arg2", "arg3"});
-        TestTPCH.main(new String[] {"arg1", "arg2", "arg3"});
+        //TestTPCH.main(new String[] {"arg1", "arg2", "arg3"});
 //        DPccpExperiment.main(new String[] {"arg1", "arg2", "arg3"});
 //        String file_test = test;
 //        String training_file = training;
