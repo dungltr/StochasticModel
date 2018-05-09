@@ -282,7 +282,7 @@ public class testQueryPlan {
                     System.out.println("Table 2" + tmp[3]);
                 }
                 else{
-                    tmp[0] = Double.toString(size[i]);
+                    tmp[0] = Integer.toString(i);// index for matrix value of dataset in dicom/dicom.csv
                     tmp[1] = dataset_move[i];
                     tmp[2] = query[i];
                     tmp[3] = dataset_up[i];
