@@ -15,7 +15,7 @@ public class TestTPCH {
     public static void main(String[] args) throws Exception{
         //testSQL();
         //testJoin();
-        testMove();
+        testMoveDicom();
         /*
         TPCHQuery.Move(Math.random(),"tpch","100m","Postgres","Hive","Move","training");
         TPCHQuery.Move(Math.random(),"tpch","100m","Hive","Postgres","Move","training");
