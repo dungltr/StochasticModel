@@ -655,7 +655,7 @@ public class testQueryPlan {
         return size;
     }
     public static double[][] sizeDatasetDicom(String dataset, String Size_tpch) throws IOException {
-        String matrix = new new App().readhome("dicom");
+        String matrix = new App().readhome("dicom");
         double [][] size = ReadMatrixCSV.readMatrix(matrix, CsvFileReader.count(matrix));
         return size;
     }

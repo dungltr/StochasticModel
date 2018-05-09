@@ -989,7 +989,7 @@ public class TPCHQuery {
     }
     public static double[] calculateSize(String DB, String[] randomQuery, String From, String To, String Size_tpch, String KindOfMoving) throws IOException {
         if (DB.toLowerCase().contains("tpch")){
-            return calculateSize(String[] randomQuery, String From, String To, String Size_tpch, String KindOfMoving);
+            return calculateSize(randomQuery, From, To, Size_tpch, KindOfMoving);
         }
         else if (DB.toLowerCase().contains("dicom")){
             double R1,R2;
