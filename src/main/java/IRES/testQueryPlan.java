@@ -241,7 +241,7 @@ public class testQueryPlan {
                         , "studyall_text"//good
                         , "patientall_text"//good
                         , "clinicaltrial_text"//good
-                        , "filemetaelement_text"
+                        //, "filemetaelement_text"
                         };
                         //,"sequenceattributes_text"
                         //,"generalinfotable_text"
@@ -259,7 +259,7 @@ public class testQueryPlan {
                         , "studyall_text"//good
                         , "patientall_text"//good
                         , "clinicaltrial_text"//good
-                        , "filemetaelement_text"
+                        //, "filemetaelement_text"
                         };
                 //,"sequenceattributes_text"
                 //,"generalinfotable_text"
