@@ -1114,6 +1114,6 @@ public class TPCHQuery {
                 return size;
             }
         }
-
+        else return calculateSize(randomQuery, From, To, Size_tpch, KindOfMoving);
     }
 }
