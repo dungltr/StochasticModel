@@ -242,8 +242,9 @@ public class testQueryPlan {
                         , "patientall_text"//good
                         , "clinicaltrial_text"//good
                         , "filemetaelement_text"
+                        ,"sequenceattributes_text"
                         };
-                        //,"sequenceattributes_text"
+                        //
                         //,"generalinfotable_text"
                         //};
                 String [] query         = {
