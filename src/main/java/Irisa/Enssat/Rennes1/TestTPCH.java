@@ -38,6 +38,6 @@ public class TestTPCH {
     public static void testMoveDicom() throws Exception {
         double TimeOfDay = 24.00*Math.random()/24;
         TPCHQuery.Move(TimeOfDay, "dicom","","Hive","Postgres", "Move", "training");
-        TPCHQuery.Move(TimeOfDay, "dicom","","Hive","Postgres", "Move", "training");
+        //TPCHQuery.Move(TimeOfDay, "dicom","","Hive","Postgres", "Move", "training");
     }
 }
