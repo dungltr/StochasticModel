@@ -243,7 +243,8 @@ public class testQueryPlan {
                         //, "clinicaltrial_text"//good
                         //, "filemetaelement_text"
                         "sequenceattributes_text"
-                        ,"generalinfotable_text"
+                        ,"generalinfotable_texta"
+                        ,"generalinfotable_textb"
                         };
                         //
 
