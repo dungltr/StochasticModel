@@ -238,10 +238,10 @@ public class testQueryPlan {
             if (DB.toLowerCase().contains("dicom")){
                 String [] dataset_move  = {
                         "generalseries_text"//good
-                        , "studyall_text"//good
-                        , "patientall_text"//good
-                        , "clinicaltrial_text"//good
-                        , "filemetaelement_text"
+                        //, "studyall_text"//good
+                        //, "patientall_text"//good
+                        //, "clinicaltrial_text"//good
+                        //, "filemetaelement_text"
                         ,"sequenceattributes_text"
                         };
                         //
