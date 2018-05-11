@@ -256,7 +256,8 @@ public class testQueryPlan {
                         ,"query34"
                         ,"query35"
                         ,"query36"
-                        ,"query37"};
+                        ,"query37"
+                        ,"query38"};
                 String [] dataset_up    = dataset_move;/*{
                         "generalseries_text"//good
                         , "studyall_text"//good
@@ -270,7 +271,7 @@ public class testQueryPlan {
                 double [] size = new double [dataset_move.length];
                 int i = rand.nextInt(dataset_move.length);//rand.nextInt(4) + 6;//
                 int j,k;
-                int [] SQLJoin2Table = {31,32,33,34,35,36,37};
+                int [] SQLJoin2Table = {31,32,33,34,35,36,37,38};
                 double size_multi = 0;
                 String[] tmp = new String[4];
                 if (KindOfRunning.equals("testing")){
