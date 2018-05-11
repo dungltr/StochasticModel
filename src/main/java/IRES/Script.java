@@ -5,11 +5,8 @@
  */
 package IRES;
 
-import LibraryIres.*;
+import LibraryIres.Move_Data;
 import com.sparkexample.App;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 
 /**
  *
@@ -225,7 +222,8 @@ public class Script {
         String CSV2Postgres = "echo \"loading table to POSTGRES\"\n" +                
 "psql -U "+username+" -d $DATABASE_OUT -c \"DROP TABLE IF EXISTS $TABLE_OUT;\"\n" +
 "psql -U "+username+" -d $DATABASE_OUT -c \"CREATE TABLE IF NOT EXISTS $TABLE_OUT $SCHEMA;\"\n" +
-"psql -U "+username+" -d $DATABASE_OUT -c \"\\COPY $TABLE_OUT FROM '$BASE_IN/$TABLE/$TABLE.csv' WITH DELIMITER AS '|';\"\n" +
+//"psql -U "+username+" -d $DATABASE_OUT -c \"\\COPY $TABLE_OUT FROM '$BASE_IN/$TABLE/$TABLE.csv' WITH DELIMITER AS '|';\"\n" +
+"psql -U "+username+" -d $DATABASE_OUT -c \"\\COPY $TABLE_OUT FROM '$BASE_IN/$TABLE/$TABLE.csv' WITH( FORMAT CSV, DELIMITER ',', QUOTE '\"', ESCAPE '\\', NULL '\\N' );\"\n" +
 //"SQL_CSV2Posgres=\"DROP TABLE IF EXISTS $TABLE_OUT; CREATE TABLE IF NOT EXISTS $TABLE_OUT $SCHEMA; COPY $TABLE_OUT FROM '$BASE_IN/$TABLE/$TABLE.csv' WITH DELIMITER AS '|';\"\n" +
 //"#rm /mnt/Data/tmp/$TABLE_OUT.csv\n" +
 //"#rm /mnt/Data/tmp/$TABLE.csv\n" +                
